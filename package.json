@@ -20,7 +20,10 @@
     "test:lint": "eslint ./src --fix",
     "test:unit": "cross-env CI=1 react-scripts test --env=jsdom",
     "test:watch": "react-scripts test --env=jsdom",
-    "predeploy": "cd example && yarn install && yarn run build",
+    "docs:build": "typedoc",
+    "rm:deploy": "rimraf example/build",
+    "example:build": "cd example && yarn install && yarn run build",
+    "predeploy": "run-s example:build docs:build",
     "deploy": "gh-pages -d example/build"
   },
   "peerDependencies": {
@@ -28,8 +31,7 @@
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
     "framer-motion": "^4",
-    "react": "^17.0.2",
-    "use-select": "^0.0.6"
+    "react": "^17.0.2"
   },
   "devDependencies": {
     "@chakra-ui/react": "^1.4.1",
@@ -65,7 +67,9 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "^4.0.3",
+    "rimraf": "^3.0.2",
     "rollup-plugin-typescript": "^1.0.1",
+    "typedoc": "^0.20.34",
     "typescript": "^4.2.3",
     "use-select": "^0.0.6"
   },

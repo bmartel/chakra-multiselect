@@ -1,8 +1,14 @@
-import { ExampleComponent } from 'chakra-multiselect'
-import 'chakra-multiselect/dist/index.css'
+import { ChakraProvider, VStack } from '@chakra-ui/react'
+import { MultiSelect } from 'chakra-multiselect'
 
 const App = () => {
-  return <ExampleComponent text='Create React Library Example 😄' />
+  return (
+    <ChakraProvider>
+      <VStack minH="100vh" w="full" justifyContent="center" alignItems="center">
+      <MultiSelect />
+      </VStack>
+    </ChakraProvider>
+  )
 }
 
 export default App

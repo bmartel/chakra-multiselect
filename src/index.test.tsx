@@ -1,7 +1,7 @@
-import { ExampleComponent } from '.'
+import { MultiSelect } from '.'
 
-describe('ExampleComponent', () => {
+describe('MultiSelect', () => {
   it('is truthy', () => {
-    expect(ExampleComponent).toBeTruthy()
+    expect(MultiSelect).toBeTruthy()
   })
 })
