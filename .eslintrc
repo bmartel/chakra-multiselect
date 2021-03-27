@@ -4,8 +4,6 @@
     "standard",
     "standard-react",
     "plugin:prettier/recommended",
-    "prettier/standard",
-    "prettier/react",
     "plugin:@typescript-eslint/eslint-recommended"
   ],
   "env": {
@@ -26,6 +24,7 @@
   "rules": {
     "space-before-function-paren": 0,
     "react/prop-types": 0,
+    "react/react-in-jsx-scope": 0,
     "react/jsx-handler-names": 0,
     "react/jsx-fragments": 0,
     "react/no-unused-prop-types": 0,
