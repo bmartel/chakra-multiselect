@@ -8,20 +8,28 @@
 
 ```bash
 npm install --save chakra-multiselect
+or
+yarn add chakra-multiselect
 ```
 
 ## Usage
 
 ```tsx
-import React, { Component } from 'react'
+import { ChakraProvider, extendTheme } from '@chakra-ui/react'
+import { MultiSelect, MultiSelectTheme } from 'chakra-multiselect'
 
-import MyComponent from 'chakra-multiselect'
-import 'chakra-multiselect/dist/index.css'
-
-class Example extends Component {
-  render() {
-    return <MyComponent />
+const theme = extendTheme({
+  components: {
+    MultiSelect: MultiSelectTheme
   }
+})
+
+const App = () => {
+  return (
+    <ChakraProvider theme={theme}>
+      <MultiSelect items={items} label="Choose an item" />
+    </ChakraProvider>
+  )
 }
 ```
 
