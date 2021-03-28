@@ -17,6 +17,7 @@ import { createContext } from './utils'
 export interface UseSelectProps extends UsePopperProps {
   items?: any[]
   initialSelectedItems: any[]
+  hasDivider?: boolean
 }
 
 export interface UseSelectReturnValue<T = any>
@@ -27,6 +28,7 @@ export interface UseSelectReturnValue<T = any>
   getFilteredItems: (items: any[]) => any[]
   inputValue: any
   setInputValue: (input: any) => void
+  hasDivider?: boolean
 }
 
 const [SelectProvider, useSelectContext] = createContext<UseSelectReturnValue>({
@@ -40,7 +42,8 @@ export const useSelect = <T = any>(
   {
     items = [],
     initialSelectedItems = [],
-    placement = 'bottom-start'
+    placement = 'bottom-start',
+    hasDivider = true
   }: UseSelectProps = {
     items: [],
     initialSelectedItems: [],
@@ -100,6 +103,7 @@ export const useSelect = <T = any>(
 
   return {
     items,
+    hasDivider,
     inputValue,
     setInputValue,
     getSelectedItemProps,
@@ -143,6 +147,58 @@ export function useSelectList(props: any = {}) {
         __css: styles.list
       }),
       [props.ref, menuRef, styles.list, popper.popperRef]
+    )
+  }
+}
+
+export function useSelectInput(props: any = {}) {
+  const { getInputProps, getDropdownProps, isOpen } = useSelectContext()
+  const styles = useStyles()
+
+  return {
+    ...props,
+    ...getInputProps!(getDropdownProps!({ preventKeyAction: isOpen })),
+    ...useMemo(
+      () => ({
+        __css: styles.input
+      }),
+      [styles.input]
+    )
+  }
+}
+
+export function useSelectControl(props: any = {}) {
+  const {
+    isOpen,
+    hasDivider,
+    selectedItems,
+    getSelectedItemProps,
+    removeSelectedItem,
+    getInputProps,
+    getToggleButtonProps,
+    getDropdownProps,
+    getComboboxProps,
+    popper
+  } = useSelectContext()
+  const styles = useStyles()
+
+  return {
+    ...props,
+    hasDivider,
+    selectedItems,
+    getSelectedItemProps,
+    removeSelectedItem,
+    getInputProps,
+    getToggleButtonProps,
+    getDropdownProps,
+    getComboboxProps,
+    isOpen,
+    ...useMemo(
+      () => ({
+        ref: mergeRefs(props.ref, popper.referenceRef),
+        __css: styles.input
+      }),
+      [props.ref, styles.control, popper.referenceRef]
     )
   }
 }

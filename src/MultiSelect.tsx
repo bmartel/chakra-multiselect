@@ -22,7 +22,8 @@ import { PropsOf } from '@emotion/react'
 import {
   SelectProvider,
   useSelect,
-  useSelectContext,
+  useSelectControl,
+  useSelectInput,
   useSelectItem,
   useSelectLabel,
   useSelectList
@@ -33,10 +34,10 @@ import {
 export interface SelectProps
   extends Omit<HTMLChakraProps<'select'>, 'size'>,
     Omit<MenuProps, 'children'> {
+  label?: string
   items?: any[]
   initialSelectedItems?: any[]
   defaultIsOpen?: boolean
-  isLazy?: true
   closeOnSelect?: false
   children: ReactNode
 }
@@ -82,7 +83,9 @@ export const Select: React.FC<SelectProps> = (props) => {
 
   return (
     <SelectProvider value={context}>
-      <StylesProvider value={styles}>{children}</StylesProvider>
+      <StylesProvider value={styles}>
+        <chakra.div pos='relative'>{children}</chakra.div>
+      </StylesProvider>
     </SelectProvider>
   )
 }
@@ -120,9 +123,9 @@ export const SelectList = forwardRef<SelectListProps, 'ul'>((_, ref) => {
     <chakra.ul
       ref={listRef}
       __css={{
+        listStyle: 'none',
         position: 'absolute',
-        top: 0,
-        transition: 'all 250ms',
+        ...(!isOpen && { visibility: 'hidden' }),
         ...__css
       }}
       {...listProps}
@@ -163,22 +166,28 @@ const SelectToggleIcon: React.FC<PropsOf<'svg'>> = (props) => (
   </svg>
 )
 
-export const SelectControl: React.FC<SelectControlProps> = () => {
+export const SelectInput = () => {
+  const inputProps = useSelectInput()
+
+  return <chakra.input {...inputProps} />
+}
+
+export const SelectControl = forwardRef<SelectControlProps, 'div'>((_, ref) => {
   const {
-    isOpen,
+    ref: controlRef,
+    __css,
+    hasDivider,
     selectedItems,
     getSelectedItemProps,
     removeSelectedItem,
-    getInputProps,
     getToggleButtonProps,
-    getDropdownProps,
     getComboboxProps
-  } = useSelectContext()
+  } = useSelectControl({ ref })
 
   return (
-    <Input as={Box} pos='relative' px={1} d='flex'>
+    <Input ref={controlRef} as={Box} px={1} d='flex' {...__css}>
       <HStack>
-        {selectedItems?.map((selectedItem, index) => (
+        {selectedItems?.map((selectedItem: any, index: number) => (
           <span
             style={selectedItemStyles}
             key={`selected-item-${index}`}
@@ -196,11 +205,9 @@ export const SelectControl: React.FC<SelectControlProps> = () => {
       </HStack>
 
       <Box d='flex' alignItems='center' {...getComboboxProps!()}>
-        <chakra.input
-          {...getInputProps!(getDropdownProps!({ preventKeyAction: isOpen }))}
-        />
-        <Box d='flex' py='1' alignItems='center'>
-          <Divider orientation='vertical' />
+        <SelectInput />
+        <Box h='full' d='flex' p='1' alignItems='center'>
+          {hasDivider && <Divider orientation='vertical' />}
         </Box>
         <IconButton
           variant='ghost'
@@ -212,12 +219,15 @@ export const SelectControl: React.FC<SelectControlProps> = () => {
       </Box>
     </Input>
   )
-}
+})
 
-export const MultiSelect: React.FC<MultiSelectProps> = ({ items }) => {
+export const MultiSelect: React.FC<MultiSelectProps> = ({
+  label,
+  ...props
+}) => {
   return (
-    <Select items={items}>
-      <SelectLabel>Choose some elements:</SelectLabel>
+    <Select {...props}>
+      {label && <SelectLabel>{label}</SelectLabel>}
       <SelectControl />
       <SelectList />
     </Select>
