@@ -14,11 +14,19 @@ import {
   HStack,
   omitThemingProps,
   useMultiStyleConfig,
-  StylesProvider
+  StylesProvider,
+  forwardRef
 } from '@chakra-ui/react'
 import { ReactNode, useMemo } from 'react'
 import { PropsOf } from '@emotion/react'
-import { SelectProvider, useSelect, useSelectContext } from './use-select'
+import {
+  SelectProvider,
+  useSelect,
+  useSelectContext,
+  useSelectItem,
+  useSelectLabel,
+  useSelectList
+} from './use-select'
 
 // @see https://github.com/chakra-ui/chakra-ui/issues/140
 
@@ -47,7 +55,21 @@ export interface SelectDividerProps extends MenuDividerProps {}
 export interface SelectOptionGroupProps extends MenuOptionGroupProps {}
 export interface SelectOptionItemProps extends HTMLChakraProps<'li'> {
   highlighted?: boolean
+  index: number
 }
+
+export interface MultiSelectProps extends Omit<SelectProps, 'children'> {
+  children?: ReactNode
+}
+
+const selectedItemStyles = {
+  marginLeft: '5px',
+  backgroundColor: 'aliceblue',
+  borderRadius: '10px'
+}
+
+const selectedItemIconStyles = { cursor: 'pointer' }
+// END OF TEMP
 
 export const Select: React.FC<SelectProps> = (props) => {
   const { children } = props
@@ -66,40 +88,56 @@ export const Select: React.FC<SelectProps> = (props) => {
 }
 
 export const SelectLabel: React.FC<HTMLChakraProps<'label'>> = (props) => {
-  const { getLabelProps } = useSelectContext()
+  const labelProps = useSelectLabel()
 
-  return <chakra.label {...props} {...getLabelProps!()} />
+  return <chakra.label {...props} {...labelProps} />
 }
 
 export const SelectOptionItem: React.FC<SelectOptionItemProps> = ({
   value,
+  index,
   ...props
 }) => {
-  return <chakra.li {...props}>{value}</chakra.li>
-}
+  const itemProps = useSelectItem({ item: value, index })
 
-export const SelectList: React.FC<SelectListProps> = () => {
-  const {
-    isOpen,
-    getMenuProps,
-    getItemProps,
-    getFilteredItems,
-    highlightedIndex
-  } = useSelectContext()
   return (
-    <ul {...getMenuProps!()}>
+    <chakra.li {...props} {...itemProps}>
+      {value}
+    </chakra.li>
+  )
+}
+export const SelectList = forwardRef<SelectListProps, 'ul'>((_, ref) => {
+  const {
+    __css,
+    items,
+    isOpen,
+    getFilteredItems,
+    ref: listRef,
+    ...listProps
+  } = useSelectList({ ref })
+
+  return (
+    <chakra.ul
+      ref={listRef}
+      __css={{
+        position: 'absolute',
+        top: 0,
+        transition: 'all 250ms',
+        ...__css
+      }}
+      {...listProps}
+    >
       {isOpen &&
         getFilteredItems!(items)?.map((item: any, index: number) => (
           <SelectOptionItem
             key={`${item}${index}`}
             value={item}
-            highlighted={highlightedIndex === index}
-            {...getItemProps!({ item, index })}
+            index={index}
           />
         ))}
-    </ul>
+    </chakra.ul>
   )
-}
+})
 
 export const SelectOptionGroup: React.FC<SelectOptionGroupProps> = (props) => {
   return <MenuOptionGroup {...props} />
@@ -108,6 +146,22 @@ export const SelectOptionGroup: React.FC<SelectOptionGroupProps> = (props) => {
 export const SelectDivider: React.FC<SelectDividerProps> = (props) => {
   return <MenuDivider {...props} />
 }
+
+const SelectToggleIcon: React.FC<PropsOf<'svg'>> = (props) => (
+  <svg
+    fill='none'
+    stroke='currentColor'
+    strokeWidth='2'
+    strokeLinecap='round'
+    strokeLinejoin='round'
+    viewBox='0 0 24 24'
+    width='1.5em'
+    height='1.5em'
+    {...props}
+  >
+    <path d='M6 9l6 6 6-6' />
+  </svg>
+)
 
 export const SelectControl: React.FC<SelectControlProps> = () => {
   const {
@@ -160,119 +214,12 @@ export const SelectControl: React.FC<SelectControlProps> = () => {
   )
 }
 
-export interface MultiSelectProps extends Omit<SelectProps, 'children'> {
-  children?: ReactNode
-}
-
-// START OF TEMP
-const items = [
-  'Neptunium',
-  'Plutonium',
-  'Americium',
-  'Curium',
-  'Berkelium',
-  'Californium',
-  'Einsteinium',
-  'Fermium',
-  'Mendelevium',
-  'Nobelium',
-  'Lawrencium',
-  'Rutherfordium',
-  'Dubnium',
-  'Seaborgium',
-  'Bohrium',
-  'Hassium',
-  'Meitnerium',
-  'Darmstadtium',
-  'Roentgenium',
-  'Copernicium',
-  'Nihonium',
-  'Flerovium',
-  'Moscovium',
-  'Livermorium',
-  'Tennessine',
-  'Oganesson'
-]
-
-/* const menuStyles = { */
-/*   maxHeight: 80, */
-/*   maxWidth: 300, */
-/*   overflowY: 'scroll', */
-/*   backgroundColor: '#eee', */
-/*   padding: 0, */
-/*   listStyle: 'none', */
-/*   position: 'relative', */
-/* } */
-
-/* const menuMultipleStyles = { */
-/*   maxHeight: '180px', */
-/*   overflowY: 'auto', */
-/*   width: '135px', */
-/*   margin: 0, */
-/*   borderTop: 0, */
-/*   background: 'white', */
-/*   position: 'absolute', */
-/*   zIndex: 1000, */
-/*   listStyle: 'none', */
-/*   padding: 0, */
-/*   left: '340px' */
-/* } */
-
-const selectedItemStyles = {
-  marginLeft: '5px',
-  backgroundColor: 'aliceblue',
-  borderRadius: '10px'
-}
-
-const SelectToggleIcon: React.FC<PropsOf<'svg'>> = (props) => (
-  <svg
-    fill='none'
-    stroke='currentColor'
-    strokeWidth='2'
-    strokeLinecap='round'
-    strokeLinejoin='round'
-    viewBox='0 0 24 24'
-    width='1.5em'
-    height='1.5em'
-    {...props}
-  >
-    <path d='M6 9l6 6 6-6' />
-  </svg>
-)
-
-const selectedItemIconStyles = { cursor: 'pointer' }
-// END OF TEMP
-
-export function MultiSelect() {
+export const MultiSelect: React.FC<MultiSelectProps> = ({ items }) => {
   return (
     <Select items={items}>
       <SelectLabel>Choose some elements:</SelectLabel>
       <SelectControl />
       <SelectList />
-    </Select>
-  )
-}
-export const MultiSelect2: React.FC<MultiSelectProps> = ({
-  isLazy = true,
-  closeOnSelect = false,
-  maxW,
-  ...props
-}) => {
-  return (
-    <Select closeOnSelect={closeOnSelect} isLazy={isLazy} {...props}>
-      <SelectControl maxW={maxW} />
-      <SelectList w='full'>
-        <SelectOptionGroup defaultValue='asc' title='Order' type='radio'>
-          <SelectOptionItem value='asc'>Ascending</SelectOptionItem>
-          <SelectOptionItem value='desc'>Descending</SelectOptionItem>
-        </SelectOptionGroup>
-        <SelectDivider />
-        <SelectOptionGroup title='Country' type='checkbox'>
-          <SelectOptionItem value='email'>Email</SelectOptionItem>
-          <SelectOptionItem value='phone'>Phone</SelectOptionItem>
-          <SelectOptionItem value='country'>Country</SelectOptionItem>
-        </SelectOptionGroup>
-      </SelectList>
     </Select>
   )
 }
