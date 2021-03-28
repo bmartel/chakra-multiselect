@@ -1,26 +1,32 @@
 import {
   HTMLChakraProps,
-  Menu,
-  MenuList,
   MenuOptionGroup,
-  MenuItemOption,
   MenuDivider,
   MenuProps,
-  forwardRef,
-  useMenuButton,
   Input,
   MenuListProps,
   MenuOptionGroupProps,
-  MenuItemOptionProps,
-  MenuDividerProps
+  MenuDividerProps,
+  Box,
+  IconButton,
+  Divider,
+  chakra,
+  HStack,
+  omitThemingProps,
+  useMultiStyleConfig,
+  StylesProvider
 } from '@chakra-ui/react'
-import { ReactNode } from 'react'
+import { ReactNode, useMemo } from 'react'
+import { PropsOf } from '@emotion/react'
+import { SelectProvider, useSelect, useSelectContext } from './use-select'
 
 // @see https://github.com/chakra-ui/chakra-ui/issues/140
 
 export interface SelectProps
   extends Omit<HTMLChakraProps<'select'>, 'size'>,
     Omit<MenuProps, 'children'> {
+  items?: any[]
+  initialSelectedItems?: any[]
   defaultIsOpen?: boolean
   isLazy?: true
   closeOnSelect?: false
@@ -39,45 +45,214 @@ export interface SelectControlProps
 export interface SelectListProps extends MenuListProps {}
 export interface SelectDividerProps extends MenuDividerProps {}
 export interface SelectOptionGroupProps extends MenuOptionGroupProps {}
-export interface SelectOptionItemProps extends MenuItemOptionProps {}
-
-export const Select: React.FC<SelectProps> = (props) => {
-  return <Menu {...props} />
+export interface SelectOptionItemProps extends HTMLChakraProps<'li'> {
+  highlighted?: boolean
 }
 
-export const SelectList: React.FC<SelectListProps> = (props) => {
-  return <MenuList {...props} />
+export const Select: React.FC<SelectProps> = (props) => {
+  const { children } = props
+
+  const styles = useMultiStyleConfig('MultiSelect', props)
+  const ownProps = omitThemingProps(props)
+
+  const ctx = useSelect(ownProps as any)
+  const context = useMemo(() => ctx, [ctx])
+
+  return (
+    <SelectProvider value={context}>
+      <StylesProvider value={styles}>{children}</StylesProvider>
+    </SelectProvider>
+  )
+}
+
+export const SelectLabel: React.FC<HTMLChakraProps<'label'>> = (props) => {
+  const { getLabelProps } = useSelectContext()
+
+  return <chakra.label {...props} {...getLabelProps!()} />
+}
+
+export const SelectOptionItem: React.FC<SelectOptionItemProps> = ({
+  value,
+  ...props
+}) => {
+  return <chakra.li {...props}>{value}</chakra.li>
+}
+
+export const SelectList: React.FC<SelectListProps> = () => {
+  const {
+    isOpen,
+    getMenuProps,
+    getItemProps,
+    getFilteredItems,
+    highlightedIndex
+  } = useSelectContext()
+  return (
+    <ul {...getMenuProps!()}>
+      {isOpen &&
+        getFilteredItems!(items)?.map((item: any, index: number) => (
+          <SelectOptionItem
+            key={`${item}${index}`}
+            value={item}
+            highlighted={highlightedIndex === index}
+            {...getItemProps!({ item, index })}
+          />
+        ))}
+    </ul>
+  )
 }
 
 export const SelectOptionGroup: React.FC<SelectOptionGroupProps> = (props) => {
   return <MenuOptionGroup {...props} />
 }
 
-export const SelectOptionItem: React.FC<SelectOptionItemProps> = (props) => {
-  return <MenuItemOption {...props} />
-}
-
 export const SelectDivider: React.FC<SelectDividerProps> = (props) => {
   return <MenuDivider {...props} />
 }
 
-export const SelectControl = forwardRef<SelectControlProps, 'input'>(
-  (props, ref) => {
-    const { children, as: As, ...rest } = props
+export const SelectControl: React.FC<SelectControlProps> = () => {
+  const {
+    isOpen,
+    selectedItems,
+    getSelectedItemProps,
+    removeSelectedItem,
+    getInputProps,
+    getToggleButtonProps,
+    getDropdownProps,
+    getComboboxProps
+  } = useSelectContext()
 
-    const inputProps = useMenuButton(rest, ref)
+  return (
+    <Input as={Box} pos='relative' px={1} d='flex'>
+      <HStack>
+        {selectedItems?.map((selectedItem, index) => (
+          <span
+            style={selectedItemStyles}
+            key={`selected-item-${index}`}
+            {...getSelectedItemProps!({ selectedItem, index })}
+          >
+            {selectedItem}
+            <span
+              style={selectedItemIconStyles}
+              onClick={() => removeSelectedItem!(selectedItem)}
+            >
+              &#10005;
+            </span>
+          </span>
+        ))}
+      </HStack>
 
-    const Element = As || Input
-
-    return <Element {...inputProps} {...props} />
-  }
-)
+      <Box d='flex' alignItems='center' {...getComboboxProps!()}>
+        <chakra.input
+          {...getInputProps!(getDropdownProps!({ preventKeyAction: isOpen }))}
+        />
+        <Box d='flex' py='1' alignItems='center'>
+          <Divider orientation='vertical' />
+        </Box>
+        <IconButton
+          variant='ghost'
+          size='sm'
+          aria-label='toggle menu'
+          icon={<SelectToggleIcon />}
+          {...getToggleButtonProps!()}
+        />
+      </Box>
+    </Input>
+  )
+}
 
 export interface MultiSelectProps extends Omit<SelectProps, 'children'> {
   children?: ReactNode
 }
 
-export const MultiSelect: React.FC<MultiSelectProps> = ({
+// START OF TEMP
+const items = [
+  'Neptunium',
+  'Plutonium',
+  'Americium',
+  'Curium',
+  'Berkelium',
+  'Californium',
+  'Einsteinium',
+  'Fermium',
+  'Mendelevium',
+  'Nobelium',
+  'Lawrencium',
+  'Rutherfordium',
+  'Dubnium',
+  'Seaborgium',
+  'Bohrium',
+  'Hassium',
+  'Meitnerium',
+  'Darmstadtium',
+  'Roentgenium',
+  'Copernicium',
+  'Nihonium',
+  'Flerovium',
+  'Moscovium',
+  'Livermorium',
+  'Tennessine',
+  'Oganesson'
+]
+
+/* const menuStyles = { */
+/*   maxHeight: 80, */
+/*   maxWidth: 300, */
+/*   overflowY: 'scroll', */
+/*   backgroundColor: '#eee', */
+/*   padding: 0, */
+/*   listStyle: 'none', */
+/*   position: 'relative', */
+/* } */
+
+/* const menuMultipleStyles = { */
+/*   maxHeight: '180px', */
+/*   overflowY: 'auto', */
+/*   width: '135px', */
+/*   margin: 0, */
+/*   borderTop: 0, */
+/*   background: 'white', */
+/*   position: 'absolute', */
+/*   zIndex: 1000, */
+/*   listStyle: 'none', */
+/*   padding: 0, */
+/*   left: '340px' */
+/* } */
+
+const selectedItemStyles = {
+  marginLeft: '5px',
+  backgroundColor: 'aliceblue',
+  borderRadius: '10px'
+}
+
+const SelectToggleIcon: React.FC<PropsOf<'svg'>> = (props) => (
+  <svg
+    fill='none'
+    stroke='currentColor'
+    strokeWidth='2'
+    strokeLinecap='round'
+    strokeLinejoin='round'
+    viewBox='0 0 24 24'
+    width='1.5em'
+    height='1.5em'
+    {...props}
+  >
+    <path d='M6 9l6 6 6-6' />
+  </svg>
+)
+
+const selectedItemIconStyles = { cursor: 'pointer' }
+// END OF TEMP
+
+export function MultiSelect() {
+  return (
+    <Select items={items}>
+      <SelectLabel>Choose some elements:</SelectLabel>
+      <SelectControl />
+      <SelectList />
+    </Select>
+  )
+}
+export const MultiSelect2: React.FC<MultiSelectProps> = ({
   isLazy = true,
   closeOnSelect = false,
   maxW,
@@ -86,7 +261,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   return (
     <Select closeOnSelect={closeOnSelect} isLazy={isLazy} {...props}>
       <SelectControl maxW={maxW} />
-      <SelectList minWidth='240px'>
+      <SelectList w='full'>
         <SelectOptionGroup defaultValue='asc' title='Order' type='radio'>
           <SelectOptionItem value='asc'>Ascending</SelectOptionItem>
           <SelectOptionItem value='desc'>Descending</SelectOptionItem>

@@ -5,7 +5,7 @@ const App = () => {
   return (
     <ChakraProvider>
       <VStack minH="100vh" w="full" justifyContent="center" alignItems="center">
-      <MultiSelect maxW="xl" />
+      <MultiSelect />
       </VStack>
     </ChakraProvider>
   )
