@@ -69,19 +69,27 @@
 					<h2>Install</h2>
 				</a>
 				<pre><code class="language-bash"><span style="color: #000000">npm install --save chakra-multiselect</span>
+<span style="color: #000000">or</span>
+<span style="color: #000000">yarn add chakra-multiselect</span>
 </code></pre>
 				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
 					<h2>Usage</h2>
 				</a>
-				<pre><code class="language-tsx"><span style="color: #AF00DB">import</span><span style="color: #000000"> </span><span style="color: #001080">React</span><span style="color: #000000">, { </span><span style="color: #001080">Component</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;react&#039;</span>
+				<pre><code class="language-tsx"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">ChakraProvider</span><span style="color: #000000">, </span><span style="color: #001080">extendTheme</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@chakra-ui/react&#039;</span>
+<span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">MultiSelect</span><span style="color: #000000">, </span><span style="color: #001080">MultiSelectTheme</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;chakra-multiselect&#039;</span>
 
-<span style="color: #AF00DB">import</span><span style="color: #000000"> </span><span style="color: #001080">MyComponent</span><span style="color: #000000"> </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;chakra-multiselect&#039;</span>
-<span style="color: #AF00DB">import</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;chakra-multiselect/dist/index.css&#039;</span>
-
-<span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">Example</span><span style="color: #000000"> </span><span style="color: #0000FF">extends</span><span style="color: #000000"> </span><span style="color: #267F99">Component</span><span style="color: #000000"> {</span>
-<span style="color: #000000">  </span><span style="color: #795E26">render</span><span style="color: #000000">() {</span>
-<span style="color: #000000">    </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #800000">&lt;</span><span style="color: #267F99">MyComponent</span><span style="color: #000000"> </span><span style="color: #800000">/&gt;</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">theme</span><span style="color: #000000"> = </span><span style="color: #795E26">extendTheme</span><span style="color: #000000">({</span>
+<span style="color: #000000">  </span><span style="color: #001080">components:</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #001080">MultiSelect:</span><span style="color: #000000"> </span><span style="color: #001080">MultiSelectTheme</span>
 <span style="color: #000000">  }</span>
+<span style="color: #000000">})</span>
+
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">App</span><span style="color: #000000"> = () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">  </span><span style="color: #AF00DB">return</span><span style="color: #000000"> (</span>
+<span style="color: #000000">    </span><span style="color: #800000">&lt;</span><span style="color: #267F99">ChakraProvider</span><span style="color: #000000"> </span><span style="color: #FF0000">theme</span><span style="color: #000000">=</span><span style="color: #0000FF">{</span><span style="color: #001080">theme</span><span style="color: #0000FF">}</span><span style="color: #800000">&gt;</span>
+<span style="color: #000000">      </span><span style="color: #800000">&lt;</span><span style="color: #267F99">MultiSelect</span><span style="color: #000000"> </span><span style="color: #FF0000">items</span><span style="color: #000000">=</span><span style="color: #0000FF">{</span><span style="color: #001080">items</span><span style="color: #0000FF">}</span><span style="color: #000000"> </span><span style="color: #FF0000">label</span><span style="color: #000000">=</span><span style="color: #A31515">&quot;Choose an item&quot;</span><span style="color: #000000"> </span><span style="color: #800000">/&gt;</span>
+<span style="color: #000000">    </span><span style="color: #800000">&lt;/</span><span style="color: #267F99">ChakraProvider</span><span style="color: #800000">&gt;</span>
+<span style="color: #000000">  )</span>
 <span style="color: #000000">}</span>
 </code></pre>
 				<a href="#license" id="license" style="color: inherit; text-decoration: none;">
