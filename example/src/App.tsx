@@ -1,5 +1,11 @@
-import { ChakraProvider, VStack } from '@chakra-ui/react'
-import { MultiSelect } from 'chakra-multiselect'
+import { ChakraProvider, extendTheme, VStack } from '@chakra-ui/react'
+import { MultiSelect, MultiSelectTheme } from 'chakra-multiselect'
+
+const theme = extendTheme({
+  components: {
+    MultiSelect: MultiSelectTheme
+  }
+})
 
 // START OF TEMP
 const items = [
@@ -57,7 +63,7 @@ const items = [
 
 const App = () => {
   return (
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
       <VStack minH='100vh' w='full' justifyContent='center' alignItems='center'>
         <MultiSelect items={items} />
       </VStack>

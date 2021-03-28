@@ -1607,7 +1607,7 @@
     "@chakra-ui/form-control" "1.2.3"
     "@chakra-ui/utils" "1.4.0"
 
-"@chakra-ui/theme-tools@1.1.1":
+"@chakra-ui/theme-tools@1.1.1", "@chakra-ui/theme-tools@^1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@chakra-ui/theme-tools/-/theme-tools-1.1.1.tgz#c5e2fda87fb9602f637ea8360e4084503faa4f2c"
   integrity sha512-ECW8IF0DxMxQgwgn4SPKPbHXhp1fnz50WtInNTvyXHvFZSst0ANn8k+WRAMb9qXolzuZw0sFjhd8U59rtIIpwA==
@@ -1656,7 +1656,7 @@
     "@chakra-ui/hooks" "1.2.0"
     "@chakra-ui/utils" "1.4.0"
 
-"@chakra-ui/utils@1.4.0":
+"@chakra-ui/utils@1.4.0", "@chakra-ui/utils@^1.4.0":
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/@chakra-ui/utils/-/utils-1.4.0.tgz#4b20c522141d68dc62b5c7be929bb6d1596db190"
   integrity sha512-ND7NIilpncnkzcNBnAySGBFpOXb3urO1X9esSY0+M5zXiq+VSSfK9JuoJd3ilvV4Dbwgzil7hMAELBuHme4uTg==
