@@ -19,7 +19,9 @@ function baseStyleList(props: Record<string, any>) {
     py: '2',
     zIndex: 1,
     borderRadius: 'md',
-    borderWidth: '1px'
+    borderWidth: '1px',
+    maxH: '64',
+    overflowY: 'auto'
   }
 }
 
