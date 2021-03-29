@@ -15,14 +15,20 @@ import {
   omitThemingProps,
   useMultiStyleConfig,
   StylesProvider,
-  forwardRef
+  forwardRef,
+  Tag,
+  TagLabel,
+  TagCloseButton,
+  TagProps
 } from '@chakra-ui/react'
 import { ReactNode, useMemo } from 'react'
 import { PropsOf } from '@emotion/react'
 import {
   SelectProvider,
   useSelect,
+  useSelectButton,
   useSelectControl,
+  useSelectedItem,
   useSelectInput,
   useSelectItem,
   useSelectLabel,
@@ -58,19 +64,14 @@ export interface SelectOptionItemProps extends HTMLChakraProps<'li'> {
   highlighted?: boolean
   index: number
 }
+export interface SelectedItemProps extends TagProps {
+  value: any
+  index: number
+}
 
 export interface MultiSelectProps extends Omit<SelectProps, 'children'> {
   children?: ReactNode
 }
-
-const selectedItemStyles = {
-  marginLeft: '5px',
-  backgroundColor: 'aliceblue',
-  borderRadius: '10px'
-}
-
-const selectedItemIconStyles = { cursor: 'pointer' }
-// END OF TEMP
 
 export const Select: React.FC<SelectProps> = (props) => {
   const { children } = props
@@ -151,18 +152,11 @@ export const SelectDivider: React.FC<SelectDividerProps> = (props) => {
 }
 
 const SelectToggleIcon: React.FC<PropsOf<'svg'>> = (props) => (
-  <svg
-    fill='none'
-    stroke='currentColor'
-    strokeWidth='2'
-    strokeLinecap='round'
-    strokeLinejoin='round'
-    viewBox='0 0 24 24'
-    width='1.5em'
-    height='1.5em'
-    {...props}
-  >
-    <path d='M6 9l6 6 6-6' />
+  <svg viewBox='0 0 24 24' width='1.5em' height='1.5em' {...props}>
+    <path
+      fill='currentColor'
+      d='M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z'
+    />
   </svg>
 )
 
@@ -172,35 +166,56 @@ export const SelectInput = () => {
   return <chakra.input {...inputProps} />
 }
 
+export const SelectedItem: React.FC<SelectedItemProps> = ({
+  value,
+  index,
+  ...props
+}) => {
+  const { removeSelectedItem, __css, ...itemProps } = useSelectedItem({
+    item: value,
+    index,
+    ...props
+  })
+
+  return (
+    <Tag {...__css} {...itemProps}>
+      <TagLabel>{value}</TagLabel>
+      <TagCloseButton onClick={() => removeSelectedItem(value)} />
+    </Tag>
+  )
+}
+
+export const SelectButton = () => {
+  const { __css, ...buttonProps } = useSelectButton()
+  return (
+    <IconButton
+      size='sm'
+      aria-label='toggle menu'
+      icon={<SelectToggleIcon />}
+      {...__css}
+      {...buttonProps}
+    />
+  )
+}
+
 export const SelectControl = forwardRef<SelectControlProps, 'div'>((_, ref) => {
   const {
     ref: controlRef,
     __css,
     hasDivider,
     selectedItems,
-    getSelectedItemProps,
-    removeSelectedItem,
-    getToggleButtonProps,
     getComboboxProps
   } = useSelectControl({ ref })
 
   return (
-    <Input ref={controlRef} as={Box} px={1} d='flex' {...__css}>
-      <HStack>
+    <Input ref={controlRef} as={HStack} pl={1} pr={0} spacing={1} {...__css}>
+      <HStack flexWrap='wrap' py={1} spacing={1}>
         {selectedItems?.map((selectedItem: any, index: number) => (
-          <span
-            style={selectedItemStyles}
+          <SelectedItem
             key={`selected-item-${index}`}
-            {...getSelectedItemProps!({ selectedItem, index })}
-          >
-            {selectedItem}
-            <span
-              style={selectedItemIconStyles}
-              onClick={() => removeSelectedItem!(selectedItem)}
-            >
-              &#10005;
-            </span>
-          </span>
+            value={selectedItem}
+            index={index}
+          />
         ))}
       </HStack>
 
@@ -209,13 +224,7 @@ export const SelectControl = forwardRef<SelectControlProps, 'div'>((_, ref) => {
         <Box h='full' d='flex' p='1' alignItems='center'>
           {hasDivider && <Divider orientation='vertical' />}
         </Box>
-        <IconButton
-          variant='ghost'
-          size='sm'
-          aria-label='toggle menu'
-          icon={<SelectToggleIcon />}
-          {...getToggleButtonProps!()}
-        />
+        <SelectButton />
       </Box>
     </Input>
   )

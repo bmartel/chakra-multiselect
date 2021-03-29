@@ -196,7 +196,7 @@ export function useSelectControl(props: any = {}) {
     ...useMemo(
       () => ({
         ref: mergeRefs(props.ref, popper.referenceRef),
-        __css: styles.input
+        __css: styles.control
       }),
       [props.ref, styles.control, popper.referenceRef]
     )
@@ -208,6 +208,42 @@ export function useSelectLabel(props: any = {}) {
   return {
     ...props,
     ...getLabelProps!()
+  }
+}
+
+export function useSelectButton(props: any = {}) {
+  const { getToggleButtonProps } = useSelectContext()
+  const styles = useStyles()
+
+  return {
+    ...props,
+    ...useMemo(
+      () => ({
+        ...getToggleButtonProps!(),
+        __css: styles.button
+      }),
+      [getToggleButtonProps, styles.button]
+    )
+  }
+}
+
+export function useSelectedItem(props: any = {}) {
+  const { getSelectedItemProps, removeSelectedItem } = useSelectContext()
+  const styles = useStyles()
+
+  return {
+    ...props,
+    ...useMemo(
+      () => ({
+        ...getSelectedItemProps!({
+          selectedItem: props.item,
+          index: props.index
+        }),
+        __css: styles.selectedItem
+      }),
+      [getSelectedItemProps, props.item, props.index, styles.selectedItem]
+    ),
+    removeSelectedItem
   }
 }
 
