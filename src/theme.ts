@@ -2,12 +2,16 @@ import { mode } from '@chakra-ui/theme-tools'
 
 const parts = [
   'item',
+  'selectedItem',
   'list',
+  'selectedList',
+  'combobox',
   'control',
   'input',
   'button',
   'groupTitle',
-  'divider'
+  'divider',
+  'label'
 ]
 
 function baseStyleList(props: Record<string, any>) {
@@ -25,17 +29,32 @@ function baseStyleList(props: Record<string, any>) {
   }
 }
 
+const baseStyleSelectedList = {
+  flexWrap: 'wrap',
+  alignItems: 'center'
+}
+
+const baseStyleLabel = {
+  fontSize: 'md',
+  marginEnd: 3,
+  mb: 2,
+  fontWeight: 'medium',
+  transition: 'all 0.2s',
+  opacity: 1,
+  _disabled: {
+    opacity: 0.4
+  }
+}
+
 function baseStyleItem(props: Record<string, any>) {
   return {
-    py: '0.4rem',
-    px: '0.8rem',
     cursor: 'pointer',
-    transition: 'background 50ms ease-in 0s',
+    transition: 'background 50ms ease-out',
     _focus: {
       bg: mode(`gray.100`, `whiteAlpha.100`)(props)
     },
     _active: {
-      bg: mode(`gray.200`, `whiteAlpha.200`)(props)
+      bg: mode(`gray.100`, `whiteAlpha.100`)(props)
     },
     _expanded: {
       bg: mode(`gray.100`, `whiteAlpha.100`)(props)
@@ -58,47 +77,152 @@ function baseStyleSelectedItem(props: Record<string, any>) {
 function baseStyleButton(props: Record<string, any>) {
   return {
     variant: 'ghost',
+    _hover: {
+      bg: 'transparent'
+    },
+    _focus: {
+      bg: 'transparent'
+    },
+    _active: {
+      bg: 'transparent'
+    },
     colorscheme: props.colorscheme
   }
 }
 
-const baseStyleControl = (props: Record<string, any>) => ({
-  minH: props.theme.components.Input.sizes[props.size || 'md'].h,
+const baseStyleControl = {
   h: 'auto'
-})
+}
 
 const baseStyleInput = (_props: Record<string, any>) => ({
   appearance: 'none',
   outline: 0
 })
 
+const baseStyleCombobox = {
+  d: 'flex',
+  alignItems: 'center'
+}
+
 const baseStyleGroupTitle = {
-  mx: 4,
-  my: 2,
-  fontWeight: 'semibold',
-  fontSize: 'sm'
+  fontWeight: 'semibold'
 }
 
 const baseStyleDivider = {
+  d: 'inline',
+  h: 'full',
   border: 0,
-  borderBottom: '1px solid',
   borderColor: 'inherit',
-  my: '0.5rem',
-  opacity: 0.6
+  my: 1,
+  opacity: 0.8
 }
 
 const baseStyle = (props: Record<string, any>) => ({
   list: baseStyleList(props),
+  selectedList: baseStyleSelectedList,
   item: baseStyleItem(props),
-  button: baseStyleButton(props),
   selectedItem: baseStyleSelectedItem(props),
-  control: baseStyleControl(props),
+  button: baseStyleButton(props),
+  combobox: baseStyleCombobox,
+  control: baseStyleControl,
   input: baseStyleInput(props),
   groupTitle: baseStyleGroupTitle,
-  divider: baseStyleDivider
+  divider: baseStyleDivider,
+  label: baseStyleLabel
 })
 
+export const sizes = {
+  sm: {
+    control: {
+      minH: 8,
+      px: 1,
+      spacing: 1
+    },
+    input: {
+      m: 'px'
+    },
+    combobox: {
+      spacing: '1'
+    },
+    item: {
+      py: 1,
+      px: 2
+    },
+    selectedItem: {
+      m: 'px'
+    },
+    selectedList: {
+      py: 'px'
+    },
+    groupTitle: {
+      mx: 2,
+      my: 1,
+      fontSize: 'sm'
+    }
+  },
+  md: {
+    control: {
+      minH: 10,
+      px: 1,
+      spacing: 1
+    },
+    input: {
+      m: '2px'
+    },
+    combobox: {
+      spacing: '1'
+    },
+    item: {
+      py: 2,
+      px: 3
+    },
+    selectedItem: {
+      m: '2px'
+    },
+    selectedList: {
+      py: '2px'
+    },
+    groupTitle: {
+      mx: 4,
+      my: 2,
+      fontSize: 'sm'
+    }
+  },
+  lg: {
+    control: {
+      minH: 12,
+      px: 2,
+      spacing: 2
+    },
+    input: {
+      m: 1
+    },
+    combobox: {
+      spacing: '2'
+    },
+    item: {
+      py: 2,
+      px: 3
+    },
+    selectedItem: {
+      m: 1
+    },
+    selectedList: {
+      py: 1
+    },
+    groupTitle: {
+      mx: 4,
+      my: 2,
+      fontSize: 'sm'
+    }
+  }
+}
+
 export default {
+  defaultProps: {
+    size: 'md'
+  },
   parts,
+  sizes,
   baseStyle
 }

@@ -1,7 +1,6 @@
 import {
   HTMLChakraProps,
   MenuOptionGroup,
-  MenuDivider,
   MenuProps,
   Input,
   MenuListProps,
@@ -29,6 +28,7 @@ import {
   useSelectButton,
   useSelectControl,
   useSelectCombobox,
+  useSelectDivider,
   useSelectedItem,
   useSelectInput,
   useSelectItem,
@@ -48,7 +48,7 @@ export interface SelectProps
   extends Omit<HTMLChakraProps<'select'>, 'size'>,
     Omit<MenuProps, 'children'> {
   label?: string
-  items?: any[]
+  options?: any[]
   value?: any
   initialSelectedItems?: any[]
   defaultIsOpen?: boolean
@@ -123,9 +123,8 @@ export const SelectOptionItem: React.FC<SelectOptionItemProps> = ({
 export const SelectList = forwardRef<SelectListProps, 'ul'>((_, ref) => {
   const {
     __css,
-    items,
+    filteredItems,
     isOpen,
-    getFilteredItems,
     ref: listRef,
     ...listProps
   } = useSelectList({ ref })
@@ -136,13 +135,13 @@ export const SelectList = forwardRef<SelectListProps, 'ul'>((_, ref) => {
       __css={{
         listStyle: 'none',
         position: 'absolute',
-        ...(!isOpen && { visibility: 'hidden' }),
+        ...(!isOpen && { display: 'none' }),
         ...__css
       }}
       {...listProps}
     >
       {isOpen &&
-        getFilteredItems!(items)?.map((item: any, index: number) => (
+        filteredItems.map((item: any, index: number) => (
           <SelectOptionItem
             key={`${item}${index}`}
             value={item}
@@ -158,11 +157,17 @@ export const SelectOptionGroup: React.FC<SelectOptionGroupProps> = (props) => {
 }
 
 export const SelectDivider: React.FC<SelectDividerProps> = (props) => {
-  return <MenuDivider {...props} />
+  const { hasDivider, __css, ...dividerProps } = useSelectDivider(props)
+
+  return (hasDivider && (
+    <Box {...dividerProps}>
+      <Divider orientation='vertical' {...__css} />
+    </Box>
+  )) as any
 }
 
 const SelectToggleIcon: React.FC<PropsOf<'svg'>> = (props) => (
-  <svg viewBox='0 0 24 24' width='1.5em' height='1.5em' {...props}>
+  <svg viewBox='0 0 24 24' width='1.25rem' height='1.25rem' {...props}>
     <path
       fill='currentColor'
       d='M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z'
@@ -170,8 +175,8 @@ const SelectToggleIcon: React.FC<PropsOf<'svg'>> = (props) => (
   </svg>
 )
 
-export const SelectInput = () => {
-  const inputProps = useSelectInput()
+export const SelectInput: React.FC = (props) => {
+  const inputProps = useSelectInput(props)
 
   return <chakra.input {...inputProps} />
 }
@@ -195,24 +200,31 @@ export const SelectedItem: React.FC<SelectedItemProps> = ({
   )
 }
 
-export const SelectButton = () => {
-  const { __css, ...buttonProps } = useSelectButton()
+export const SelectToggleButton: React.FC = (props) => {
+  const {
+    __css,
+    size = 'sm',
+    ariaLabel = 'toggle menu',
+    Icon = SelectToggleIcon,
+    ...buttonProps
+  } = useSelectButton(props)
+
   return (
     <IconButton
-      size='sm'
-      aria-label='toggle menu'
-      icon={<SelectToggleIcon />}
+      size={size}
+      aria-label={ariaLabel}
+      icon={<Icon />}
       {...__css}
       {...buttonProps}
     />
   )
 }
 
-export const SelectedList = () => {
-  const { __css, selectedItems } = useSelectedList()
+export const SelectedList: React.FC = ({ children, ...props }) => {
+  const { __css, selectedItems, ...selectedListProps } = useSelectedList(props)
 
   return (
-    <HStack flexWrap='wrap' py={1} spacing={1} {...__css}>
+    <Box {...__css} {...selectedListProps}>
       {selectedItems?.map((selectedItem: any, index: number) => (
         <SelectedItem
           key={`selected-item-${index}`}
@@ -220,21 +232,19 @@ export const SelectedList = () => {
           index={index}
         />
       ))}
-    </HStack>
+      {children}
+    </Box>
   )
 }
 
-export const SelectCombobox = () => {
-  const { __css, hasDivider, ...comboboxProps } = useSelectCombobox()
+export const SelectCombobox: React.FC = (props) => {
+  const { __css, ...comboboxProps } = useSelectCombobox(props)
 
   return (
-    <Box d='flex' alignItems='center' {...__css} {...comboboxProps}>
-      <SelectInput />
-      <Box h='full' d='flex' p='1' alignItems='center'>
-        {hasDivider && <Divider orientation='vertical' />}
-      </Box>
-      <SelectButton />
-    </Box>
+    <HStack {...__css} {...comboboxProps}>
+      <SelectDivider />
+      <SelectToggleButton />
+    </HStack>
   )
 }
 
@@ -243,7 +253,7 @@ export const SelectControl = forwardRef<SelectControlProps, 'div'>(
     const { ref: controlRef, __css } = useSelectControl({ ref })
 
     return (
-      <Input ref={controlRef} as={HStack} pl={1} pr={0} spacing={1} {...__css}>
+      <Input ref={controlRef} as={HStack} {...__css}>
         {children}
       </Input>
     )
@@ -258,7 +268,9 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
     <Select {...props}>
       {label && <SelectLabel>{label}</SelectLabel>}
       <SelectControl>
-        <SelectedList />
+        <SelectedList>
+          <SelectInput />
+        </SelectedList>
         <SelectCombobox />
       </SelectControl>
       <SelectList />

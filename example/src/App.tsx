@@ -7,8 +7,7 @@ const theme = extendTheme({
   }
 })
 
-// START OF TEMP
-const items = [
+const options = [
   'Neptunium',
   'Plutonium',
   'Americium',
@@ -37,35 +36,11 @@ const items = [
   'Oganesson'
 ]
 
-/* const menuStyles = { */
-/*   maxHeight: 80, */
-/*   maxWidth: 300, */
-/*   overflowY: 'scroll', */
-/*   backgroundColor: '#eee', */
-/*   padding: 0, */
-/*   listStyle: 'none', */
-/*   position: 'relative', */
-/* } */
-
-/* const menuMultipleStyles = { */
-/*   maxHeight: '180px', */
-/*   overflowY: 'auto', */
-/*   width: '135px', */
-/*   margin: 0, */
-/*   borderTop: 0, */
-/*   background: 'white', */
-/*   position: 'absolute', */
-/*   zIndex: 1000, */
-/*   listStyle: 'none', */
-/*   padding: 0, */
-/*   left: '340px' */
-/* } */
-
 const App = () => {
   return (
     <ChakraProvider theme={theme}>
       <VStack minH='100vh' w='full' justifyContent='center' alignItems='center'>
-        <MultiSelect items={items} label="Choose an item" />
+        <MultiSelect options={options} label='Choose an item' />
       </VStack>
     </ChakraProvider>
   )

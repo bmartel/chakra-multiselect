@@ -15,7 +15,9 @@ import {
 import { createContext } from './utils'
 
 export interface UseSelectProps extends UsePopperProps {
-  items?: any[]
+  value?: any
+  options?: any[]
+  size?: string | number
   initialSelectedItems: any[]
   hasDivider?: boolean
 }
@@ -24,8 +26,8 @@ export interface UseSelectReturnValue<T = any>
   extends Partial<UseMultipleSelectionReturnValue<T>>,
     Partial<UseComboboxReturnValue<T>> {
   popper: UsePopperReturn
-  items: any[]
-  getFilteredItems: (items: any[]) => any[]
+  size?: string | number
+  filteredItems: any[]
   inputValue: any
   setInputValue: (input: any) => void
   hasDivider?: boolean
@@ -40,12 +42,12 @@ export { SelectProvider, useSelectContext }
 
 export const useSelect = <T = any>(
   {
-    items = [],
+    options = [],
     initialSelectedItems = [],
     placement = 'bottom-start',
     hasDivider = true
   }: UseSelectProps = {
-    items: [],
+    options: [],
     initialSelectedItems: [],
     placement: 'bottom-start'
   }
@@ -58,12 +60,18 @@ export const useSelect = <T = any>(
     removeSelectedItem,
     selectedItems
   } = useMultipleSelection<any>({ initialSelectedItems })
+
   const getFilteredItems = (items: any[]) =>
     items.filter(
       (item) =>
         selectedItems.indexOf(item) < 0 &&
-        item.toLowerCase().startsWith(inputValue.toLowerCase())
+        (typeof item === 'string' ? item : item.label)
+          .toLowerCase()
+          .startsWith(inputValue.toLowerCase())
     )
+
+  const filteredItems = getFilteredItems(options)
+
   const {
     isOpen,
     getToggleButtonProps,
@@ -76,7 +84,7 @@ export const useSelect = <T = any>(
     selectItem
   } = useCombobox({
     inputValue,
-    items: getFilteredItems(items),
+    items: filteredItems,
     onStateChange: ({ inputValue, type, selectedItem }) => {
       switch (type) {
         case useCombobox.stateChangeTypes.InputChange:
@@ -102,7 +110,7 @@ export const useSelect = <T = any>(
   })
 
   return {
-    items,
+    filteredItems,
     hasDivider,
     inputValue,
     setInputValue,
@@ -120,50 +128,27 @@ export const useSelect = <T = any>(
     highlightedIndex,
     getItemProps,
     selectItem,
-    getFilteredItems,
     popper
   }
 }
 
 export function useSelectList(props: any = {}) {
-  const {
-    isOpen,
-    getMenuProps,
-    getFilteredItems,
-    popper,
-    items
-  } = useSelectContext()
+  const { isOpen, getMenuProps, popper, filteredItems } = useSelectContext()
   const { ref: menuRef, ...menuProps } = getMenuProps!()
   const styles = useStyles()
+
   return {
     ...props,
     ...menuProps,
+    ...useMemo(
+      () => ({
+        ref: mergeRefs(props.ref, menuRef, popper.popperRef)
+      }),
+      [props.ref, menuRef, popper.popperRef]
+    ),
     isOpen,
-    getFilteredItems,
-    items,
-    ...useMemo(
-      () => ({
-        ref: mergeRefs(props.ref, menuRef, popper.popperRef),
-        __css: styles.list
-      }),
-      [props.ref, menuRef, styles.list, popper.popperRef]
-    )
-  }
-}
-
-export function useSelectInput(props: any = {}) {
-  const { getInputProps, getDropdownProps, isOpen } = useSelectContext()
-  const styles = useStyles()
-
-  return {
-    ...props,
-    ...getInputProps!(getDropdownProps!({ preventKeyAction: isOpen })),
-    ...useMemo(
-      () => ({
-        __css: styles.input
-      }),
-      [styles.input]
-    )
+    filteredItems,
+    __css: styles.list
   }
 }
 
@@ -174,29 +159,29 @@ export function useSelectedList(props: any = {}) {
   return {
     ...props,
     selectedItems,
-    ...useMemo(
-      () => ({
-        __css: styles.selectedList
-      }),
-      [styles.selectedList]
-    )
+    __css: styles.selectedList
   }
 }
 
-export function useSelectCombobox(props: any = {}) {
-  const { hasDivider, getComboboxProps } = useSelectContext()
+export function useSelectInput(props: any = {}) {
+  const { getInputProps, getDropdownProps, isOpen } = useSelectContext()
   const styles = useStyles()
 
   return {
     ...props,
-    hasDivider,
-    ...useMemo(
-      () => ({
-        ...getComboboxProps!(),
-        __css: styles.combobox
-      }),
-      [styles.combobox, getComboboxProps]
-    )
+    ...getInputProps!(getDropdownProps!({ preventKeyAction: isOpen })),
+    __css: styles.input
+  }
+}
+
+export function useSelectCombobox(props: any = {}) {
+  const { getComboboxProps } = useSelectContext()
+  const styles = useStyles()
+
+  return {
+    ...props,
+    ...useMemo(getComboboxProps!, [getComboboxProps]),
+    __css: styles.combobox
   }
 }
 
@@ -215,6 +200,12 @@ export function useSelectControl(props: any = {}) {
 
   return {
     ...props,
+    ...useMemo(
+      () => ({
+        ref: mergeRefs(props.ref, popper.referenceRef)
+      }),
+      [props.ref, popper.referenceRef]
+    ),
     getSelectedItemProps,
     removeSelectedItem,
     getInputProps,
@@ -222,21 +213,29 @@ export function useSelectControl(props: any = {}) {
     getDropdownProps,
     getComboboxProps,
     isOpen,
-    ...useMemo(
-      () => ({
-        ref: mergeRefs(props.ref, popper.referenceRef),
-        __css: styles.control
-      }),
-      [props.ref, styles.control, popper.referenceRef]
-    )
+    __css: styles.control
   }
 }
 
 export function useSelectLabel(props: any = {}) {
   const { getLabelProps } = useSelectContext()
+  const styles = useStyles()
+
   return {
     ...props,
-    ...getLabelProps!()
+    ...useMemo(getLabelProps!, [getLabelProps]),
+    __css: styles.label
+  }
+}
+
+export function useSelectDivider(props: any = {}) {
+  const { hasDivider } = useSelectContext()
+  const styles = useStyles()
+
+  return {
+    ...props,
+    hasDivider,
+    __css: styles.divider
   }
 }
 
@@ -246,33 +245,8 @@ export function useSelectButton(props: any = {}) {
 
   return {
     ...props,
-    ...useMemo(
-      () => ({
-        ...getToggleButtonProps!(),
-        __css: styles.button
-      }),
-      [getToggleButtonProps, styles.button]
-    )
-  }
-}
-
-export function useSelectedItem(props: any = {}) {
-  const { getSelectedItemProps, removeSelectedItem } = useSelectContext()
-  const styles = useStyles()
-
-  return {
-    ...props,
-    ...useMemo(
-      () => ({
-        ...getSelectedItemProps!({
-          selectedItem: props.item,
-          index: props.index
-        }),
-        __css: styles.selectedItem
-      }),
-      [getSelectedItemProps, props.item, props.index, styles.selectedItem]
-    ),
-    removeSelectedItem
+    ...useMemo(getToggleButtonProps!, [getToggleButtonProps]),
+    __css: styles.button
   }
 }
 
@@ -280,6 +254,7 @@ export function useSelectItem(props: any = {}) {
   const { getItemProps, highlightedIndex } = useSelectContext()
   const styles = useStyles()
   const highlighted = highlightedIndex === props.index
+
   return {
     ...props,
     ...useMemo(
@@ -292,5 +267,24 @@ export function useSelectItem(props: any = {}) {
       }),
       [getItemProps, props.item, props.index, highlighted, styles.item]
     )
+  }
+}
+
+export function useSelectedItem(props: any = {}) {
+  const { getSelectedItemProps, removeSelectedItem } = useSelectContext()
+  const styles = useStyles()
+
+  return {
+    ...props,
+    ...useMemo(
+      () =>
+        getSelectedItemProps!({
+          selectedItem: props.item,
+          index: props.index
+        }),
+      [getSelectedItemProps, props.item, props.index]
+    ),
+    removeSelectedItem,
+    __css: styles.selectedItem
   }
 }
