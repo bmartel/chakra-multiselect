@@ -167,25 +167,54 @@ export function useSelectInput(props: any = {}) {
   }
 }
 
+export function useSelectedList(props: any = {}) {
+  const { selectedItems } = useSelectContext()
+  const styles = useStyles()
+
+  return {
+    ...props,
+    selectedItems,
+    ...useMemo(
+      () => ({
+        __css: styles.selectedList
+      }),
+      [styles.selectedList]
+    )
+  }
+}
+
+export function useSelectCombobox(props: any = {}) {
+  const { hasDivider, getComboboxProps } = useSelectContext()
+  const styles = useStyles()
+
+  return {
+    ...props,
+    hasDivider,
+    ...useMemo(
+      () => ({
+        ...getComboboxProps!(),
+        __css: styles.combobox
+      }),
+      [styles.combobox, getComboboxProps]
+    )
+  }
+}
+
 export function useSelectControl(props: any = {}) {
   const {
-    isOpen,
-    hasDivider,
-    selectedItems,
     getSelectedItemProps,
     removeSelectedItem,
     getInputProps,
     getToggleButtonProps,
     getDropdownProps,
     getComboboxProps,
+    isOpen,
     popper
   } = useSelectContext()
   const styles = useStyles()
 
   return {
     ...props,
-    hasDivider,
-    selectedItems,
     getSelectedItemProps,
     removeSelectedItem,
     getInputProps,

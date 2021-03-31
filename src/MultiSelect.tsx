@@ -28,20 +28,28 @@ import {
   useSelect,
   useSelectButton,
   useSelectControl,
+  useSelectCombobox,
   useSelectedItem,
   useSelectInput,
   useSelectItem,
   useSelectLabel,
-  useSelectList
+  useSelectList,
+  useSelectedList
 } from './use-select'
 
 // @see https://github.com/chakra-ui/chakra-ui/issues/140
+
+export interface SelectItem {
+  value: any
+  label?: string
+}
 
 export interface SelectProps
   extends Omit<HTMLChakraProps<'select'>, 'size'>,
     Omit<MenuProps, 'children'> {
   label?: string
   items?: any[]
+  value?: any
   initialSelectedItems?: any[]
   defaultIsOpen?: boolean
   closeOnSelect?: false
@@ -65,13 +73,14 @@ export interface SelectOptionItemProps extends HTMLChakraProps<'li'> {
   index: number
 }
 
-export interface SelectedItemProps extends TagProps {
-  value: any
+export interface SelectedItemProps extends TagProps, SelectItem {
   index: number
 }
 
-export interface MultiSelectProps extends Omit<SelectProps, 'children'> {
+export interface MultiSelectProps
+  extends Omit<SelectProps, 'children' | 'value'> {
   children?: ReactNode
+  value?: any[]
 }
 
 export const Select: React.FC<SelectProps> = (props) => {
@@ -199,37 +208,47 @@ export const SelectButton = () => {
   )
 }
 
-export const SelectControl = forwardRef<SelectControlProps, 'div'>((_, ref) => {
-  const {
-    ref: controlRef,
-    __css,
-    hasDivider,
-    selectedItems,
-    getComboboxProps
-  } = useSelectControl({ ref })
+export const SelectedList = () => {
+  const { __css, selectedItems } = useSelectedList()
 
   return (
-    <Input ref={controlRef} as={HStack} pl={1} pr={0} spacing={1} {...__css}>
-      <HStack flexWrap='wrap' py={1} spacing={1}>
-        {selectedItems?.map((selectedItem: any, index: number) => (
-          <SelectedItem
-            key={`selected-item-${index}`}
-            value={selectedItem}
-            index={index}
-          />
-        ))}
-      </HStack>
-
-      <Box d='flex' alignItems='center' {...getComboboxProps!()}>
-        <SelectInput />
-        <Box h='full' d='flex' p='1' alignItems='center'>
-          {hasDivider && <Divider orientation='vertical' />}
-        </Box>
-        <SelectButton />
-      </Box>
-    </Input>
+    <HStack flexWrap='wrap' py={1} spacing={1} {...__css}>
+      {selectedItems?.map((selectedItem: any, index: number) => (
+        <SelectedItem
+          key={`selected-item-${index}`}
+          value={selectedItem}
+          index={index}
+        />
+      ))}
+    </HStack>
   )
-})
+}
+
+export const SelectCombobox = () => {
+  const { __css, hasDivider, ...comboboxProps } = useSelectCombobox()
+
+  return (
+    <Box d='flex' alignItems='center' {...__css} {...comboboxProps}>
+      <SelectInput />
+      <Box h='full' d='flex' p='1' alignItems='center'>
+        {hasDivider && <Divider orientation='vertical' />}
+      </Box>
+      <SelectButton />
+    </Box>
+  )
+}
+
+export const SelectControl = forwardRef<SelectControlProps, 'div'>(
+  ({ children }, ref) => {
+    const { ref: controlRef, __css } = useSelectControl({ ref })
+
+    return (
+      <Input ref={controlRef} as={HStack} pl={1} pr={0} spacing={1} {...__css}>
+        {children}
+      </Input>
+    )
+  }
+)
 
 export const MultiSelect: React.FC<MultiSelectProps> = ({
   label,
@@ -238,7 +257,10 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   return (
     <Select {...props}>
       {label && <SelectLabel>{label}</SelectLabel>}
-      <SelectControl />
+      <SelectControl>
+        <SelectedList />
+        <SelectCombobox />
+      </SelectControl>
       <SelectList />
     </Select>
   )
