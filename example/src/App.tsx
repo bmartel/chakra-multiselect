@@ -40,7 +40,7 @@ const App = () => {
   return (
     <ChakraProvider theme={theme}>
       <VStack minH='100vh' w='full' justifyContent='center' alignItems='center'>
-        <MultiSelect items={options} label='Choose an item' />
+        <MultiSelect items={options} label='Choose an item' defaultIsOpen />
       </VStack>
     </ChakraProvider>
   )

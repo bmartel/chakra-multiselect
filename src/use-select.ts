@@ -68,7 +68,7 @@ export const useSelect = <T = any>({
   initialSelectedItems = [],
   placement = 'bottom-start',
   hasDivider = true,
-  defaultIsOpen = true,
+  defaultIsOpen = false,
   openMenuOnInputFocus = true,
   id,
   labelId,
