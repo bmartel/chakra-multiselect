@@ -36,6 +36,7 @@ import {
   useSelectList,
   useSelectedList
 } from './use-select'
+import { DownshiftProps } from 'downshift'
 
 // @see https://github.com/chakra-ui/chakra-ui/issues/140
 
@@ -44,16 +45,18 @@ export interface SelectItem {
   label?: string
 }
 
-export interface SelectProps
-  extends Omit<HTMLChakraProps<'select'>, 'size'>,
-    Omit<MenuProps, 'children'> {
+export interface SelectProps<T = any>
+  extends Omit<
+      HTMLChakraProps<'select'>,
+      'size' | 'onChange' | 'onSelect' | 'children'
+    >,
+    Omit<MenuProps, 'children'>,
+    Omit<DownshiftProps<T>, 'children'> {
   label?: string
-  options?: any[]
-  value?: any
-  initialSelectedItems?: any[]
-  defaultIsOpen?: boolean
+  items: T[]
+  openMenuOnInputFocus?: boolean
   closeOnSelect?: false
-  children: ReactNode
+  children?: ReactNode
 }
 
 export interface SelectControlProps

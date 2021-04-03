@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import {
   usePopper,
   UsePopperProps,
@@ -10,22 +10,45 @@ import {
   useCombobox,
   useMultipleSelection,
   UseMultipleSelectionReturnValue,
-  UseComboboxReturnValue
+  UseComboboxReturnValue,
+  UseComboboxProps,
+  UseMultipleSelectionProps,
+  ControllerStateAndHelpers,
+  StateChangeOptions,
+  UseComboboxStateChangeTypes
 } from 'downshift'
 import { createContext } from './utils'
 
-export interface UseSelectProps extends UsePopperProps {
+export interface UseComboboxStateChangeOptions<T = any>
+  extends Omit<StateChangeOptions<T>, 'type'> {
+  type: UseComboboxStateChangeTypes
+}
+export type OnStateChange<T = any> = (
+  options: UseComboboxStateChangeOptions<T>,
+  stateAndHelpers: ControllerStateAndHelpers<T>
+) => void
+
+export interface UseSelectProps<T = any>
+  extends UsePopperProps,
+    UseComboboxProps<T>,
+    Omit<
+      UseMultipleSelectionProps<T>,
+      'itemToString' | 'onStateChange' | 'stateReducer'
+    > {
   value?: any
-  options?: any[]
   size?: string | number
-  initialSelectedItems: any[]
   hasDivider?: boolean
+  defaultIsOpen?: boolean
+  openMenuOnInputFocus?: boolean
 }
 
 export interface UseSelectReturnValue<T = any>
   extends Partial<UseMultipleSelectionReturnValue<T>>,
     Partial<UseComboboxReturnValue<T>> {
   popper: UsePopperReturn
+  closeMenu: () => void
+  openMenu: () => void
+  openMenuOnInputFocus?: boolean
   size?: string | number
   filteredItems: any[]
   inputValue: any
@@ -40,18 +63,31 @@ const [SelectProvider, useSelectContext] = createContext<UseSelectReturnValue>({
 
 export { SelectProvider, useSelectContext }
 
-export const useSelect = <T = any>(
-  {
-    options = [],
-    initialSelectedItems = [],
-    placement = 'bottom-start',
-    hasDivider = true
-  }: UseSelectProps = {
-    options: [],
-    initialSelectedItems: [],
-    placement: 'bottom-start'
-  }
-): UseSelectReturnValue<T> => {
+export const useSelect = <T = any>({
+  items: options = [],
+  initialSelectedItems = [],
+  placement = 'bottom-start',
+  hasDivider = true,
+  defaultIsOpen = true,
+  openMenuOnInputFocus = true,
+  id,
+  labelId,
+  menuId,
+  toggleButtonId,
+  defaultActiveIndex = 0,
+  defaultInputValue,
+  defaultSelectedItem,
+  defaultSelectedItems,
+  defaultHighlightedIndex = 0,
+  itemToString,
+  onSelectedItemChange,
+  onSelectedItemsChange,
+  onHighlightedIndexChange,
+  onIsOpenChange,
+  onInputValueChange,
+  stateReducer,
+  onStateChange
+}: UseSelectProps): UseSelectReturnValue<T> => {
   const [inputValue, setInputValue] = useState('')
   const {
     getSelectedItemProps,
@@ -59,7 +95,12 @@ export const useSelect = <T = any>(
     addSelectedItem,
     removeSelectedItem,
     selectedItems
-  } = useMultipleSelection<any>({ initialSelectedItems })
+  } = useMultipleSelection<any>({
+    defaultActiveIndex,
+    defaultSelectedItems,
+    initialSelectedItems,
+    onSelectedItemsChange
+  })
 
   const getFilteredItems = (items: any[]) =>
     items.filter(
@@ -70,22 +111,8 @@ export const useSelect = <T = any>(
           .startsWith(inputValue.toLowerCase())
     )
 
-  const filteredItems = getFilteredItems(options)
-
-  const {
-    isOpen,
-    getToggleButtonProps,
-    getLabelProps,
-    getMenuProps,
-    getInputProps,
-    getComboboxProps,
-    highlightedIndex,
-    getItemProps,
-    selectItem
-  } = useCombobox({
-    inputValue,
-    items: filteredItems,
-    onStateChange: ({ inputValue, type, selectedItem }) => {
+  const defaultOnstateChange: OnStateChange<T> = useCallback(
+    ({ inputValue, type, selectedItem }) => {
       switch (type) {
         case useCombobox.stateChangeTypes.InputChange:
           setInputValue(inputValue as any)
@@ -102,14 +129,60 @@ export const useSelect = <T = any>(
         default:
           break
       }
-    }
-  })
+    },
+    []
+  )
+
+  const filteredItems = getFilteredItems(options)
+  const onStateChangeCallback = onStateChange || defaultOnstateChange
+
+  const comboboxProps: any = {
+    id,
+    labelId,
+    menuId,
+    toggleButtonId,
+    defaultIsOpen,
+    defaultInputValue,
+    defaultSelectedItem,
+    defaultHighlightedIndex,
+    inputValue,
+    items: filteredItems,
+    onSelectedItemChange,
+    onHighlightedIndexChange,
+    onIsOpenChange,
+    onInputValueChange,
+    onStateChange: onStateChangeCallback as any
+  }
+
+  if (stateReducer) {
+    comboboxProps.stateReducer = stateReducer
+  }
+  if (itemToString) {
+    comboboxProps.itemToString = itemToString
+  }
+
+  const {
+    isOpen,
+    closeMenu,
+    openMenu,
+    getToggleButtonProps,
+    getLabelProps,
+    getMenuProps,
+    getInputProps,
+    getComboboxProps,
+    highlightedIndex,
+    getItemProps,
+    selectItem
+  } = useCombobox(comboboxProps)
 
   const popper = usePopper({
     placement
   })
 
   return {
+    openMenuOnInputFocus,
+    closeMenu,
+    openMenu,
     filteredItems,
     hasDivider,
     inputValue,
@@ -164,13 +237,26 @@ export function useSelectedList(props: any = {}) {
 }
 
 export function useSelectInput(props: any = {}) {
-  const { getInputProps, getDropdownProps, isOpen } = useSelectContext()
+  const {
+    getInputProps,
+    getDropdownProps,
+    isOpen,
+    openMenu,
+    openMenuOnInputFocus
+  } = useSelectContext()
   const styles = useStyles()
+
+  const onClick = useCallback(() => {
+    if (openMenuOnInputFocus) {
+      openMenu()
+    }
+  }, [openMenuOnInputFocus, openMenu])
 
   return {
     ...props,
     ...getInputProps!(getDropdownProps!({ preventKeyAction: isOpen })),
-    __css: styles.input
+    __css: styles.input,
+    onClick
   }
 }
 
