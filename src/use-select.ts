@@ -120,9 +120,9 @@ export const useSelect = <T = any>({
         case useCombobox.stateChangeTypes.InputKeyDownEnter:
         case useCombobox.stateChangeTypes.ItemClick:
         case useCombobox.stateChangeTypes.InputBlur:
-          if (selectedItem) {
+          if (selectedItem || inputValue) {
             setInputValue('')
-            addSelectedItem(selectedItem)
+            addSelectedItem(selectedItem || inputValue)
             selectItem(null)
           }
           break
