@@ -1,4 +1,10 @@
-import { EventKeys } from '@chakra-ui/utils'
+import {
+  usePopper,
+  UsePopperProps,
+  UsePopperReturn,
+  useStyles
+} from '@chakra-ui/react'
+import { mergeRefs, EventKeys } from '@chakra-ui/utils'
 import {
   useEffect,
   useRef,
@@ -7,6 +13,8 @@ import {
   useMemo,
   MutableRefObject
 } from 'react'
+
+import { createContext } from './utils'
 
 export interface Option {
   label: string
@@ -191,7 +199,7 @@ const useKeys = (
   }
 }
 
-export interface UseSelectProps {
+export interface UseSelectProps extends UsePopperProps {
   multi?: boolean
   create?: boolean
   duplicates?: boolean
@@ -204,7 +212,6 @@ export interface UseSelectProps {
   stateReducer?: StateReducer
   scrollToIndex?: ScrollToIndex
   filterFn?: SelectFilter
-  optionsRef?: MutableRefObject<HTMLElement>
 }
 export interface UseSelectReturn {
   searchValue: string
@@ -217,12 +224,21 @@ export interface UseSelectReturn {
   removeValue: SelectRemoveValue
   setOpen: SelectSetOpen
   setSearch: SelectSetSearch
+  popper: UsePopperReturn
   // TODO: fill these in properly
   getInputProps: AnyFunc
   getOptionProps: AnyFunc
+  optionsRef: MutableRefObject<any>
 }
 
-export default function useSelect({
+const [SelectProvider, useSelectContext] = createContext<UseSelectReturn>({
+  strict: false,
+  name: 'SelectContext'
+})
+
+export { SelectProvider, useSelectContext }
+
+export function useSelect({
   multi,
   create,
   getCreateLabel = defaultGetCreateLabel,
@@ -235,7 +251,7 @@ export default function useSelect({
   options,
   value,
   onChange,
-  optionsRef
+  placement = 'bottom-start'
 }: UseSelectProps): UseSelectReturn {
   const [
     { searchValue, resolvedSearchValue, isOpen, highlightedIndex },
@@ -244,12 +260,17 @@ export default function useSelect({
 
   // Refs
 
+  const optionsRef = useRef()
   const inputRef = useRef()
   const onBlurRef = useRef({})
   const onChangeRef = useRef()
   const filterFnRef = useRef()
   const getCreateLabelRef = useRef()
   const scrollToIndexRef = useRef()
+
+  const popper = usePopper({
+    placement
+  })
 
   ;(filterFnRef.current as any) = filterFn
   ;(scrollToIndexRef.current as any) = scrollToIndex
@@ -619,6 +640,8 @@ export default function useSelect({
   }, [isOpen, inputRef.current])
 
   return {
+    optionsRef,
+    popper,
     // State
     searchValue,
     isOpen,
@@ -640,7 +663,7 @@ export default function useSelect({
 function useClickOutsideRef(
   enable: boolean,
   fn: AnyFunc,
-  userRef: MutableRefObject<HTMLElement>
+  userRef: MutableRefObject<any>
 ) {
   const localRef = useRef()
   const fnRef = useRef()
@@ -674,4 +697,115 @@ function useClickOutsideRef(
       document.removeEventListener('click', handle, true)
     }
   }, [enable, handle])
+}
+
+export function useSelectInput(props: any = {}) {
+  const { getInputProps } = useSelectContext()
+  const styles = useStyles()
+
+  // const onClick = useCallback(() => {
+  //   if (openMenuOnInputFocus) {
+  //     openMenu()
+  //   }
+  // }, [openMenuOnInputFocus, openMenu])
+
+  return {
+    ...props,
+    ...getInputProps(),
+    __css: styles.input
+    // onClick
+  }
+}
+export function useSelectLabel(props: any = {}) {
+  // const {getLabelProps } = useSelectContext()
+  const styles = useStyles()
+
+  return {
+    ...props,
+    // ...useMemo(getLabelProps!, [getLabelProps]),
+    __css: styles.label
+  }
+}
+
+export function useSelectDivider(props: any = {}) {
+  // const { hasDivider } = useSelectContext()
+  const styles = useStyles()
+
+  return {
+    ...props,
+    // hasDivider,
+    __css: styles.divider
+  }
+}
+
+export function useSelectButton(props: any = {}) {
+  // const { getToggleButtonProps } = useSelectContext()
+  const styles = useStyles()
+
+  return {
+    ...props,
+    // ...useMemo(getToggleButtonProps!, [getToggleButtonProps]),
+    __css: styles.button
+  }
+}
+
+export function useSelectedItem(props: any = {}) {
+  const { removeValue } = useSelectContext()
+  const styles = useStyles()
+
+  const onClick = useCallback(() => removeValue(props.index), [
+    props.index,
+    removeValue
+  ])
+
+  return {
+    key: props.value,
+    onClick,
+    __css: styles.selectedItem,
+    ...props
+  }
+}
+
+export function useSelectItem(props: any = {}) {
+  const {
+    getOptionProps,
+    highlightedIndex
+    // selectedOption
+  } = useSelectContext()
+  const styles = useStyles()
+  const highlighted = highlightedIndex === props.index
+
+  return {
+    ...props,
+    ...useMemo(
+      () => ({
+        ...getOptionProps!({
+          option: { value: props.value }
+        }),
+        __css: {
+          ...styles.item,
+          ...(highlighted && (styles.item as any))?._active
+        }
+      }),
+      [getOptionProps, props.value, styles.item]
+    )
+  }
+}
+
+export function useSelectList(props: any = {}) {
+  const { isOpen, optionsRef, popper, visibleOptions } = useSelectContext()
+  const styles = useStyles()
+
+  return {
+    ...props,
+    ...useMemo(
+      () => ({
+        ref: mergeRefs(props.ref, optionsRef, popper.popperRef)
+      }),
+      [props.ref, optionsRef, popper.popperRef]
+    ),
+    isOpen,
+    visibleOptions,
+    __css: styles.list
+  }
 }

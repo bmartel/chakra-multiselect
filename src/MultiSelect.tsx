@@ -26,17 +26,14 @@ import {
   SelectProvider,
   useSelect,
   useSelectButton,
-  useSelectControl,
-  useSelectCombobox,
   useSelectDivider,
   useSelectedItem,
-  useSelectInput,
   useSelectItem,
   useSelectLabel,
   useSelectList,
-  useSelectedList
+  UseSelectProps
 } from './use-select'
-import { DownshiftProps } from 'downshift'
+import { useSelectInput } from './use-selected'
 
 // @see https://github.com/chakra-ui/chakra-ui/issues/140
 
@@ -45,17 +42,14 @@ export interface SelectItem {
   label?: string
 }
 
-export interface SelectProps<T = any>
+export interface SelectProps
   extends Omit<
       HTMLChakraProps<'select'>,
-      'size' | 'onChange' | 'onSelect' | 'children'
+      'value' | 'size' | 'onChange' | 'onSelect' | 'children'
     >,
     Omit<MenuProps, 'children'>,
-    Omit<DownshiftProps<T>, 'children'> {
+    UseSelectProps {
   label?: string
-  items: T[]
-  openMenuOnInputFocus?: boolean
-  closeOnSelect?: false
   children?: ReactNode
 }
 
@@ -80,10 +74,8 @@ export interface SelectedItemProps extends TagProps, SelectItem {
   index: number
 }
 
-export interface MultiSelectProps
-  extends Omit<SelectProps, 'children' | 'value'> {
+export interface MultiSelectProps extends Omit<SelectProps, 'children'> {
   children?: ReactNode
-  value?: any[]
 }
 
 export const Select: React.FC<SelectProps> = (props) => {
@@ -115,7 +107,7 @@ export const SelectOptionItem: React.FC<SelectOptionItemProps> = ({
   index,
   ...props
 }) => {
-  const itemProps = useSelectItem({ item: value, index })
+  const itemProps = useSelectItem({ value, index })
 
   return (
     <chakra.li {...props} {...itemProps}>
@@ -126,7 +118,7 @@ export const SelectOptionItem: React.FC<SelectOptionItemProps> = ({
 export const SelectList = forwardRef<SelectListProps, 'ul'>((_, ref) => {
   const {
     __css,
-    filteredItems,
+    visibleOptions,
     isOpen,
     ref: listRef,
     ...listProps
@@ -144,10 +136,10 @@ export const SelectList = forwardRef<SelectListProps, 'ul'>((_, ref) => {
       {...listProps}
     >
       {isOpen &&
-        filteredItems.map((item: any, index: number) => (
+        visibleOptions.map((item: any, index: number) => (
           <SelectOptionItem
-            key={`${item}${index}`}
-            value={item}
+            key={`${item.value}${index}`}
+            value={item.value}
             index={index}
           />
         ))}
@@ -189,8 +181,8 @@ export const SelectedItem: React.FC<SelectedItemProps> = ({
   index,
   ...props
 }) => {
-  const { removeSelectedItem, __css, ...itemProps } = useSelectedItem({
-    item: value,
+  const { onClick, __css, ...itemProps } = useSelectedItem({
+    value,
     index,
     ...props
   })
@@ -198,7 +190,7 @@ export const SelectedItem: React.FC<SelectedItemProps> = ({
   return (
     <Tag {...__css} {...itemProps}>
       <TagLabel>{value}</TagLabel>
-      <TagCloseButton onClick={() => removeSelectedItem(value)} />
+      <TagCloseButton onClick={onClick} />
     </Tag>
   )
 }

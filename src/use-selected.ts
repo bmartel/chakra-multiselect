@@ -17,7 +17,6 @@ import {
   StateChangeOptions,
   UseComboboxStateChangeTypes
 } from 'downshift'
-import { createContext } from './utils'
 
 export interface UseComboboxStateChangeOptions<T = any>
   extends Omit<StateChangeOptions<T>, 'type'> {
@@ -208,6 +207,33 @@ export const useSelect = <T = any>({
     getItemProps,
     selectItem,
     popper
+  }
+}
+
+export function useSelectItem(props: any = {}) {
+  const {
+    getOptionProps,
+    highlightedOption
+    // selectedOption
+  } = useSelectContext()
+  const styles = useStyles()
+  const highlighted = highlightedOption.value === props.value
+
+  return {
+    ...props,
+    ...useMemo(
+      () => ({
+        ...getOptionProps!({
+          option: { value: props.value },
+          index: props.index
+        }),
+        __css: {
+          ...styles.item,
+          ...(highlighted && (styles.item as any))?._active
+        }
+      }),
+      [getOptionProps, props.value, styles.item]
+    )
   }
 }
 
