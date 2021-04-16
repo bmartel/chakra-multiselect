@@ -635,7 +635,6 @@ export function useSelect({
         ;(inputRef.current as any)?.focus()
       })
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, inputRef.current])
 
   return {
