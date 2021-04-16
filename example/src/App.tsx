@@ -1,5 +1,15 @@
-import { ChakraProvider, extendTheme, VStack } from '@chakra-ui/react'
+import {
+  ChakraProvider,
+  ColorModeScript,
+  useColorMode,
+  useColorModeValue,
+  extendTheme,
+  Button,
+  Flex,
+  VStack
+} from '@chakra-ui/react'
 import { MultiSelect, MultiSelectTheme } from 'chakra-multiselect'
+import { useState } from 'react'
 
 const theme = extendTheme({
   components: {
@@ -7,7 +17,24 @@ const theme = extendTheme({
   }
 })
 
-const options = [
+const ColorModeToggleBar = () => {
+  const { toggleColorMode } = useColorMode()
+  const nextMode = useColorModeValue('dark', 'light')
+
+  return (
+    <Flex justify='flex-end' mb={4}>
+      <Button
+        size='md'
+        variant='ghost'
+        color='current'
+        marginLeft='2'
+        onClick={toggleColorMode}
+      >{`Switch to ${nextMode} mode`}</Button>
+    </Flex>
+  )
+}
+
+const items = [
   'Neptunium',
   'Plutonium',
   'Americium',
@@ -36,13 +63,29 @@ const options = [
   'Oganesson'
 ]
 
+const options = items.map((label) => ({ label, value: label.toLowerCase() }))
+
 const App = () => {
+  const [value, setValue] = useState([])
+
   return (
-    <ChakraProvider theme={theme}>
-      <VStack minH='100vh' w='full' justifyContent='center' alignItems='center'>
-        <MultiSelect items={options} label='Choose an item' defaultIsOpen />
-      </VStack>
-    </ChakraProvider>
+    <>
+      <ColorModeScript initialColorMode='light' />
+      <ChakraProvider theme={theme}>
+        <VStack minH='100vh' w='full'>
+          <ColorModeToggleBar />
+          <VStack w='full' flex='1' justifyContent='center' alignItems='center'>
+            <MultiSelect
+              value={value}
+              options={options}
+              label='Choose an item'
+              onChange={(next) => setValue(next as any)}
+              multi
+            />
+          </VStack>
+        </VStack>
+      </ChakraProvider>
+    </>
   )
 }
 
