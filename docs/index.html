@@ -64,7 +64,9 @@
 				<blockquote>
 					<p>A Multiselect component using ChakraUI</p>
 				</blockquote>
-				<p><a href="https://www.npmjs.com/package/chakra-multiselect"><img src="https://img.shields.io/npm/v/chakra-multiselect.svg" alt="NPM"></a> <a href="https://standardjs.com"><img src="https://img.shields.io/badge/code_style-standard-brightgreen.svg" alt="JavaScript Style Guide"></a></p>
+				<p><a href="https://www.npmjs.com/package/chakra-multiselect"><img src="https://img.shields.io/npm/v/chakra-multiselect.svg" alt="NPM"></a>
+					<a href="https://badgen.net/bundlephobia/min/chakra-multiselect"><img src="https://badgen.net/bundlephobia/min/chakra-multiselect" alt="Package Size"></a>
+				<a href="https://standardjs.com"><img src="https://img.shields.io/badge/code_style-standard-brightgreen.svg" alt="JavaScript Style Guide"></a></p>
 				<a href="#install" id="install" style="color: inherit; text-decoration: none;">
 					<h2>Install</h2>
 				</a>
@@ -75,6 +77,7 @@
 				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
 					<h2>Usage</h2>
 				</a>
+				<p>Single Mode</p>
 				<pre><code class="language-tsx"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">ChakraProvider</span><span style="color: #000000">, </span><span style="color: #001080">extendTheme</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@chakra-ui/react&#039;</span>
 <span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">MultiSelect</span><span style="color: #000000">, </span><span style="color: #001080">MultiSelectTheme</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;chakra-multiselect&#039;</span>
 
@@ -85,9 +88,42 @@
 <span style="color: #000000">})</span>
 
 <span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">App</span><span style="color: #000000"> = () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">  </span><span style="color: #0000FF">const</span><span style="color: #000000"> [</span><span style="color: #0070C1">value</span><span style="color: #000000">, </span><span style="color: #0070C1">setValue</span><span style="color: #000000">] = </span><span style="color: #795E26">useState</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;&#039;</span><span style="color: #000000">)</span>
+
 <span style="color: #000000">  </span><span style="color: #AF00DB">return</span><span style="color: #000000"> (</span>
 <span style="color: #000000">    </span><span style="color: #800000">&lt;</span><span style="color: #267F99">ChakraProvider</span><span style="color: #000000"> </span><span style="color: #FF0000">theme</span><span style="color: #000000">=</span><span style="color: #0000FF">{</span><span style="color: #001080">theme</span><span style="color: #0000FF">}</span><span style="color: #800000">&gt;</span>
-<span style="color: #000000">      </span><span style="color: #800000">&lt;</span><span style="color: #267F99">MultiSelect</span><span style="color: #000000"> </span><span style="color: #FF0000">items</span><span style="color: #000000">=</span><span style="color: #0000FF">{</span><span style="color: #001080">items</span><span style="color: #0000FF">}</span><span style="color: #000000"> </span><span style="color: #FF0000">label</span><span style="color: #000000">=</span><span style="color: #A31515">&quot;Choose an item&quot;</span><span style="color: #000000"> </span><span style="color: #800000">/&gt;</span>
+<span style="color: #000000">      </span><span style="color: #800000">&lt;</span><span style="color: #267F99">MultiSelect</span>
+<span style="color: #000000">        </span><span style="color: #FF0000">options</span><span style="color: #000000">=</span><span style="color: #0000FF">{</span><span style="color: #001080">options</span><span style="color: #0000FF">}</span>
+<span style="color: #000000">        </span><span style="color: #FF0000">value</span><span style="color: #000000">=</span><span style="color: #0000FF">{</span><span style="color: #001080">value</span><span style="color: #0000FF">}</span>
+<span style="color: #000000">        </span><span style="color: #FF0000">label</span><span style="color: #000000">=</span><span style="color: #A31515">&#039;Choose an item&#039;</span>
+<span style="color: #000000">        </span><span style="color: #FF0000">onChange</span><span style="color: #000000">=</span><span style="color: #0000FF">{</span><span style="color: #001080">setValue</span><span style="color: #0000FF">}</span>
+<span style="color: #000000">      </span><span style="color: #800000">/&gt;</span>
+<span style="color: #000000">    </span><span style="color: #800000">&lt;/</span><span style="color: #267F99">ChakraProvider</span><span style="color: #800000">&gt;</span>
+<span style="color: #000000">  )</span>
+<span style="color: #000000">}</span>
+</code></pre>
+				<p>Multi Mode</p>
+				<pre><code class="language-tsx"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">ChakraProvider</span><span style="color: #000000">, </span><span style="color: #001080">extendTheme</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@chakra-ui/react&#039;</span>
+<span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">MultiSelect</span><span style="color: #000000">, </span><span style="color: #001080">MultiSelectTheme</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;chakra-multiselect&#039;</span>
+
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">theme</span><span style="color: #000000"> = </span><span style="color: #795E26">extendTheme</span><span style="color: #000000">({</span>
+<span style="color: #000000">  </span><span style="color: #001080">components:</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #001080">MultiSelect:</span><span style="color: #000000"> </span><span style="color: #001080">MultiSelectTheme</span>
+<span style="color: #000000">  }</span>
+<span style="color: #000000">})</span>
+
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">App</span><span style="color: #000000"> = () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">  </span><span style="color: #0000FF">const</span><span style="color: #000000"> [</span><span style="color: #0070C1">value</span><span style="color: #000000">, </span><span style="color: #0070C1">setValue</span><span style="color: #000000">] = </span><span style="color: #795E26">useState</span><span style="color: #000000">([])</span>
+
+<span style="color: #000000">  </span><span style="color: #AF00DB">return</span><span style="color: #000000"> (</span>
+<span style="color: #000000">    </span><span style="color: #800000">&lt;</span><span style="color: #267F99">ChakraProvider</span><span style="color: #000000"> </span><span style="color: #FF0000">theme</span><span style="color: #000000">=</span><span style="color: #0000FF">{</span><span style="color: #001080">theme</span><span style="color: #0000FF">}</span><span style="color: #800000">&gt;</span>
+<span style="color: #000000">      </span><span style="color: #800000">&lt;</span><span style="color: #267F99">MultiSelect</span>
+<span style="color: #000000">        </span><span style="color: #FF0000">options</span><span style="color: #000000">=</span><span style="color: #0000FF">{</span><span style="color: #001080">options</span><span style="color: #0000FF">}</span>
+<span style="color: #000000">        </span><span style="color: #FF0000">value</span><span style="color: #000000">=</span><span style="color: #0000FF">{</span><span style="color: #001080">value</span><span style="color: #0000FF">}</span>
+<span style="color: #000000">        </span><span style="color: #FF0000">label</span><span style="color: #000000">=</span><span style="color: #A31515">&#039;Choose an item&#039;</span>
+<span style="color: #000000">        </span><span style="color: #FF0000">onChange</span><span style="color: #000000">=</span><span style="color: #0000FF">{</span><span style="color: #001080">setValue</span><span style="color: #0000FF">}</span>
+<span style="color: #000000">        </span><span style="color: #FF0000">multi</span>
+<span style="color: #000000">      </span><span style="color: #800000">/&gt;</span>
 <span style="color: #000000">    </span><span style="color: #800000">&lt;/</span><span style="color: #267F99">ChakraProvider</span><span style="color: #800000">&gt;</span>
 <span style="color: #000000">  )</span>
 <span style="color: #000000">}</span>
