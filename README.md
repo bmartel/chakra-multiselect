@@ -2,7 +2,9 @@
 
 > A Multiselect component using ChakraUI
 
-[![NPM](https://img.shields.io/npm/v/chakra-multiselect.svg)](https://www.npmjs.com/package/chakra-multiselect) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![NPM](https://img.shields.io/npm/v/chakra-multiselect.svg)](https://www.npmjs.com/package/chakra-multiselect)
+[![Package Size](https://badgen.net/bundlephobia/min/chakra-multiselect)](https://badgen.net/bundlephobia/min/chakra-multiselect)
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 ## Install
 
@@ -13,6 +15,8 @@ yarn add chakra-multiselect
 ```
 
 ## Usage
+
+Single Mode
 
 ```tsx
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
@@ -25,9 +29,45 @@ const theme = extendTheme({
 })
 
 const App = () => {
+  const [value, setValue] = useState('')
+
   return (
     <ChakraProvider theme={theme}>
-      <MultiSelect items={items} label="Choose an item" />
+      <MultiSelect
+        options={options}
+        value={value}
+        label='Choose an item'
+        onChange={setValue}
+      />
+    </ChakraProvider>
+  )
+}
+```
+
+Multi Mode
+
+```tsx
+import { ChakraProvider, extendTheme } from '@chakra-ui/react'
+import { MultiSelect, MultiSelectTheme } from 'chakra-multiselect'
+
+const theme = extendTheme({
+  components: {
+    MultiSelect: MultiSelectTheme
+  }
+})
+
+const App = () => {
+  const [value, setValue] = useState([])
+
+  return (
+    <ChakraProvider theme={theme}>
+      <MultiSelect
+        options={options}
+        value={value}
+        label='Choose an item'
+        onChange={setValue}
+        multi
+      />
     </ChakraProvider>
   )
 }
