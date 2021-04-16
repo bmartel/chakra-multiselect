@@ -5,10 +5,8 @@ import {
   Input,
   MenuListProps,
   MenuOptionGroupProps,
-  MenuDividerProps,
   Box,
   IconButton,
-  Divider,
   chakra,
   HStack,
   omitThemingProps,
@@ -20,20 +18,22 @@ import {
   TagCloseButton,
   TagProps
 } from '@chakra-ui/react'
-import { ReactNode, useMemo } from 'react'
+import { memo, ReactNode, useMemo } from 'react'
 import { PropsOf } from '@emotion/react'
 import {
   SelectProvider,
   useSelect,
   useSelectButton,
-  useSelectDivider,
+  useSelectCombobox,
+  useSelectControl,
+  useSelectInput,
   useSelectedItem,
   useSelectItem,
   useSelectLabel,
   useSelectList,
+  useSelectedList,
   UseSelectProps
 } from './use-select'
-import { useSelectInput } from './use-selected'
 
 // @see https://github.com/chakra-ui/chakra-ui/issues/140
 
@@ -63,7 +63,6 @@ export interface SelectControlProps
 }
 
 export interface SelectListProps extends MenuListProps {}
-export interface SelectDividerProps extends MenuDividerProps {}
 export interface SelectOptionGroupProps extends MenuOptionGroupProps {}
 export interface SelectOptionItemProps extends HTMLChakraProps<'li'> {
   highlighted?: boolean
@@ -115,14 +114,14 @@ export const SelectOptionItem: React.FC<SelectOptionItemProps> = ({
     </chakra.li>
   )
 }
-export const SelectList = forwardRef<SelectListProps, 'ul'>((_, ref) => {
+export const SelectList = memo(() => {
   const {
     __css,
     visibleOptions,
     isOpen,
     ref: listRef,
     ...listProps
-  } = useSelectList({ ref })
+  } = useSelectList({})
 
   return (
     <chakra.ul
@@ -149,16 +148,6 @@ export const SelectList = forwardRef<SelectListProps, 'ul'>((_, ref) => {
 
 export const SelectOptionGroup: React.FC<SelectOptionGroupProps> = (props) => {
   return <MenuOptionGroup {...props} />
-}
-
-export const SelectDivider: React.FC<SelectDividerProps> = (props) => {
-  const { hasDivider, __css, ...dividerProps } = useSelectDivider(props)
-
-  return (hasDivider && (
-    <Box {...dividerProps}>
-      <Divider orientation='vertical' {...__css} />
-    </Box>
-  )) as any
 }
 
 const SelectToggleIcon: React.FC<PropsOf<'svg'>> = (props) => (
@@ -216,17 +205,20 @@ export const SelectToggleButton: React.FC = (props) => {
 }
 
 export const SelectedList: React.FC = ({ children, ...props }) => {
-  const { __css, selectedItems, ...selectedListProps } = useSelectedList(props)
+  const { __css, selectedItems, multi, ...selectedListProps } = useSelectedList(
+    props
+  )
 
   return (
     <Box {...__css} {...selectedListProps}>
-      {selectedItems?.map((selectedItem: any, index: number) => (
-        <SelectedItem
-          key={`selected-item-${index}`}
-          value={selectedItem}
-          index={index}
-        />
-      ))}
+      {multi &&
+        selectedItems?.map((selectedItem: any, index: number) => (
+          <SelectedItem
+            key={`selected-item-${index}`}
+            value={selectedItem}
+            index={index}
+          />
+        ))}
       {children}
     </Box>
   )
@@ -237,7 +229,6 @@ export const SelectCombobox: React.FC = (props) => {
 
   return (
     <HStack {...__css} {...comboboxProps}>
-      <SelectDivider />
       <SelectToggleButton />
     </HStack>
   )

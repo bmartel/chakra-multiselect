@@ -1,5 +1,6 @@
 import { ChakraProvider, extendTheme, VStack } from '@chakra-ui/react'
 import { MultiSelect, MultiSelectTheme } from 'chakra-multiselect'
+import { useState } from 'react'
 
 const theme = extendTheme({
   components: {
@@ -7,7 +8,7 @@ const theme = extendTheme({
   }
 })
 
-const options = [
+const items = [
   'Neptunium',
   'Plutonium',
   'Americium',
@@ -36,11 +37,21 @@ const options = [
   'Oganesson'
 ]
 
+const options = items.map((label) => ({ label, value: label.toLowerCase() }))
+
 const App = () => {
+  const [value, setValue] = useState([])
+
   return (
     <ChakraProvider theme={theme}>
       <VStack minH='100vh' w='full' justifyContent='center' alignItems='center'>
-        <MultiSelect items={options} label='Choose an item' defaultIsOpen />
+        <MultiSelect
+          value={value}
+          options={options}
+          label='Choose an item'
+          onChange={next => setValue(next as any)}
+          multi
+        />
       </VStack>
     </ChakraProvider>
   )

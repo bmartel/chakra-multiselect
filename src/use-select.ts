@@ -4,7 +4,7 @@ import {
   UsePopperReturn,
   useStyles
 } from '@chakra-ui/react'
-import { mergeRefs, EventKeys } from '@chakra-ui/utils'
+import { createContext, mergeRefs, EventKeys } from '@chakra-ui/utils'
 import {
   useEffect,
   useRef,
@@ -13,8 +13,6 @@ import {
   useMemo,
   MutableRefObject
 } from 'react'
-
-import { createContext } from './utils'
 
 export interface Option {
   label: string
@@ -200,13 +198,13 @@ const useKeys = (
 }
 
 export interface UseSelectProps extends UsePopperProps {
+  onChange: SelectOnChange
   multi?: boolean
   create?: boolean
   duplicates?: boolean
   options?: Option[]
   value?: any
   shiftAmount?: number
-  onChange: SelectOnChange
   getCreateLabel?: GetCreateLabel
   getDebounce?: GetDebounce
   stateReducer?: StateReducer
@@ -214,6 +212,8 @@ export interface UseSelectProps extends UsePopperProps {
   filterFn?: SelectFilter
 }
 export interface UseSelectReturn {
+  value: any
+  multi: boolean
   searchValue: string
   isOpen: boolean
   highlightedIndex: number
@@ -225,7 +225,6 @@ export interface UseSelectReturn {
   setOpen: SelectSetOpen
   setSearch: SelectSetSearch
   popper: UsePopperReturn
-  // TODO: fill these in properly
   getInputProps: AnyFunc
   getOptionProps: AnyFunc
   optionsRef: MutableRefObject<any>
@@ -640,9 +639,11 @@ export function useSelect({
   }, [isOpen, inputRef.current])
 
   return {
+    multi: !!multi,
     optionsRef,
     popper,
     // State
+    value,
     searchValue,
     isOpen,
     highlightedIndex,
@@ -699,6 +700,14 @@ function useClickOutsideRef(
   }, [enable, handle])
 }
 
+export function useSelectCombobox(props: any = {}) {
+  const styles = useStyles()
+  return {
+    ...props,
+    __css: styles.combobox
+  }
+}
+
 export function useSelectInput(props: any = {}) {
   const { getInputProps } = useSelectContext()
   const styles = useStyles()
@@ -727,25 +736,15 @@ export function useSelectLabel(props: any = {}) {
   }
 }
 
-export function useSelectDivider(props: any = {}) {
-  // const { hasDivider } = useSelectContext()
-  const styles = useStyles()
-
-  return {
-    ...props,
-    // hasDivider,
-    __css: styles.divider
-  }
-}
-
 export function useSelectButton(props: any = {}) {
-  // const { getToggleButtonProps } = useSelectContext()
+  const { isOpen, setOpen } = useSelectContext()
+  const onClick = useCallback(() => setOpen(!isOpen), [setOpen, isOpen])
   const styles = useStyles()
 
   return {
     ...props,
-    // ...useMemo(getToggleButtonProps!, [getToggleButtonProps]),
-    __css: styles.button
+    __css: styles.button,
+    onClick
   }
 }
 
@@ -767,11 +766,7 @@ export function useSelectedItem(props: any = {}) {
 }
 
 export function useSelectItem(props: any = {}) {
-  const {
-    getOptionProps,
-    highlightedIndex
-    // selectedOption
-  } = useSelectContext()
+  const { getOptionProps, highlightedIndex } = useSelectContext()
   const styles = useStyles()
   const highlighted = highlightedIndex === props.index
 
@@ -780,14 +775,15 @@ export function useSelectItem(props: any = {}) {
     ...useMemo(
       () => ({
         ...getOptionProps!({
-          option: { value: props.value }
+          option: { value: props.value },
+          index: props.index
         }),
         __css: {
           ...styles.item,
           ...(highlighted && (styles.item as any))?._active
         }
       }),
-      [getOptionProps, props.value, styles.item]
+      [getOptionProps, props.value, props.index, styles.item]
     )
   }
 }
@@ -798,14 +794,38 @@ export function useSelectList(props: any = {}) {
 
   return {
     ...props,
-    ...useMemo(
-      () => ({
-        ref: mergeRefs(props.ref, optionsRef, popper.popperRef)
-      }),
-      [props.ref, optionsRef, popper.popperRef]
-    ),
+    ref: mergeRefs(optionsRef, popper.popperRef),
     isOpen,
     visibleOptions,
     __css: styles.list
+  }
+}
+
+export function useSelectedList(props: any = {}) {
+  const { value: selectedItems, multi } = useSelectContext()
+  const styles = useStyles()
+
+  return {
+    ...props,
+    multi,
+    selectedItems,
+    __css: styles.selectedList
+  }
+}
+
+export function useSelectControl(props: any = {}) {
+  const { isOpen, popper } = useSelectContext()
+  const styles = useStyles()
+
+  return {
+    ...props,
+    ...useMemo(
+      () => ({
+        ref: mergeRefs(props.ref, popper.referenceRef)
+      }),
+      [props.ref, popper.referenceRef]
+    ),
+    isOpen,
+    __css: styles.control
   }
 }
