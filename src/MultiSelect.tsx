@@ -95,11 +95,11 @@ export const Select: React.FC<SelectProps> = (props) => {
   )
 }
 
-export const SelectLabel: React.FC<HTMLChakraProps<'label'>> = (props) => {
+export const SelectLabel = memo<HTMLChakraProps<'label'>>((props) => {
   const labelProps = useSelectLabel()
 
   return <chakra.label {...props} {...labelProps} />
-}
+})
 
 export const SelectOptionItem: React.FC<SelectOptionItemProps> = ({
   value,
@@ -114,6 +114,7 @@ export const SelectOptionItem: React.FC<SelectOptionItemProps> = ({
     </chakra.li>
   )
 }
+
 export const SelectList = memo(() => {
   const {
     __css,
@@ -159,11 +160,11 @@ const SelectToggleIcon: React.FC<PropsOf<'svg'>> = (props) => (
   </svg>
 )
 
-export const SelectInput: React.FC = (props) => {
+export const SelectInput = memo((props) => {
   const inputProps = useSelectInput(props)
 
   return <chakra.input {...inputProps} />
-}
+})
 
 export const SelectedItem: React.FC<SelectedItemProps> = ({
   value,
@@ -184,7 +185,7 @@ export const SelectedItem: React.FC<SelectedItemProps> = ({
   )
 }
 
-export const SelectToggleButton: React.FC = (props) => {
+export const SelectToggleButton = memo((props) => {
   const {
     __css,
     size = 'sm',
@@ -202,9 +203,9 @@ export const SelectToggleButton: React.FC = (props) => {
       {...buttonProps}
     />
   )
-}
+})
 
-export const SelectedList: React.FC = ({ children, ...props }) => {
+export const SelectedList = memo(({ children, ...props }) => {
   const { __css, selectedItems, multi, ...selectedListProps } = useSelectedList(
     props
   )
@@ -222,9 +223,9 @@ export const SelectedList: React.FC = ({ children, ...props }) => {
       {children}
     </Box>
   )
-}
+})
 
-export const SelectCombobox: React.FC = (props) => {
+export const SelectCombobox = memo((props) => {
   const { __css, ...comboboxProps } = useSelectCombobox(props)
 
   return (
@@ -232,7 +233,7 @@ export const SelectCombobox: React.FC = (props) => {
       <SelectToggleButton />
     </HStack>
   )
-}
+})
 
 export const SelectControl = forwardRef<SelectControlProps, 'div'>(
   ({ children }, ref) => {

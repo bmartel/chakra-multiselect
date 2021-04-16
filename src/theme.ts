@@ -30,6 +30,7 @@ function baseStyleList(props: Record<string, any>) {
 }
 
 const baseStyleSelectedList = {
+  d: 'flex',
   flexWrap: 'wrap',
   alignItems: 'center'
 }
@@ -95,7 +96,9 @@ const baseStyleControl = {
 }
 
 const baseStyleInput = (_props: Record<string, any>) => ({
+  bgColor: 'transparent',
   appearance: 'none',
+  flex: 1,
   outline: 0
 })
 
