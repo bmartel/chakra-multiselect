@@ -31,6 +31,7 @@ function baseStyleList(props: Record<string, any>) {
 
 const baseStyleSelectedList = {
   d: 'flex',
+  flex: 1,
   flexWrap: 'wrap',
   alignItems: 'center'
 }

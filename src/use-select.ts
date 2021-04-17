@@ -711,26 +711,17 @@ export function useSelectInput(props: any = {}) {
   const { getInputProps } = useSelectContext()
   const styles = useStyles()
 
-  // const onClick = useCallback(() => {
-  //   if (openMenuOnInputFocus) {
-  //     openMenu()
-  //   }
-  // }, [openMenuOnInputFocus, openMenu])
-
   return {
     ...props,
     ...getInputProps(),
     __css: styles.input
-    // onClick
   }
 }
 export function useSelectLabel(props: any = {}) {
-  // const {getLabelProps } = useSelectContext()
   const styles = useStyles()
 
   return {
     ...props,
-    // ...useMemo(getLabelProps!, [getLabelProps]),
     __css: styles.label
   }
 }
