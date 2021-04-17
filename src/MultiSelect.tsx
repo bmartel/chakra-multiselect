@@ -124,18 +124,20 @@ export const SelectList = memo(() => {
     ...listProps
   } = useSelectList({})
 
+  const dropdownVisible = !!(isOpen && visibleOptions.length)
+
   return (
     <chakra.ul
       ref={listRef}
       __css={{
         listStyle: 'none',
         position: 'absolute',
-        ...(!isOpen && { display: 'none' }),
+        ...(!dropdownVisible && { display: 'none' }),
         ...__css
       }}
       {...listProps}
     >
-      {isOpen &&
+      {dropdownVisible &&
         visibleOptions.map((item: any, index: number) => (
           <SelectOptionItem
             key={`${item.value}${index}`}
