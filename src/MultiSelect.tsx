@@ -18,7 +18,7 @@ import {
   TagCloseButton,
   TagProps
 } from '@chakra-ui/react'
-import { memo, ReactNode, useMemo } from 'react'
+import { memo, ReactNode, useCallback, useMemo } from 'react'
 import { PropsOf } from '@emotion/react'
 import {
   SelectProvider,
@@ -120,11 +120,23 @@ export const SelectList = memo(() => {
     __css,
     visibleOptions,
     isOpen,
+    getOption,
     ref: listRef,
     ...listProps
   } = useSelectList({})
 
   const dropdownVisible = !!(isOpen && visibleOptions.length)
+  const optionItemProps = useCallback(
+    (option, index) => {
+      const optionItem = getOption(option)
+      return {
+        key: optionItem.id || `${optionItem.value}${index}`,
+        value: optionItem.value,
+        index
+      }
+    },
+    [getOption]
+  )
 
   return (
     <chakra.ul
@@ -139,11 +151,7 @@ export const SelectList = memo(() => {
     >
       {dropdownVisible &&
         visibleOptions.map((item: any, index: number) => (
-          <SelectOptionItem
-            key={`${item.value}${index}`}
-            value={item.value}
-            index={index}
-          />
+          <SelectOptionItem {...optionItemProps(item, index)} />
         ))}
     </chakra.ul>
   )

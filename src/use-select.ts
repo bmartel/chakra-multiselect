@@ -240,6 +240,7 @@ export interface UseSelectReturn {
   popper: UsePopperReturn
   getInputProps: AnyFunc
   getOptionProps: AnyFunc
+  getOption: GetOption
   optionsRef: MutableRefObject<any>
 }
 
@@ -676,7 +677,8 @@ export function useSelect({
     highlightIndex,
     // Prop Getters
     getInputProps,
-    getOptionProps
+    getOptionProps,
+    getOption
   }
 }
 
@@ -799,7 +801,13 @@ export function useSelectItem(props: any = {}) {
 }
 
 export function useSelectList(props: any = {}) {
-  const { isOpen, optionsRef, popper, visibleOptions } = useSelectContext()
+  const {
+    isOpen,
+    getOption,
+    optionsRef,
+    popper,
+    visibleOptions
+  } = useSelectContext()
   const styles = useStyles()
 
   return {
@@ -807,6 +815,7 @@ export function useSelectList(props: any = {}) {
     ref: mergeRefs(optionsRef, popper.popperRef),
     isOpen,
     visibleOptions,
+    getOption,
     __css: styles.list
   }
 }
