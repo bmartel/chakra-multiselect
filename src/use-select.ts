@@ -43,14 +43,28 @@ export type ScrollToIndex = (index: number) => void
 
 export type GetDebounce = (options: Option[]) => number
 
+export enum ChangeActions {
+  Create = 'create', // eslint-disable-line
+  Remove = 'remove', // eslint-disable-line
+  Select = 'select' // eslint-disable-line
+}
+
 export type SelectOnChange = (
   value: string | number | Array<string | number>,
-  current?: string | number
+  change?: {
+    action: ChangeActions
+    value: any
+  }
 ) => void
+
+export type GetOption = (
+  option: string | { label: string; value: any }
+) => { label: string; value: any }
 
 export type SelectFilter = (
   options: Option[],
-  searchValue: string | number
+  searchValue: string | number,
+  getOption: GetOption
 ) => Option[]
 
 export type SelectRemoveValue = (index: number) => void
@@ -58,8 +72,6 @@ export type SelectRemoveValue = (index: number) => void
 export type SelectSetOpen = (open: boolean) => void
 
 export type SelectSetSearch = (searchValue: string) => void
-
-export type GetCreateLabel = (searchValue: string) => string
 
 export enum SelectActions {
   SetOpen = 'setOpen', // eslint-disable-line
@@ -89,22 +101,23 @@ const initialState: SelectState = {
 }
 
 const defaultStateReducer: StateReducer = (_, newState) => newState
-const defaultGetCreateLabel: GetCreateLabel = (d) => `Create "${d}"`
 const defaultScrollToIndex: ScrollToIndex = () => {}
+const defaultGetOption: GetOption = (option) =>
+  typeof option === 'string' ? { label: option, value: option } : option
 const defaultGetDebounce: GetDebounce = (options) =>
   options.length > 10000 ? 1000 : options.length > 1000 ? 200 : 0
 
-const defaultFilterFn: SelectFilter = (options, searchValue) => {
+const defaultFilterFn: SelectFilter = (options, searchValue, getOption) => {
   return options
     .filter((option) =>
-      option.value
-        .toString()
+      getOption(option)
+        .value.toString()
         .toLowerCase()
         .includes(searchValue.toString().toLowerCase())
     )
     .sort((a) => {
-      return a.value
-        .toString()
+      return getOption(a)
+        .value.toString()
         .toLowerCase()
         .indexOf(searchValue.toString().toLowerCase())
     })
@@ -199,13 +212,13 @@ const useKeys = (
 
 export interface UseSelectProps extends UsePopperProps {
   onChange: SelectOnChange
-  multi?: boolean
+  single?: boolean
   create?: boolean
   duplicates?: boolean
   options?: Option[]
   value?: any
   shiftAmount?: number
-  getCreateLabel?: GetCreateLabel
+  getOption?: GetOption
   getDebounce?: GetDebounce
   stateReducer?: StateReducer
   scrollToIndex?: ScrollToIndex
@@ -238,10 +251,10 @@ const [SelectProvider, useSelectContext] = createContext<UseSelectReturn>({
 export { SelectProvider, useSelectContext }
 
 export function useSelect({
-  multi,
+  single,
   create,
-  getCreateLabel = defaultGetCreateLabel,
   getDebounce = defaultGetDebounce,
+  getOption = defaultGetOption,
   stateReducer = defaultStateReducer,
   filterFn = defaultFilterFn,
   scrollToIndex = defaultScrollToIndex,
@@ -257,6 +270,8 @@ export function useSelect({
     setState
   ] = useHoistedState(initialState, stateReducer)
 
+  const multi = !single
+
   // Refs
 
   const optionsRef = useRef()
@@ -264,7 +279,6 @@ export function useSelect({
   const onBlurRef = useRef({})
   const onChangeRef = useRef()
   const filterFnRef = useRef()
-  const getCreateLabelRef = useRef()
   const scrollToIndexRef = useRef()
 
   const popper = usePopper({
@@ -273,7 +287,6 @@ export function useSelect({
 
   ;(filterFnRef.current as any) = filterFn
   ;(scrollToIndexRef.current as any) = scrollToIndex
-  ;(getCreateLabelRef.current as any) = getCreateLabel
   ;(onChangeRef.current as any) = onChange
 
   // Multi should always at least have an empty array as the value
@@ -292,52 +305,51 @@ export function useSelect({
   // selected options from the options list
   options = useMemo(() => {
     if (multi && !duplicates) {
-      return options?.filter((d) => !value.includes(d.value))
+      return options?.filter(
+        (d) =>
+          !value.some((v: any) => getOption(v).value === getOption(d).value)
+      )
     }
     return options
-  }, [options, value, duplicates, multi])
+  }, [options, value, duplicates, multi, getOption])
 
   // Compute the currently selected option(s)
   const selectedOption = useMemo(() => {
     if (!multi) {
       return (
-        originalOptions.find((d) => d.value === value) || {
-          label: value,
-          value: value
-        }
+        originalOptions.find(
+          (d) => getOption(d).value === getOption(value).value
+        ) || getOption(value)
       )
     } else {
       return value.map(
-        (val: string | number) =>
-          originalOptions.find((d) => d.value === val) || {
-            label: val,
-            value: val
-          }
+        (val: any) =>
+          originalOptions.find(
+            (d) => getOption(d).value === getOption(val).value
+          ) || getOption(val)
       )
     }
-  }, [multi, value, originalOptions])
+  }, [multi, value, originalOptions, getOption])
 
   // If there is a search value, filter the options for that value
   // TODO: This is likely where we will perform async option fetching
   // in the future.
   options = useMemo(() => {
     if (resolvedSearchValue) {
-      return (filterFnRef.current as any)?.(options, resolvedSearchValue)
+      return (filterFnRef.current as any)?.(
+        options,
+        resolvedSearchValue,
+        getOption
+      )
     }
     return options
-  }, [options, resolvedSearchValue])
+  }, [options, resolvedSearchValue, getOption])
 
   // If in create mode and we have a search value, fabricate
   // an option for that searchValue and prepend it to options
   options = useMemo(() => {
     if (create && searchValue) {
-      return [
-        {
-          label: (getCreateLabelRef.current as any)?.(searchValue),
-          value: searchValue
-        },
-        ...options!
-      ]
+      return [{ _new: true, ...getOption(searchValue) }, ...options!]
     }
     return options
   }, [create, searchValue, options])
@@ -403,14 +415,21 @@ export function useSelect({
     (index) => {
       const option = options![index]
       if (option) {
+        const { _new, ...selectedOption } = getOption(option) as any
         if (!multi) {
-          ;(onChangeRef.current as any)?.(option.value)
+          ;(onChangeRef.current as any)?.(selectedOption.value, {
+            action: _new ? ChangeActions.Create : ChangeActions.Select,
+            value: selectedOption
+          })
         } else {
-          if (duplicates || !value.includes(option.value)) {
-            ;(onChangeRef.current as any)?.(
-              [...value, option.value],
-              option.value
-            )
+          if (
+            duplicates ||
+            !value.some((v: any) => getOption(v).value === selectedOption.value)
+          ) {
+            ;(onChangeRef.current as any)?.([...value, selectedOption.value], {
+              action: _new ? ChangeActions.Create : ChangeActions.Select,
+              value: selectedOption
+            })
           }
         }
       }
@@ -427,7 +446,8 @@ export function useSelect({
   const removeValue = useCallback(
     (index) => {
       ;(onChangeRef.current as any)(
-        value.filter((_: string, i: number) => i !== index)
+        value.filter((_: string, i: number) => i !== index),
+        { action: ChangeActions.Remove, value: getOption(value[index]) }
       )
     },
     [value]
@@ -638,7 +658,7 @@ export function useSelect({
   }, [isOpen, inputRef.current])
 
   return {
-    multi: !!multi,
+    multi,
     optionsRef,
     popper,
     // State

@@ -79,8 +79,10 @@ const App = () => {
               value={value}
               options={options}
               label='Choose an item'
-              onChange={(next) => setValue(next as any)}
-              multi
+              onChange={(next) => {
+                setValue(next as any)
+              }}
+              create
             />
           </VStack>
         </VStack>
