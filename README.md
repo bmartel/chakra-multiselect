@@ -38,6 +38,7 @@ const App = () => {
         value={value}
         label='Choose an item'
         onChange={setValue}
+        single
       />
     </ChakraProvider>
   )
@@ -66,7 +67,6 @@ const App = () => {
         value={value}
         label='Choose an item'
         onChange={setValue}
-        multi
       />
     </ChakraProvider>
   )

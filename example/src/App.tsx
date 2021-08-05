@@ -6,15 +6,19 @@ import {
   extendTheme,
   Button,
   Flex,
-  VStack
+  VStack,
 } from '@chakra-ui/react'
-import { MultiSelect, MultiSelectTheme } from 'chakra-multiselect'
-import { useState } from 'react'
+import {
+  MultiSelect,
+  MultiSelectProps,
+  MultiSelectTheme,
+} from 'chakra-multiselect'
+import { FC, useCallback, useState } from 'react'
 
 const theme = extendTheme({
   components: {
-    MultiSelect: MultiSelectTheme
-  }
+    MultiSelect: MultiSelectTheme,
+  },
 })
 
 const ColorModeToggleBar = () => {
@@ -60,28 +64,59 @@ const items = [
   'Moscovium',
   'Livermorium',
   'Tennessine',
-  'Oganesson'
+  'Oganesson',
 ]
 
 const options = items.map((label) => ({ label, value: label.toLowerCase() }))
 
-const App = () => {
-  const [value, setValue] = useState([])
+const StatefulMultiSelect: FC<
+  Omit<MultiSelectProps, 'onChange' | 'value'> &
+    Partial<Pick<MultiSelectProps, 'onChange' | 'value'>>
+> = ({ onChange: _onChange, value: _value, ...props }) => {
+  const [value, setValue] = useState(_value || props.single ? '' : [])
+  const onChange = useCallback(
+    (next: any) => {
+      setValue(next)
+      _onChange?.(next)
+    },
+    [setValue, _onChange]
+  )
 
+  return <MultiSelect value={value} onChange={onChange} {...props} />
+}
+
+const App = () => {
   return (
     <>
       <ColorModeScript initialColorMode='light' />
       <ChakraProvider theme={theme}>
         <VStack minH='100vh' w='full'>
           <ColorModeToggleBar />
-          <VStack w='full' flex='1' justifyContent='center' alignItems='center'>
-            <MultiSelect
-              value={value}
+          <VStack
+            spacing='12'
+            w='full'
+            flex='1'
+            justifyContent='center'
+            alignItems='center'
+          >
+            <StatefulMultiSelect
               options={options}
-              label='Choose an item'
-              onChange={(next) => {
-                setValue(next as any)
-              }}
+              label='Choose a single item'
+              single
+            />
+            <StatefulMultiSelect
+              options={options}
+              label='Choose multiple items'
+            />
+            <StatefulMultiSelect
+              options={options}
+              label='Choose or create a single item'
+              single
+              create
+            />
+            <StatefulMultiSelect
+              options={options}
+              label='Choose or create multiple items'
               create
             />
           </VStack>

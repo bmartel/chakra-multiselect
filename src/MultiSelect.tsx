@@ -16,7 +16,7 @@ import {
   Tag,
   TagLabel,
   TagCloseButton,
-  TagProps
+  TagProps,
 } from '@chakra-ui/react'
 import { memo, ReactNode, useCallback, useMemo } from 'react'
 import { PropsOf } from '@emotion/react'
@@ -32,7 +32,7 @@ import {
   useSelectLabel,
   useSelectList,
   useSelectedList,
-  UseSelectProps
+  UseSelectProps,
 } from './use-select'
 
 // @see https://github.com/chakra-ui/chakra-ui/issues/140
@@ -101,19 +101,21 @@ export const SelectLabel = memo<HTMLChakraProps<'label'>>((props) => {
   return <chakra.label {...props} {...labelProps} />
 })
 
-export const SelectOptionItem: React.FC<SelectOptionItemProps> = ({
-  value,
-  index,
-  ...props
-}) => {
-  const itemProps = useSelectItem({ value, index })
+export const SelectOptionItem = memo<SelectOptionItemProps>(
+  ({ value, index, ...props }) => {
+    const { selectedItemRef, ...itemProps } = useSelectItem({ value, index })
 
-  return (
-    <chakra.li {...props} {...itemProps}>
-      {value}
-    </chakra.li>
-  )
-}
+    return (
+      <chakra.li
+        ref={selectedItemRef && selectedItemRef}
+        {...props}
+        {...itemProps}
+      >
+        {value}
+      </chakra.li>
+    )
+  }
+)
 
 export const SelectList = memo(() => {
   const {
@@ -132,7 +134,7 @@ export const SelectList = memo(() => {
       return {
         key: optionItem.id || `${optionItem.value}${index}`,
         value: optionItem.value,
-        index
+        index,
       }
     },
     [getOption]
@@ -145,7 +147,7 @@ export const SelectList = memo(() => {
         listStyle: 'none',
         position: 'absolute',
         ...(!dropdownVisible && { display: 'none' }),
-        ...__css
+        ...__css,
       }}
       {...listProps}
     >
@@ -184,7 +186,7 @@ export const SelectedItem: React.FC<SelectedItemProps> = ({
   const { onClick, __css, ...itemProps } = useSelectedItem({
     value,
     index,
-    ...props
+    ...props,
   })
 
   return (
@@ -216,9 +218,8 @@ export const SelectToggleButton = memo((props) => {
 })
 
 export const SelectedList = memo(({ children, ...props }) => {
-  const { __css, selectedItems, multi, ...selectedListProps } = useSelectedList(
-    props
-  )
+  const { __css, selectedItems, multi, ...selectedListProps } =
+    useSelectedList(props)
 
   return (
     <Box {...__css} {...selectedListProps}>

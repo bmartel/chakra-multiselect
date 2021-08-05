@@ -4,7 +4,8 @@ import {
   UsePopperReturn,
   useStyles
 } from '@chakra-ui/react'
-import { createContext, mergeRefs, EventKeys } from '@chakra-ui/utils'
+import { EventKeys } from '@chakra-ui/utils'
+import { createContext, mergeRefs } from '@chakra-ui/react-utils'
 import {
   useEffect,
   useRef,
@@ -252,8 +253,8 @@ const [SelectProvider, useSelectContext] = createContext<UseSelectReturn>({
 export { SelectProvider, useSelectContext }
 
 export function useSelect({
-  single,
-  create,
+  create = false,
+  single = false,
   getDebounce = defaultGetDebounce,
   getOption = defaultGetOption,
   stateReducer = defaultStateReducer,
@@ -270,6 +271,7 @@ export function useSelect({
     { searchValue, resolvedSearchValue, isOpen, highlightedIndex },
     setState
   ] = useHoistedState(initialState, stateReducer)
+
 
   const multi = !single
 
@@ -308,7 +310,7 @@ export function useSelect({
     if (multi && !duplicates) {
       return options?.filter(
         (d) =>
-          !value.some((v: any) => getOption(v).value === getOption(d).value)
+          !value?.some((v: any) => getOption(v).value === getOption(d).value)
       )
     }
     return options
