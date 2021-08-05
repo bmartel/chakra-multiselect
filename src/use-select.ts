@@ -236,6 +236,7 @@ export interface UseSelectReturn {
   visibleOptions: Option[]
   selectIndex: (index: number) => any
   highlightIndex: (value: any) => any
+  highlightedIndexRef: MutableRefObject<HTMLElement | undefined>
   removeValue: SelectRemoveValue
   setOpen: SelectSetOpen
   setSearch: SelectSetSearch
@@ -283,6 +284,7 @@ export function useSelect({
   const onChangeRef = useRef()
   const filterFnRef = useRef()
   const scrollToIndexRef = useRef()
+  const highlightedIndexRef = useRef<HTMLElement | undefined>()
 
   const popper = usePopper({
     placement,
@@ -647,7 +649,11 @@ export function useSelect({
 
   // When the highlightedIndex changes, scroll to that item
   useEffect(() => {
-    ;(scrollToIndexRef.current as any)?.(highlightedIndex)
+    ;(scrollToIndexRef.current as any)?.(
+      highlightedIndex,
+      highlightedIndexRef,
+      enableScrollRef
+    )
   }, [highlightedIndex])
 
   useEffect(() => {
