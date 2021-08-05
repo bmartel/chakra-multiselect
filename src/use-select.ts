@@ -2,7 +2,7 @@ import {
   usePopper,
   UsePopperProps,
   UsePopperReturn,
-  useStyles
+  useStyles,
 } from '@chakra-ui/react'
 import { EventKeys } from '@chakra-ui/utils'
 import { createContext, mergeRefs } from '@chakra-ui/react-utils'
@@ -12,7 +12,7 @@ import {
   useState,
   useCallback,
   useMemo,
-  MutableRefObject
+  MutableRefObject,
 } from 'react'
 
 export interface Option {
@@ -47,7 +47,7 @@ export type GetDebounce = (options: Option[]) => number
 export enum ChangeActions {
   Create = 'create', // eslint-disable-line
   Remove = 'remove', // eslint-disable-line
-  Select = 'select' // eslint-disable-line
+  Select = 'select', // eslint-disable-line
 }
 
 export type SelectOnChange = (
@@ -58,9 +58,10 @@ export type SelectOnChange = (
   }
 ) => void
 
-export type GetOption = (
-  option: string | { label: string; value: any }
-) => { label: string; value: any }
+export type GetOption = (option: string | { label: string; value: any }) => {
+  label: string
+  value: any
+}
 
 export type SelectFilter = (
   options: Option[],
@@ -77,7 +78,7 @@ export type SelectSetSearch = (searchValue: string) => void
 export enum SelectActions {
   SetOpen = 'setOpen', // eslint-disable-line
   SetSearch = 'setSearch', // eslint-disable-line
-  HighlightIndex = 'highlightIndex' // eslint-disable-line
+  HighlightIndex = 'highlightIndex', // eslint-disable-line
 }
 
 export type SelectStateUpdater = (
@@ -98,11 +99,11 @@ const initialState: SelectState = {
   searchValue: '',
   resolvedSearchValue: '',
   isOpen: false,
-  highlightedIndex: 0
+  highlightedIndex: 0,
 }
 
 const defaultStateReducer: StateReducer = (_, newState) => newState
-const defaultScrollToIndex: ScrollToIndex = () => {}
+const defaultScrollToIndex: ScrollToIndex = () => null
 const defaultGetOption: GetOption = (option) =>
   typeof option === 'string' ? { label: option, value: option } : option
 const defaultGetDebounce: GetDebounce = (options) =>
@@ -132,20 +133,20 @@ function useDebounce(fn: AnyFunc, time = 0) {
 
   useEffect(() => {
     return () => {
-      clearTimeout((ref.current as unknown) as number)
+      clearTimeout(ref.current as unknown as number)
     }
   }, [time])
 
   return useCallback(
     async (...args) => {
       if (ref.current) {
-        clearTimeout((ref.current as unknown) as number)
+        clearTimeout(ref.current as unknown as number)
       }
       return new Promise((resolve, reject) => {
         ref.current = setTimeout(() => {
           ref.current = null
           try {
-            resolve(((fnRef.current as unknown) as AnyFunc)(...args))
+            resolve((fnRef.current as unknown as AnyFunc)(...args))
           } catch (err) {
             reject(err)
           }
@@ -169,7 +170,7 @@ function useHoistedState(
         throw new Error('An action type is required to update the state')
       }
       return _setState((old: SelectState) =>
-        ((reducerRef.current as unknown) as StateReducer)(
+        (reducerRef.current as unknown as StateReducer)(
           old,
           updater(old),
           action
@@ -198,7 +199,7 @@ const useKeys = (
               keyCode,
               key,
               shift,
-              meta
+              meta,
             },
             e
           )
@@ -206,7 +207,7 @@ const useKeys = (
         if (onKeyDown) {
           onKeyDown(e)
         }
-      }
+      },
     }
   }
 }
@@ -247,7 +248,7 @@ export interface UseSelectReturn {
 
 const [SelectProvider, useSelectContext] = createContext<UseSelectReturn>({
   strict: false,
-  name: 'SelectContext'
+  name: 'SelectContext',
 })
 
 export { SelectProvider, useSelectContext }
@@ -265,13 +266,12 @@ export function useSelect({
   options,
   value,
   onChange,
-  placement = 'bottom-start'
+  placement = 'bottom-start',
 }: UseSelectProps): UseSelectReturn {
   const [
     { searchValue, resolvedSearchValue, isOpen, highlightedIndex },
-    setState
+    setState,
   ] = useHoistedState(initialState, stateReducer)
-
 
   const multi = !single
 
@@ -285,7 +285,7 @@ export function useSelect({
   const scrollToIndexRef = useRef()
 
   const popper = usePopper({
-    placement
+    placement,
   })
 
   ;(filterFnRef.current as any) = filterFn
@@ -364,7 +364,7 @@ export function useSelect({
       setState(
         (old) => ({
           ...old,
-          isOpen: newIsOpen
+          isOpen: newIsOpen,
         }),
         SelectActions.SetOpen
       )
@@ -376,7 +376,7 @@ export function useSelect({
     setState(
       (old) => ({
         ...old,
-        resolvedSearchValue: value
+        resolvedSearchValue: value,
       }),
       SelectActions.SetSearch
     )
@@ -387,7 +387,7 @@ export function useSelect({
       setState(
         (old) => ({
           ...old,
-          searchValue: value
+          searchValue: value,
         }),
         SelectActions.SetSearch
       )
@@ -407,7 +407,7 @@ export function useSelect({
               typeof value === 'function' ? value(old.highlightedIndex) : value
             ),
             options!.length - 1
-          )
+          ),
         }
       }, SelectActions.HighlightIndex)
     },
@@ -422,7 +422,7 @@ export function useSelect({
         if (!multi) {
           ;(onChangeRef.current as any)?.(selectedOption.value, {
             action: _new ? ChangeActions.Create : ChangeActions.Select,
-            value: selectedOption
+            value: selectedOption,
           })
         } else {
           if (
@@ -431,7 +431,7 @@ export function useSelect({
           ) {
             ;(onChangeRef.current as any)?.([...value, selectedOption.value], {
               action: _new ? ChangeActions.Create : ChangeActions.Select,
-              value: selectedOption
+              value: selectedOption,
             })
           }
         }
@@ -474,35 +474,33 @@ export function useSelect({
 
   // Prop Getters
 
-  const ArrowUp = (defaultShift?: any, defaultMeta?: any) => (
-    { shift, meta }: any,
-    e: any
-  ) => {
-    e.preventDefault()
-    const amount =
-      defaultMeta || meta
-        ? 1000000000000
-        : defaultShift || shift
-        ? shiftAmount - 1
-        : 1
-    setOpen(true)
-    highlightIndex((old: number) => old - amount)
-  }
+  const ArrowUp =
+    (defaultShift?: any, defaultMeta?: any) =>
+    ({ shift, meta }: any, e: any) => {
+      e.preventDefault()
+      const amount =
+        defaultMeta || meta
+          ? 1000000000000
+          : defaultShift || shift
+          ? shiftAmount - 1
+          : 1
+      setOpen(true)
+      highlightIndex((old: number) => old - amount)
+    }
 
-  const ArrowDown = (defaultShift?: any, defaultMeta?: any) => (
-    { shift, meta }: any,
-    e: any
-  ) => {
-    e.preventDefault()
-    const amount =
-      defaultMeta || meta
-        ? 1000000000000
-        : defaultShift || shift
-        ? shiftAmount - 1
-        : 1
-    setOpen(true)
-    highlightIndex((old: number) => old + amount)
-  }
+  const ArrowDown =
+    (defaultShift?: any, defaultMeta?: any) =>
+    ({ shift, meta }: any, e: any) => {
+      e.preventDefault()
+      const amount =
+        defaultMeta || meta
+          ? 1000000000000
+          : defaultShift || shift
+          ? shiftAmount - 1
+          : 1
+      setOpen(true)
+      highlightIndex((old: number) => old + amount)
+    }
 
   const Enter = (_: any, e: any) => {
     if (isOpen) {
@@ -540,7 +538,7 @@ export function useSelect({
     Enter,
     Escape,
     Tab,
-    Backspace
+    Backspace,
   } as any)
 
   const getInputProps = (
@@ -589,7 +587,7 @@ export function useSelect({
           ;(onBlurRef.current as any).event = e
         }
       },
-      ...rest
+      ...rest,
     })
   }
 
@@ -616,7 +614,7 @@ export function useSelect({
         if (onMouseEnter) {
           onMouseEnter(e)
         }
-      }
+      },
     }
   }
 
@@ -658,7 +656,7 @@ export function useSelect({
         ;(inputRef.current as any)?.focus()
       })
     }
-  }, [isOpen, inputRef.current])
+  }, [isOpen])
 
   return {
     multi,
@@ -680,7 +678,7 @@ export function useSelect({
     // Prop Getters
     getInputProps,
     getOptionProps,
-    getOption
+    getOption,
   }
 }
 
@@ -694,7 +692,7 @@ function useClickOutsideRef(
 
   ;(fnRef.current as any) = fn
   const elRef =
-    userRef || ((localRef as unknown) as MutableRefObject<HTMLElement>)
+    userRef || (localRef as unknown as MutableRefObject<HTMLElement>)
 
   const handle = useCallback(
     (e) => {
@@ -727,7 +725,7 @@ export function useSelectCombobox(props: any = {}) {
   const styles = useStyles()
   return {
     ...props,
-    __css: styles.combobox
+    __css: styles.combobox,
   }
 }
 
@@ -738,7 +736,7 @@ export function useSelectInput(props: any = {}) {
   return {
     ...props,
     ...getInputProps(),
-    __css: styles.input
+    __css: styles.input,
   }
 }
 export function useSelectLabel(props: any = {}) {
@@ -746,7 +744,7 @@ export function useSelectLabel(props: any = {}) {
 
   return {
     ...props,
-    __css: styles.label
+    __css: styles.label,
   }
 }
 
@@ -758,7 +756,7 @@ export function useSelectButton(props: any = {}) {
   return {
     ...props,
     __css: styles.button,
-    onClick
+    onClick,
   }
 }
 
@@ -766,16 +764,16 @@ export function useSelectedItem(props: any = {}) {
   const { removeValue } = useSelectContext()
   const styles = useStyles()
 
-  const onClick = useCallback(() => removeValue(props.index), [
-    props.index,
-    removeValue
-  ])
+  const onClick = useCallback(
+    () => removeValue(props.index),
+    [props.index, removeValue]
+  )
 
   return {
     key: props.value,
     onClick,
     __css: styles.selectedItem,
-    ...props
+    ...props,
   }
 }
 
@@ -790,26 +788,21 @@ export function useSelectItem(props: any = {}) {
       () => ({
         ...getOptionProps!({
           option: { value: props.value },
-          index: props.index
+          index: props.index,
         }),
         __css: {
           ...styles.item,
-          ...(highlighted && (styles.item as any))?._active
-        }
+          ...(highlighted && (styles.item as any))?._active,
+        },
       }),
       [getOptionProps, props.value, props.index, styles.item]
-    )
+    ),
   }
 }
 
 export function useSelectList(props: any = {}) {
-  const {
-    isOpen,
-    getOption,
-    optionsRef,
-    popper,
-    visibleOptions
-  } = useSelectContext()
+  const { isOpen, getOption, optionsRef, popper, visibleOptions } =
+    useSelectContext()
   const styles = useStyles()
 
   return {
@@ -818,7 +811,7 @@ export function useSelectList(props: any = {}) {
     isOpen,
     visibleOptions,
     getOption,
-    __css: styles.list
+    __css: styles.list,
   }
 }
 
@@ -830,7 +823,7 @@ export function useSelectedList(props: any = {}) {
     ...props,
     multi,
     selectedItems,
-    __css: styles.selectedList
+    __css: styles.selectedList,
   }
 }
 
@@ -842,11 +835,11 @@ export function useSelectControl(props: any = {}) {
     ...props,
     ...useMemo(
       () => ({
-        ref: mergeRefs(props.ref, popper.referenceRef)
+        ref: mergeRefs(props.ref, popper.referenceRef),
       }),
       [props.ref, popper.referenceRef]
     ),
     isOpen,
-    __css: styles.control
+    __css: styles.control,
   }
 }

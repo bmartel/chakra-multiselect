@@ -62,8 +62,8 @@ export interface SelectControlProps
   children?: ReactNode
 }
 
-export interface SelectListProps extends MenuListProps {}
-export interface SelectOptionGroupProps extends MenuOptionGroupProps {}
+export type SelectListProps = MenuListProps
+export type SelectOptionGroupProps = MenuOptionGroupProps
 export interface SelectOptionItemProps extends HTMLChakraProps<'li'> {
   highlighted?: boolean
   index: number
@@ -100,6 +100,7 @@ export const SelectLabel = memo<HTMLChakraProps<'label'>>((props) => {
 
   return <chakra.label {...props} {...labelProps} />
 })
+SelectLabel.displayName = 'SelectLabel'
 
 export const SelectOptionItem = memo<SelectOptionItemProps>(
   ({ value, index, ...props }) => {
@@ -152,9 +153,13 @@ export const SelectList = memo(() => {
       {...listProps}
     >
       {dropdownVisible &&
-        visibleOptions.map((item: any, index: number) => (
-          <SelectOptionItem {...optionItemProps(item, index)} />
-        ))}
+        visibleOptions.map((item: any, index: number) => {
+          const { key: itemKey, ...restItemProps } = optionItemProps(
+            item,
+            index
+          )
+          return <SelectOptionItem key={itemKey} {...restItemProps} />
+        })}
     </chakra.ul>
   )
 })
@@ -177,6 +182,7 @@ export const SelectInput = memo((props) => {
 
   return <chakra.input {...inputProps} />
 })
+SelectInput.displayName = 'SelectInput'
 
 export const SelectedItem: React.FC<SelectedItemProps> = ({
   value,
@@ -216,6 +222,7 @@ export const SelectToggleButton = memo((props) => {
     />
   )
 })
+SelectToggleButton.displayName = 'SelectToggleButton'
 
 export const SelectedList = memo(({ children, ...props }) => {
   const { __css, selectedItems, multi, ...selectedListProps } =
@@ -235,6 +242,7 @@ export const SelectedList = memo(({ children, ...props }) => {
     </Box>
   )
 })
+SelectedList.displayName = 'SelectedList'
 
 export const SelectCombobox = memo((props) => {
   const { __css, ...comboboxProps } = useSelectCombobox(props)
@@ -245,6 +253,7 @@ export const SelectCombobox = memo((props) => {
     </HStack>
   )
 })
+SelectCombobox.displayName = 'SelectCombobox'
 
 export const SelectControl = forwardRef<SelectControlProps, 'div'>(
   ({ children }, ref) => {

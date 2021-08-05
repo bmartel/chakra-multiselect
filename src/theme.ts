@@ -11,7 +11,7 @@ const parts = [
   'button',
   'groupTitle',
   'divider',
-  'label'
+  'label',
 ]
 
 function baseStyleList(props: Record<string, any>) {
@@ -25,7 +25,7 @@ function baseStyleList(props: Record<string, any>) {
     borderRadius: 'md',
     borderWidth: '1px',
     maxH: '64',
-    overflowY: 'auto'
+    overflowY: 'auto',
   }
 }
 
@@ -33,7 +33,7 @@ const baseStyleSelectedList = {
   d: 'flex',
   flex: 1,
   flexWrap: 'wrap',
-  alignItems: 'center'
+  alignItems: 'center',
 }
 
 const baseStyleLabel = {
@@ -44,8 +44,8 @@ const baseStyleLabel = {
   transition: 'all 0.2s',
   opacity: 1,
   _disabled: {
-    opacity: 0.4
-  }
+    opacity: 0.4,
+  },
 }
 
 function baseStyleItem(props: Record<string, any>) {
@@ -53,18 +53,18 @@ function baseStyleItem(props: Record<string, any>) {
     cursor: 'pointer',
     transition: 'background 50ms ease-out',
     _focus: {
-      bg: mode(`gray.100`, `whiteAlpha.100`)(props)
+      bg: mode(`gray.100`, `whiteAlpha.100`)(props),
     },
     _active: {
-      bg: mode(`gray.100`, `whiteAlpha.100`)(props)
+      bg: mode(`gray.100`, `whiteAlpha.100`)(props),
     },
     _expanded: {
-      bg: mode(`gray.100`, `whiteAlpha.100`)(props)
+      bg: mode(`gray.100`, `whiteAlpha.100`)(props),
     },
     _disabled: {
       opacity: 0.4,
-      cursor: 'not-allowed'
-    }
+      cursor: 'not-allowed',
+    },
   }
 }
 
@@ -72,7 +72,7 @@ function baseStyleSelectedItem(props: Record<string, any>) {
   return {
     borderRadius: 'full',
     variant: 'solid',
-    colorscheme: props.colorscheme
+    colorscheme: props.colorscheme,
   }
 }
 
@@ -80,36 +80,36 @@ function baseStyleButton(props: Record<string, any>) {
   return {
     variant: 'ghost',
     _hover: {
-      bg: 'transparent'
+      bg: 'transparent',
     },
     _focus: {
-      bg: 'transparent'
+      bg: 'transparent',
     },
     _active: {
-      bg: 'transparent'
+      bg: 'transparent',
     },
-    colorscheme: props.colorscheme
+    colorscheme: props.colorscheme,
   }
 }
 
 const baseStyleControl = {
-  h: 'auto'
+  h: 'auto',
 }
 
-const baseStyleInput = (_props: Record<string, any>) => ({
+const baseStyleInput = () => ({
   bgColor: 'transparent',
   appearance: 'none',
   flex: 1,
-  outline: 0
+  outline: 0,
 })
 
 const baseStyleCombobox = {
   d: 'flex',
-  alignItems: 'center'
+  alignItems: 'center',
 }
 
 const baseStyleGroupTitle = {
-  fontWeight: 'semibold'
+  fontWeight: 'semibold',
 }
 
 const baseStyleDivider = {
@@ -118,7 +118,7 @@ const baseStyleDivider = {
   border: 0,
   borderColor: 'inherit',
   my: 1,
-  opacity: 0.8
+  opacity: 0.8,
 }
 
 const baseStyle = (props: Record<string, any>) => ({
@@ -132,7 +132,7 @@ const baseStyle = (props: Record<string, any>) => ({
   input: baseStyleInput(props),
   groupTitle: baseStyleGroupTitle,
   divider: baseStyleDivider,
-  label: baseStyleLabel
+  label: baseStyleLabel,
 })
 
 export const sizes = {
@@ -140,93 +140,93 @@ export const sizes = {
     control: {
       minH: 8,
       px: 1,
-      spacing: 1
+      spacing: 1,
     },
     input: {
-      m: 'px'
+      m: 'px',
     },
     combobox: {
-      spacing: '1'
+      spacing: '1',
     },
     item: {
       py: 1,
-      px: 2
+      px: 2,
     },
     selectedItem: {
-      m: 'px'
+      m: 'px',
     },
     selectedList: {
-      py: 'px'
+      py: 'px',
     },
     groupTitle: {
       mx: 2,
       my: 1,
-      fontSize: 'sm'
-    }
+      fontSize: 'sm',
+    },
   },
   md: {
     control: {
       minH: 10,
       px: 1,
-      spacing: 1
+      spacing: 1,
     },
     input: {
-      m: '2px'
+      m: '2px',
     },
     combobox: {
-      spacing: '1'
+      spacing: '1',
     },
     item: {
       py: 2,
-      px: 3
+      px: 3,
     },
     selectedItem: {
-      m: '2px'
+      m: '2px',
     },
     selectedList: {
-      py: '2px'
+      py: '2px',
     },
     groupTitle: {
       mx: 4,
       my: 2,
-      fontSize: 'sm'
-    }
+      fontSize: 'sm',
+    },
   },
   lg: {
     control: {
       minH: 12,
       px: 2,
-      spacing: 2
+      spacing: 2,
     },
     input: {
-      m: 1
+      m: 1,
     },
     combobox: {
-      spacing: '2'
+      spacing: '2',
     },
     item: {
       py: 2,
-      px: 3
+      px: 3,
     },
     selectedItem: {
-      m: 1
+      m: 1,
     },
     selectedList: {
-      py: 1
+      py: 1,
     },
     groupTitle: {
       mx: 4,
       my: 2,
-      fontSize: 'sm'
-    }
-  }
+      fontSize: 'sm',
+    },
+  },
 }
 
 export default {
   defaultProps: {
-    size: 'md'
+    size: 'md',
   },
   parts,
   sizes,
-  baseStyle
+  baseStyle,
 }
