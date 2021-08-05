@@ -96,7 +96,8 @@ const baseStyleControl = {
   h: 'auto',
 }
 
-const baseStyleInput = () => ({
+// eslint-disable-next-line
+const baseStyleInput = (_props: Record<string, any>) => ({
   bgColor: 'transparent',
   appearance: 'none',
   flex: 1,
