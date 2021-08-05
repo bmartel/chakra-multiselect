@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>SelectActions | chakra-multiselect</title>
+	<title>KeyMeta | chakra-multiselect</title>
 	<meta name="description" content="Documentation for chakra-multiselect">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,60 +55,79 @@
 					<a href="../modules.html">chakra-multiselect</a>
 				</li>
 				<li>
-					<a href="selectactions.html">SelectActions</a>
+					<a href="KeyMeta.html">KeyMeta</a>
 				</li>
 			</ul>
-			<h1>Enumeration SelectActions</h1>
+			<h1>Interface KeyMeta</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">KeyMeta</span>
+					</li>
+				</ul>
+			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Enumeration members</h3>
+							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="selectactions.html#highlightindex" class="tsd-kind-icon">Highlight<wbr>Index</a></li>
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="selectactions.html#setopen" class="tsd-kind-icon">Set<wbr>Open</a></li>
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="selectactions.html#setsearch" class="tsd-kind-icon">Set<wbr>Search</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="KeyMeta.html#key" class="tsd-kind-icon">key</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="KeyMeta.html#keyCode" class="tsd-kind-icon">key<wbr>Code</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="KeyMeta.html#meta" class="tsd-kind-icon">meta</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="KeyMeta.html#shift" class="tsd-kind-icon">shift</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Enumeration members</h2>
-				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="highlightindex" class="tsd-anchor"></a>
-					<h3>Highlight<wbr>Index</h3>
-					<div class="tsd-signature tsd-kind-icon">Highlight<wbr>Index<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;highlightIndex&quot;</span></div>
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="key" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> key</h3>
+					<div class="tsd-signature tsd-kind-icon">key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">EventKeys</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/997ae93/src/use-select.ts#L79">src/use-select.ts:79</a></li>
+							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/aa87c21/src/use-select.ts#L33">src/use-select.ts:33</a></li>
 						</ul>
 					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="setopen" class="tsd-anchor"></a>
-					<h3>Set<wbr>Open</h3>
-					<div class="tsd-signature tsd-kind-icon">Set<wbr>Open<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;setOpen&quot;</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="keyCode" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> key<wbr>Code</h3>
+					<div class="tsd-signature tsd-kind-icon">key<wbr>Code<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">EventKeys</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/997ae93/src/use-select.ts#L77">src/use-select.ts:77</a></li>
+							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/aa87c21/src/use-select.ts#L34">src/use-select.ts:34</a></li>
 						</ul>
 					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="setsearch" class="tsd-anchor"></a>
-					<h3>Set<wbr>Search</h3>
-					<div class="tsd-signature tsd-kind-icon">Set<wbr>Search<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;setSearch&quot;</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="meta" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> meta</h3>
+					<div class="tsd-signature tsd-kind-icon">meta<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/997ae93/src/use-select.ts#L78">src/use-select.ts:78</a></li>
+							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/aa87c21/src/use-select.ts#L36">src/use-select.ts:36</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="shift" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> shift</h3>
+					<div class="tsd-signature tsd-kind-icon">shift<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/aa87c21/src/use-select.ts#L35">src/use-select.ts:35</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -126,17 +145,20 @@
 				<ul class="before-current">
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-enum">
-						<a href="selectactions.html" class="tsd-kind-icon">Select<wbr>Actions</a>
+					<li class="current tsd-kind-interface">
+						<a href="KeyMeta.html" class="tsd-kind-icon">Key<wbr>Meta</a>
 						<ul>
-							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="selectactions.html#highlightindex" class="tsd-kind-icon">Highlight<wbr>Index</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="KeyMeta.html#key" class="tsd-kind-icon">key</a>
 							</li>
-							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="selectactions.html#setopen" class="tsd-kind-icon">Set<wbr>Open</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="KeyMeta.html#keyCode" class="tsd-kind-icon">key<wbr>Code</a>
 							</li>
-							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="selectactions.html#setsearch" class="tsd-kind-icon">Set<wbr>Search</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="KeyMeta.html#meta" class="tsd-kind-icon">meta</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="KeyMeta.html#shift" class="tsd-kind-icon">shift</a>
 							</li>
 						</ul>
 					</li>
@@ -153,6 +175,7 @@
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
 				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
 			</ul>
 		</div>
 	</div>

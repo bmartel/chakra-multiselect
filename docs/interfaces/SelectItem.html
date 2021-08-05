@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Option | chakra-multiselect</title>
+	<title>SelectItem | chakra-multiselect</title>
 	<meta name="description" content="Documentation for chakra-multiselect">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,10 +55,10 @@
 					<a href="../modules.html">chakra-multiselect</a>
 				</li>
 				<li>
-					<a href="option.html">Option</a>
+					<a href="SelectItem.html">SelectItem</a>
 				</li>
 			</ul>
-			<h1>Interface Option</h1>
+			<h1>Interface SelectItem</h1>
 		</div>
 	</div>
 </header>
@@ -69,7 +69,12 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">Option</span>
+						<span class="target">SelectItem</span>
+						<ul class="tsd-hierarchy">
+							<li>
+								<a href="SelectedItemProps.html" class="tsd-signature-type" data-tsd-kind="Interface">SelectedItemProps</a>
+							</li>
+						</ul>
 					</li>
 				</ul>
 			</section>
@@ -80,8 +85,8 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="option.html#label" class="tsd-kind-icon">label</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="option.html#value" class="tsd-kind-icon">value</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="SelectItem.html#label" class="tsd-kind-icon">label</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="SelectItem.html#value" class="tsd-kind-icon">value</a></li>
 							</ul>
 						</section>
 					</div>
@@ -91,21 +96,21 @@
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="label" class="tsd-anchor"></a>
-					<h3>label</h3>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> label</h3>
 					<div class="tsd-signature tsd-kind-icon">label<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/997ae93/src/use-select.ts#L18">src/use-select.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/aa87c21/src/MultiSelect.tsx#L42">src/MultiSelect.tsx:42</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="value" class="tsd-anchor"></a>
 					<h3>value</h3>
-					<div class="tsd-signature tsd-kind-icon">value<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></div>
+					<div class="tsd-signature tsd-kind-icon">value<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/997ae93/src/use-select.ts#L19">src/use-select.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/aa87c21/src/MultiSelect.tsx#L41">src/MultiSelect.tsx:41</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -124,13 +129,13 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface">
-						<a href="option.html" class="tsd-kind-icon">Option</a>
+						<a href="SelectItem.html" class="tsd-kind-icon">Select<wbr>Item</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="option.html#label" class="tsd-kind-icon">label</a>
+								<a href="SelectItem.html#label" class="tsd-kind-icon">label</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="option.html#value" class="tsd-kind-icon">value</a>
+								<a href="SelectItem.html#value" class="tsd-kind-icon">value</a>
 							</li>
 						</ul>
 					</li>
@@ -147,6 +152,7 @@
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
 				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
 			</ul>
 		</div>
 	</div>
