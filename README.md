@@ -4,7 +4,7 @@
 
 [![NPM](https://img.shields.io/npm/v/chakra-multiselect.svg)](https://www.npmjs.com/package/chakra-multiselect)
 [![Package Size](https://badgen.net/bundlephobia/min/chakra-multiselect)](https://badgen.net/bundlephobia/min/chakra-multiselect)
-[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-prettier-hotpink.svg)](https://prettier.io)
 
 ## Install
 
