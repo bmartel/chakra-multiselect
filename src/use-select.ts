@@ -14,6 +14,7 @@ import {
   useMemo,
   MutableRefObject,
 } from 'react'
+import computeScrollIntoView from 'compute-scroll-into-view'
 
 export interface Option {
   label: string
@@ -40,7 +41,12 @@ export type KeyboardEventHandler = (e: KeyboardEvent) => void
 
 export type KeyHandler = () => void
 
-export type ScrollToIndex = (index: number) => void
+export type ScrollToIndex = (
+  index: number,
+  ref: MutableRefObject<HTMLElement | undefined>,
+  optionsRef: MutableRefObject<HTMLElement | undefined>,
+  enabledRef: MutableRefObject<boolean>
+) => void
 
 export type GetDebounce = (options: Option[]) => number
 
@@ -102,8 +108,31 @@ const initialState: SelectState = {
   highlightedIndex: 0,
 }
 
+function scrollIntoView(node: any, optionsNode: any) {
+  if (!node || !optionsNode) {
+    return
+  }
+  const actions = computeScrollIntoView(node, {
+    boundary: optionsNode,
+    block: 'nearest',
+    scrollMode: 'if-needed',
+  })
+  actions.forEach(({ el, top, left }) => {
+    el.scrollTop = top
+    el.scrollLeft = left
+  })
+}
 const defaultStateReducer: StateReducer = (_, newState) => newState
-const defaultScrollToIndex: ScrollToIndex = () => null
+const defaultScrollToIndex: ScrollToIndex = (
+  _,
+  inputRef,
+  optionsRef,
+  enabledRef
+) => {
+  if (enabledRef.current) {
+    scrollIntoView(inputRef.current, optionsRef.current)
+  }
+}
 const defaultGetOption: GetOption = (option) =>
   typeof option === 'string' ? { label: option, value: option } : option
 const defaultGetDebounce: GetDebounce = (options) =>
@@ -237,6 +266,7 @@ export interface UseSelectReturn {
   selectIndex: (index: number) => any
   highlightIndex: (value: any) => any
   highlightedIndexRef: MutableRefObject<HTMLElement | undefined>
+  enableScrollRef: MutableRefObject<boolean>
   removeValue: SelectRemoveValue
   setOpen: SelectSetOpen
   setSearch: SelectSetSearch
@@ -285,6 +315,7 @@ export function useSelect({
   const filterFnRef = useRef()
   const scrollToIndexRef = useRef()
   const highlightedIndexRef = useRef<HTMLElement | undefined>()
+  const enableScrollRef = useRef(false)
 
   const popper = usePopper({
     placement,
@@ -487,6 +518,7 @@ export function useSelect({
           ? shiftAmount - 1
           : 1
       setOpen(true)
+      enableScrollRef.current = true
       highlightIndex((old: number) => old - amount)
     }
 
@@ -501,6 +533,7 @@ export function useSelect({
           ? shiftAmount - 1
           : 1
       setOpen(true)
+      enableScrollRef.current = true
       highlightIndex((old: number) => old + amount)
     }
 
@@ -612,6 +645,7 @@ export function useSelect({
         }
       },
       onMouseEnter: (e: any) => {
+        enableScrollRef.current = false
         highlightIndex(index)
         if (onMouseEnter) {
           onMouseEnter(e)
@@ -652,6 +686,7 @@ export function useSelect({
     ;(scrollToIndexRef.current as any)?.(
       highlightedIndex,
       highlightedIndexRef,
+      optionsRef,
       enableScrollRef
     )
   }, [highlightedIndex])
@@ -673,6 +708,8 @@ export function useSelect({
     searchValue,
     isOpen,
     highlightedIndex,
+    highlightedIndexRef,
+    enableScrollRef,
     selectedOption,
     visibleOptions: options!,
     // Actions
@@ -784,7 +821,8 @@ export function useSelectedItem(props: any = {}) {
 }
 
 export function useSelectItem(props: any = {}) {
-  const { getOptionProps, highlightedIndex } = useSelectContext()
+  const { getOptionProps, highlightedIndex, highlightedIndexRef } =
+    useSelectContext()
   const styles = useStyles()
   const highlighted = highlightedIndex === props.index
 
@@ -796,12 +834,13 @@ export function useSelectItem(props: any = {}) {
           option: { value: props.value },
           index: props.index,
         }),
+        highlightedRef: highlighted ? highlightedIndexRef : undefined,
         __css: {
           ...styles.item,
           ...(highlighted && (styles.item as any))?._active,
         },
       }),
-      [getOptionProps, props.value, props.index, styles.item]
+      [highlighted, getOptionProps, props.value, props.index, styles.item]
     ),
   }
 }
