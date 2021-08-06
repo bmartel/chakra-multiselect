@@ -104,11 +104,11 @@ SelectLabel.displayName = 'SelectLabel'
 
 export const SelectOptionItem = memo<SelectOptionItemProps>(
   ({ value, index, ...props }) => {
-    const { selectedItemRef, ...itemProps } = useSelectItem({ value, index })
+    const { highlightedRef, ...itemProps } = useSelectItem({ value, index })
 
     return (
       <chakra.li
-        ref={selectedItemRef && selectedItemRef}
+        ref={highlightedRef && highlightedRef}
         {...props}
         {...itemProps}
       >

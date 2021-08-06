@@ -42,9 +42,9 @@
     "react": "^17.0.2"
   },
   "devDependencies": {
+    "@chakra-ui/react-utils": "^1.1.2",
     "@chakra-ui/theme-tools": "^1.1.8",
     "@chakra-ui/utils": "^1.8.1",
-    "@chakra-ui/react-utils": "^1.1.2",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",
     "@testing-library/user-event": "^13.2.1",
@@ -55,6 +55,7 @@
     "@typescript-eslint/eslint-plugin": "^4.29.0",
     "@typescript-eslint/parser": "^4.29.0",
     "babel-eslint": "^10.1.0",
+    "compute-scroll-into-view": "^1.0.17",
     "cross-env": "^7.0.3",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.1.0",
