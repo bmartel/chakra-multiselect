@@ -133,8 +133,12 @@ const defaultScrollToIndex: ScrollToIndex = (
     scrollIntoView(inputRef.current, optionsRef.current)
   }
 }
+export const labelFromValue = (value: string): string =>
+  `${value.charAt(0).toUpperCase()}${value.substring(1)}`
+export const idFromOption = (option: Option, prefix = ''): string =>
+  `${prefix}${option?.value}`
 const defaultGetOption: GetOption = (option) =>
-  typeof option === 'string' ? { label: option, value: option } : option
+  typeof option === 'string' ? { value: option, label: '' } : option
 const defaultGetDebounce: GetDebounce = (options) =>
   options.length > 10000 ? 1000 : options.length > 1000 ? 200 : 0
 
@@ -860,10 +864,15 @@ export function useSelectItem(props: any = {}) {
 
   return {
     ...props,
-    ...useMemo(
-      () => ({
+    ...useMemo(() => {
+      const option = {
+        value: props.value,
+        label: props.label || labelFromValue(props.value),
+      }
+      return {
         ...getOptionProps!({
-          option: { value: props.value },
+          option,
+          key: props.key || idFromOption(option),
           index: props.index,
         }),
         highlightedRef: highlighted ? highlightedIndexRef : undefined,
@@ -871,9 +880,8 @@ export function useSelectItem(props: any = {}) {
           ...styles.item,
           ...(highlighted && (styles.item as any))?._active,
         },
-      }),
-      [highlighted, getOptionProps, props.value, props.index, styles.item]
-    ),
+      }
+    }, [highlighted, getOptionProps, props.value, props.index, styles.item]),
   }
 }
 

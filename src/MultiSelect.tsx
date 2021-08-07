@@ -32,6 +32,8 @@ import {
   useSelectList,
   useSelectedList,
   UseSelectProps,
+  idFromOption,
+  labelFromValue,
 } from './use-select'
 
 // @see https://github.com/chakra-ui/chakra-ui/issues/140
@@ -65,6 +67,7 @@ export type SelectListProps = MenuListProps
 export type SelectOptionGroupProps = MenuOptionGroupProps
 export interface SelectOptionItemProps extends HTMLChakraProps<'li'> {
   highlighted?: boolean
+  label?: string
   index: number
 }
 
@@ -104,8 +107,12 @@ export const SelectLabel = memo<HTMLChakraProps<'label'>>((props) => {
 SelectLabel.displayName = 'SelectLabel'
 
 export const SelectOptionItem = memo<SelectOptionItemProps>(
-  ({ value, index, ...props }) => {
-    const { highlightedRef, ...itemProps } = useSelectItem({ value, index })
+  ({ value, label, index, ...props }) => {
+    const { highlightedRef, option, ...itemProps } = useSelectItem({
+      value,
+      label,
+      index,
+    })
 
     return (
       <chakra.li
@@ -113,7 +120,7 @@ export const SelectOptionItem = memo<SelectOptionItemProps>(
         {...props}
         {...itemProps}
       >
-        {value}
+        {option?.label || value}
       </chakra.li>
     )
   }
@@ -134,8 +141,9 @@ export const SelectList = memo(() => {
     (option, index) => {
       const optionItem = getOption(option)
       return {
-        key: optionItem.id || `${optionItem.value}${index}`,
+        key: optionItem.id || idFromOption(optionItem, 'option-'),
         value: optionItem.value,
+        label: optionItem.label || labelFromValue(optionItem.value),
         index,
       }
     },
