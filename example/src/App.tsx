@@ -17,7 +17,15 @@ import { FC, useCallback, useState } from 'react'
 
 const theme = extendTheme({
   components: {
-    MultiSelect: MultiSelectTheme,
+    MultiSelect: {
+      ...MultiSelectTheme,
+      baseStyle: (props: any) => {
+        const baseStyle = MultiSelectTheme.baseStyle(props) as any
+        return {
+          ...baseStyle,
+        }
+      },
+    },
   },
 })
 

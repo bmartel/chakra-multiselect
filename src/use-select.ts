@@ -793,12 +793,16 @@ export function useSelectLabel(props: any = {}) {
 
 export function useSelectButton(props: any = {}) {
   const { isOpen, setOpen } = useSelectContext()
-  const onClick = useCallback(() => setOpen(!isOpen), [setOpen, isOpen])
+  const onClick = useCallback(() => (setOpen as any)((o: any) => !o), [setOpen])
   const styles = useStyles()
 
   return {
     ...props,
-    __css: styles.button,
+    __css: {
+      ...styles.button,
+      ...(isOpen && (styles.button as any))?._active,
+    },
+    isOpen,
     onClick,
   }
 }

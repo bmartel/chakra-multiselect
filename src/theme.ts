@@ -54,6 +54,7 @@ function baseStyleItem(props: Record<string, any>) {
     transition: 'background 50ms ease-out',
     _focus: {
       bg: mode(`gray.100`, `whiteAlpha.100`)(props),
+      boxShadow: 'outline',
     },
     _active: {
       bg: mode(`gray.100`, `whiteAlpha.100`)(props),
@@ -80,13 +81,14 @@ function baseStyleButton(props: Record<string, any>) {
   return {
     variant: 'ghost',
     _hover: {
-      bg: 'transparent',
+      bg: mode(`gray.200`, `whiteAlpha.200`)(props),
     },
     _focus: {
-      bg: 'transparent',
+      bg: mode(`gray.200`, `whiteAlpha.200`)(props),
+      boxShadow: 'outline',
     },
     _active: {
-      bg: 'transparent',
+      bg: mode(`gray.100`, `whiteAlpha.100`)(props),
     },
     colorscheme: props.colorscheme,
   }

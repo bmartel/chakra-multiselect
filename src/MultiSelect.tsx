@@ -19,7 +19,6 @@ import {
   TagProps,
 } from '@chakra-ui/react'
 import { memo, ReactNode, useCallback, useMemo } from 'react'
-import { PropsOf } from '@emotion/react'
 import {
   SelectProvider,
   useSelect,
@@ -76,6 +75,8 @@ export interface SelectedItemProps extends TagProps, SelectItem {
 export interface MultiSelectProps extends Omit<SelectProps, 'children'> {
   children?: ReactNode
 }
+
+export const ChakraSvg = chakra('svg')
 
 export const Select: React.FC<SelectProps> = (props) => {
   const { children } = props
@@ -168,13 +169,24 @@ export const SelectOptionGroup: React.FC<SelectOptionGroupProps> = (props) => {
   return <MenuOptionGroup {...props} />
 }
 
-const SelectToggleIcon: React.FC<PropsOf<'svg'>> = (props) => (
-  <svg viewBox='0 0 24 24' width='1.25rem' height='1.25rem' {...props}>
+const SelectToggleIcon: React.FC<
+  HTMLChakraProps<'svg'> & { isActive?: boolean }
+> = ({ isActive, width = '1.25rem', height = '1.25rem', __css, ...props }) => (
+  <ChakraSvg
+    viewBox='0 0 24 24'
+    width={width}
+    height={height}
+    __css={{
+      ...__css,
+      ...(isActive && ((__css as any)?._active as any)),
+    }}
+    {...props}
+  >
     <path
       fill='currentColor'
       d='M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z'
     />
-  </svg>
+  </ChakraSvg>
 )
 
 export const SelectInput = memo((props) => {
@@ -214,9 +226,19 @@ export const SelectToggleButton = memo((props) => {
 
   return (
     <IconButton
+      tabIndex={0}
       size={size}
       aria-label={ariaLabel}
-      icon={<Icon />}
+      icon={
+        <Icon
+          isActive={buttonProps.isOpen}
+          __css={{
+            transitionDuration: '200ms',
+            transitionProperty: 'transform',
+            _active: { transform: 'rotate(180deg)' },
+          }}
+        />
+      }
       {...__css}
       {...buttonProps}
     />
