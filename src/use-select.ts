@@ -186,6 +186,25 @@ function useDebounce(fn: AnyFunc, time = 0) {
   )
 }
 
+function updateReducerState(state: any, newValue: any, key?: string): any {
+  if (!key) {
+    if (typeof newValue === 'function') {
+      return newValue(state)
+    }
+    return newValue
+  }
+  if (typeof newValue === 'function') {
+    const next = {
+      ...state,
+      [key]: newValue(state[key]),
+    }
+    return next
+  }
+  return {
+    ...state,
+    [key]: newValue,
+  }
+}
 function useHoistedState(
   initialState: SelectState,
   reducer: StateReducer
@@ -275,6 +294,7 @@ export interface UseSelectReturn {
   getOptionProps: AnyFunc
   getOption: GetOption
   optionsRef: MutableRefObject<any>
+  controlRef: MutableRefObject<any>
 }
 
 const [SelectProvider, useSelectContext] = createContext<UseSelectReturn>({
@@ -310,6 +330,7 @@ export function useSelect({
 
   const optionsRef = useRef()
   const inputRef = useRef()
+  const controlRef = useRef()
   const onBlurRef = useRef({})
   const onChangeRef = useRef()
   const filterFnRef = useRef()
@@ -395,10 +416,7 @@ export function useSelect({
   const setOpen = useCallback(
     (newIsOpen) => {
       setState(
-        (old) => ({
-          ...old,
-          isOpen: newIsOpen,
-        }),
+        (old) => updateReducerState(old, newIsOpen, 'isOpen'),
         SelectActions.SetOpen
       )
     },
@@ -407,10 +425,7 @@ export function useSelect({
 
   const setResolvedSearch = useDebounce((value) => {
     setState(
-      (old) => ({
-        ...old,
-        resolvedSearchValue: value,
-      }),
+      (old) => updateReducerState(old, value, 'resolvedSearchValue'),
       SelectActions.SetSearch
     )
   }, getDebounce(options!))
@@ -418,10 +433,7 @@ export function useSelect({
   const setSearch = useCallback(
     (value) => {
       setState(
-        (old) => ({
-          ...old,
-          searchValue: value,
-        }),
+        (old) => updateReducerState(old, value, 'searchValue'),
         SelectActions.SetSearch
       )
       setResolvedSearch(value)
@@ -656,14 +668,15 @@ export function useSelect({
 
   // Effects
 
-  // When the user clicks outside of the options box
+  // When the user clicks outside of the options box or input
   // while open, we need to close the dropdown
   useClickOutsideRef(
     isOpen,
     () => {
       setOpen(false)
     },
-    optionsRef!
+    optionsRef!,
+    controlRef!
   )
 
   // When searching, activate the first option
@@ -702,6 +715,7 @@ export function useSelect({
   return {
     multi,
     optionsRef,
+    controlRef,
     popper,
     // State
     value,
@@ -728,14 +742,19 @@ export function useSelect({
 function useClickOutsideRef(
   enable: boolean,
   fn: AnyFunc,
-  userRef: MutableRefObject<any>
+  dropdownRef: MutableRefObject<any>,
+  controlRef: MutableRefObject<any>
 ) {
-  const localRef = useRef()
+  const localDropdownRef = useRef()
+  const localControlRef = useRef()
   const fnRef = useRef()
 
   ;(fnRef.current as any) = fn
-  const elRef =
-    userRef || (localRef as unknown as MutableRefObject<HTMLElement>)
+  const elDropdownRef =
+    dropdownRef ||
+    (localDropdownRef as unknown as MutableRefObject<HTMLElement>)
+  const elControlRef =
+    controlRef || (localControlRef as unknown as MutableRefObject<HTMLElement>)
 
   const handle = useCallback(
     (e) => {
@@ -743,12 +762,14 @@ function useClickOutsideRef(
       if (e.type === 'click' && isTouch) {
         return
       }
-      const el = elRef.current as HTMLElement
-      if (el && !el.contains(e.target)) {
+
+      const elControl = elControlRef.current as HTMLElement
+      const elDropdown = elDropdownRef.current as HTMLElement
+      if (!(elControl?.contains(e.target) || elDropdown?.contains(e.target))) {
         ;(fnRef.current as any)(e)
       }
     },
-    [elRef]
+    [elControlRef, elDropdownRef]
   )
 
   useEffect(() => {
@@ -793,7 +814,14 @@ export function useSelectLabel(props: any = {}) {
 
 export function useSelectButton(props: any = {}) {
   const { isOpen, setOpen } = useSelectContext()
-  const onClick = useCallback(() => (setOpen as any)((o: any) => !o), [setOpen])
+  const onClick = useCallback(
+    (e) => {
+      e.preventDefault()
+      e.stopPropagation()
+      ;(setOpen as any)((o: any) => !o)
+    },
+    [setOpen]
+  )
   const styles = useStyles()
 
   return {
@@ -877,16 +905,16 @@ export function useSelectedList(props: any = {}) {
 }
 
 export function useSelectControl(props: any = {}) {
-  const { isOpen, popper } = useSelectContext()
+  const { isOpen, popper, controlRef } = useSelectContext()
   const styles = useStyles()
 
   return {
     ...props,
     ...useMemo(
       () => ({
-        ref: mergeRefs(props.ref, popper.referenceRef),
+        ref: mergeRefs(props.ref, controlRef, popper.referenceRef),
       }),
-      [props.ref, popper.referenceRef]
+      [props.ref, controlRef, popper.referenceRef]
     ),
     isOpen,
     __css: styles.control,

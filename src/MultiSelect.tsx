@@ -221,6 +221,7 @@ export const SelectToggleButton = memo((props) => {
     size = 'sm',
     ariaLabel = 'toggle menu',
     Icon = SelectToggleIcon,
+    isOpen,
     ...buttonProps
   } = useSelectButton(props)
 
@@ -231,7 +232,7 @@ export const SelectToggleButton = memo((props) => {
       aria-label={ariaLabel}
       icon={
         <Icon
-          isActive={buttonProps.isOpen}
+          isActive={isOpen}
           __css={{
             transitionDuration: '200ms',
             transitionProperty: 'transform',
