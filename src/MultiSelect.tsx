@@ -109,7 +109,7 @@ export const SelectLabel = memo<HTMLChakraProps<'label'>>((props) => {
 SelectLabel.displayName = 'SelectLabel'
 
 export const SelectOptionItem = memo<SelectOptionItemProps>(
-  ({ value, label, index, selected, ...props }) => {
+  ({ value, label, index, selected, created, ...props }) => {
     const { highlightedRef, option, ...itemProps } = useSelectItem({
       value,
       label,
@@ -123,7 +123,16 @@ export const SelectOptionItem = memo<SelectOptionItemProps>(
         {...props}
         {...itemProps}
       >
-        {option?.label || value}
+        <HStack justifyContent='space-between' w='full'>
+          <Box>{option?.label || value}</Box>
+          {!!created && (
+            <Tag flexShrink={0}>
+              <TagLabel fontSize='xs' fontWeight='bold'>
+                New
+              </TagLabel>
+            </Tag>
+          )}
+        </HStack>
       </chakra.li>
     )
   }
@@ -148,6 +157,7 @@ export const SelectList = memo(() => {
         value: optionItem.value,
         label: optionItem.label || labelFromValue(optionItem.value),
         selected: optionItem.selected,
+        created: optionItem.created,
         index,
       }
     },
