@@ -12,6 +12,7 @@ import {
   MultiSelect,
   MultiSelectProps,
   MultiSelectTheme,
+  SelectionVisibilityMode,
 } from 'chakra-multiselect'
 import { FC, useCallback, useState } from 'react'
 
@@ -126,6 +127,17 @@ const App = () => {
               options={options}
               label='Choose or create multiple items'
               create
+            />
+            <StatefulMultiSelect
+              options={options}
+              label='Choose a single item with list selection'
+              selectionVisibleIn={SelectionVisibilityMode.List}
+              single
+            />
+            <StatefulMultiSelect
+              options={options}
+              label='Choose multiple items with list selection'
+              selectionVisibleIn={SelectionVisibilityMode.List}
             />
           </VStack>
         </VStack>

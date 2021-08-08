@@ -69,6 +69,7 @@ export interface SelectOptionItemProps extends HTMLChakraProps<'li'> {
   highlighted?: boolean
   label?: string
   index: number
+  selected?: boolean
 }
 
 export interface SelectedItemProps extends TagProps, SelectItem {
@@ -107,11 +108,12 @@ export const SelectLabel = memo<HTMLChakraProps<'label'>>((props) => {
 SelectLabel.displayName = 'SelectLabel'
 
 export const SelectOptionItem = memo<SelectOptionItemProps>(
-  ({ value, label, index, ...props }) => {
+  ({ value, label, index, selected, ...props }) => {
     const { highlightedRef, option, ...itemProps } = useSelectItem({
       value,
       label,
       index,
+      selected,
     })
 
     return (
@@ -144,6 +146,7 @@ export const SelectList = memo(() => {
         key: optionItem.id || idFromOption(optionItem, 'option-'),
         value: optionItem.value,
         label: optionItem.label || labelFromValue(optionItem.value),
+        selected: optionItem.selected,
         index,
       }
     },

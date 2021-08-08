@@ -62,6 +62,9 @@ function baseStyleItem(props: Record<string, any>) {
     _expanded: {
       bg: mode(`gray.100`, `whiteAlpha.100`)(props),
     },
+    _selected: {
+      bg: mode(`gray.300`, `whiteAlpha.300`)(props),
+    },
     _disabled: {
       opacity: 0.4,
       cursor: 'not-allowed',
@@ -81,10 +84,10 @@ function baseStyleButton(props: Record<string, any>) {
   return {
     variant: 'ghost',
     _hover: {
-      bg: mode(`gray.200`, `whiteAlpha.200`)(props),
+      bg: mode(`gray.300`, `whiteAlpha.300`)(props),
     },
     _focus: {
-      bg: mode(`gray.200`, `whiteAlpha.200`)(props),
+      bg: mode(`gray.300`, `whiteAlpha.300`)(props),
       boxShadow: 'outline',
     },
     _active: {

@@ -264,10 +264,16 @@ const useKeys = (
   }
 }
 
+export enum SelectionVisibilityMode {
+  List = 'list',
+  Input = 'input',
+  Both = 'both',
+}
 export interface UseSelectProps extends UsePopperProps {
   onChange: SelectOnChange
   single?: boolean
   create?: boolean
+  selectionVisibleIn?: SelectionVisibilityMode
   duplicates?: boolean
   options?: Option[]
   value?: any
@@ -286,6 +292,7 @@ export interface UseSelectReturn {
   highlightedIndex: number
   selectedOption: Option
   visibleOptions: Option[]
+  selectionVisibleIn: SelectionVisibilityMode
   selectIndex: (index: number) => any
   highlightIndex: (value: any) => any
   highlightedIndexRef: MutableRefObject<HTMLElement | undefined>
@@ -311,6 +318,7 @@ export { SelectProvider, useSelectContext }
 export function useSelect({
   create = false,
   single = false,
+  selectionVisibleIn = SelectionVisibilityMode.Input,
   getDebounce = defaultGetDebounce,
   getOption = defaultGetOption,
   stateReducer = defaultStateReducer,
@@ -365,6 +373,17 @@ export function useSelect({
   // If multi and duplicates aren't allowed, filter out the
   // selected options from the options list
   options = useMemo(() => {
+    // if selectionVisibleIn list || both set a selected value and don't filter
+    if (selectionVisibleIn !== SelectionVisibilityMode.Input) {
+      return options?.map((d) => ({
+        ...getOption(d),
+        selected: (Array.isArray(value) ? value : [value || ''])?.some(
+          (v: any) => getOption(v).value === getOption(d).value
+        ),
+      }))
+    }
+
+    // otherwise
     if (multi && !duplicates) {
       return options?.filter(
         (d) =>
@@ -372,7 +391,7 @@ export function useSelect({
       )
     }
     return options
-  }, [options, value, duplicates, multi, getOption])
+  }, [options, value, duplicates, multi, getOption, selectionVisibleIn])
 
   // Compute the currently selected option(s)
   const selectedOption = useMemo(() => {
@@ -496,11 +515,17 @@ export function useSelect({
   )
 
   const removeValue = useCallback(
-    (index) => {
-      ;(onChangeRef.current as any)(
-        value.filter((_: string, i: number) => i !== index),
-        { action: ChangeActions.Remove, value: getOption(value[index]) }
+    (v: number | string) => {
+      const isIndex = typeof v === 'number'
+      const _multi = Array.isArray(value)
+      const _value = _multi ? value : [value]
+      const _next = _value.filter((_v: string, i: number) =>
+        isIndex ? i !== v : v !== _v
       )
+      ;(onChangeRef.current as any)(_multi ? _next : _next[0] || '', {
+        action: ChangeActions.Remove,
+        value: getOption(isIndex ? _value[v] : v),
+      })
     },
     [value]
   )
@@ -611,8 +636,11 @@ export function useSelect({
         }
       },
       value:
-        (isOpen ? searchValue : selectedOption ? selectedOption.label : '') ||
-        '',
+        (isOpen
+          ? searchValue || selectedOption.label
+          : selectedOption
+          ? selectedOption.label
+          : '') || '',
       onChange: (e: any) => {
         handleSearchValueChange(e)
         if (onChange) {
@@ -643,7 +671,7 @@ export function useSelect({
   }
 
   const getOptionProps = (
-    { index, key = index, onClick, onMouseEnter, ...rest } = {} as any
+    { index, key = index, onClick, onMouseEnter, option, ...rest } = {} as any
   ) => {
     if (typeof index !== 'number' || index < 0) {
       throw new Error(
@@ -653,9 +681,14 @@ export function useSelect({
 
     return {
       key,
+      option,
       ...rest,
       onClick: (e: any) => {
-        selectIndex(index)
+        if (option.selected !== undefined && option.selected) {
+          removeValue(option.value)
+        } else {
+          selectIndex(index)
+        }
         if (onClick) {
           onClick(e)
         }
@@ -730,6 +763,7 @@ export function useSelect({
     enableScrollRef,
     selectedOption,
     visibleOptions: options!,
+    selectionVisibleIn,
     // Actions
     selectIndex,
     removeValue,
@@ -856,7 +890,7 @@ export function useSelectedItem(props: any = {}) {
   }
 }
 
-export function useSelectItem(props: any = {}) {
+export function useSelectItem({ selected, ...props }: any = {}) {
   const { getOptionProps, highlightedIndex, highlightedIndexRef } =
     useSelectContext()
   const styles = useStyles()
@@ -868,6 +902,7 @@ export function useSelectItem(props: any = {}) {
       const option = {
         value: props.value,
         label: props.label || labelFromValue(props.value),
+        selected,
       }
       return {
         ...getOptionProps!({
@@ -878,6 +913,7 @@ export function useSelectItem(props: any = {}) {
         highlightedRef: highlighted ? highlightedIndexRef : undefined,
         __css: {
           ...styles.item,
+          ...(selected && (styles.item as any))?._selected,
           ...(highlighted && (styles.item as any))?._active,
         },
       }
