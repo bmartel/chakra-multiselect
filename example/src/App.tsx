@@ -13,8 +13,9 @@ import {
   MultiSelectProps,
   MultiSelectTheme,
   SelectionVisibilityMode,
+  useMultiSelect,
 } from 'chakra-multiselect'
-import { FC, useCallback, useState } from 'react'
+import { FC } from 'react'
 
 const theme = extendTheme({
   components: {
@@ -76,22 +77,26 @@ const items = [
   'Oganesson',
 ]
 
-const options = items.map((label) => ({ label, value: label.toLowerCase() }))
+const _options = items.map((label) => ({ label, value: label.toLowerCase() }))
 
 const StatefulMultiSelect: FC<
   Omit<MultiSelectProps, 'onChange' | 'value'> &
     Partial<Pick<MultiSelectProps, 'onChange' | 'value'>>
 > = ({ onChange: _onChange, value: _value, ...props }) => {
-  const [value, setValue] = useState(_value || props.single ? '' : [])
-  const onChange = useCallback(
-    (next: any) => {
-      setValue(next)
-      _onChange?.(next)
-    },
-    [setValue, _onChange]
-  )
+  const { value, options, onChange } = useMultiSelect({
+    value: _value || props.single ? '' : [],
+    options: props.options!,
+    onChange: _onChange,
+  })
 
-  return <MultiSelect value={value} onChange={onChange} {...props} />
+  return (
+    <MultiSelect
+      value={value}
+      options={options}
+      onChange={onChange!}
+      {...props}
+    />
+  )
 }
 
 const App = () => {
@@ -109,33 +114,33 @@ const App = () => {
             alignItems='center'
           >
             <StatefulMultiSelect
-              options={options}
+              options={_options}
               label='Choose a single item'
               single
             />
             <StatefulMultiSelect
-              options={options}
+              options={_options}
               label='Choose multiple items'
             />
             <StatefulMultiSelect
-              options={options}
+              options={_options}
               label='Choose or create a single item'
               single
               create
             />
             <StatefulMultiSelect
-              options={options}
+              options={_options}
               label='Choose or create multiple items'
               create
             />
             <StatefulMultiSelect
-              options={options}
+              options={_options}
               label='Choose a single item with list selection'
               selectionVisibleIn={SelectionVisibilityMode.List}
               single
             />
             <StatefulMultiSelect
-              options={options}
+              options={_options}
               label='Choose multiple items with list selection'
               selectionVisibleIn={SelectionVisibilityMode.List}
             />

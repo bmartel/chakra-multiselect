@@ -51,9 +51,12 @@ export type ScrollToIndex = (
 export type GetDebounce = (options: Option[]) => number
 
 export enum ChangeActions {
-  Create = 'create', // eslint-disable-line
-  Remove = 'remove', // eslint-disable-line
-  Select = 'select', // eslint-disable-line
+  SingleCreate = 'singleCreate', // eslint-disable-line
+  SingleRemove = 'singleRemove', // eslint-disable-line
+  SingleSelect = 'singleSelect', // eslint-disable-line
+  MultiCreate = 'multiCreate', // eslint-disable-line
+  MultiRemove = 'multiRemove', // eslint-disable-line
+  MultiSelect = 'multiSelect', // eslint-disable-line
 }
 
 export type SelectOnChange = (
@@ -138,7 +141,9 @@ export const labelFromValue = (value: string): string =>
 export const idFromOption = (option: Option, prefix = ''): string =>
   `${prefix}${option?.value}`
 const defaultGetOption: GetOption = (option) =>
-  typeof option === 'string' ? { value: option, label: '' } : option
+  typeof option === 'string'
+    ? { value: option, label: labelFromValue(option) }
+    : option
 const defaultGetDebounce: GetDebounce = (options) =>
   options.length > 10000 ? 1000 : options.length > 1000 ? 200 : 0
 
@@ -268,6 +273,17 @@ export enum SelectionVisibilityMode {
   List = 'list',
   Input = 'input',
   Both = 'both',
+}
+export interface UseMultiSelectProps {
+  value?: string | string[]
+  options: Option[]
+  onChange?: SelectOnChange
+  getOption?: GetOption
+}
+export interface UseMultiSelectReturn {
+  value?: string | string[]
+  options: Option[]
+  onChange?: SelectOnChange
 }
 export interface UseSelectProps extends UsePopperProps {
   onChange: SelectOnChange
@@ -429,7 +445,7 @@ export function useSelect({
   // an option for that searchValue and prepend it to options
   options = useMemo(() => {
     if (create && searchValue) {
-      return [{ _new: true, ...getOption(searchValue) }, ...options!]
+      return [{ created: true, ...getOption(searchValue) }, ...options!]
     }
     return options
   }, [create, searchValue, options])
@@ -486,10 +502,13 @@ export function useSelect({
     (index) => {
       const option = options![index]
       if (option) {
-        const { _new, ...selectedOption } = getOption(option) as any
+        const selectedOption = getOption(option) as any
+
         if (!multi) {
           ;(onChangeRef.current as any)?.(selectedOption.value, {
-            action: _new ? ChangeActions.Create : ChangeActions.Select,
+            action: selectedOption.created
+              ? ChangeActions.SingleCreate
+              : ChangeActions.SingleSelect,
             value: selectedOption,
           })
         } else {
@@ -498,20 +517,23 @@ export function useSelect({
             !value.some((v: any) => getOption(v).value === selectedOption.value)
           ) {
             ;(onChangeRef.current as any)?.([...value, selectedOption.value], {
-              action: _new ? ChangeActions.Create : ChangeActions.Select,
+              action: selectedOption.created
+                ? ChangeActions.MultiCreate
+                : ChangeActions.MultiSelect,
               value: selectedOption,
             })
           }
         }
       }
 
-      if (!multi) {
-        setOpen(false)
-      } else {
+      if (create || multi) {
         setSearch('')
       }
+      if (!multi) {
+        setOpen(false)
+      }
     },
-    [multi, options, duplicates, value, setOpen, setSearch]
+    [multi, create, options, duplicates, value, setOpen]
   )
 
   const removeValue = useCallback(
@@ -522,10 +544,17 @@ export function useSelect({
       const _next = _value.filter((_v: string, i: number) =>
         isIndex ? i !== v : v !== _v
       )
-      ;(onChangeRef.current as any)(_multi ? _next : _next[0] || '', {
-        action: ChangeActions.Remove,
-        value: getOption(isIndex ? _value[v] : v),
-      })
+      if (_multi) {
+        ;(onChangeRef.current as any)(_next, {
+          action: ChangeActions.MultiRemove,
+          value: getOption(isIndex ? _value[v] : v),
+        })
+      } else {
+        ;(onChangeRef.current as any)(_next[0] || '', {
+          action: ChangeActions.SingleRemove,
+          value: getOption(isIndex ? _value[v] : v),
+        })
+      }
     },
     [value]
   )
@@ -598,10 +627,11 @@ export function useSelect({
   }
 
   const Backspace = () => {
-    if (!multi || searchValue) {
-      return
+    const lastValue = multi ? value[value.length - 1] : value
+    if ((multi && !searchValue) || (!multi && lastValue)) {
+      removeValue(lastValue)
+      setSearch('')
     }
-    removeValue(value.length - 1)
   }
 
   const getKeyProps = useKeys({
@@ -639,7 +669,7 @@ export function useSelect({
         (isOpen
           ? searchValue || selectedOption.label
           : selectedOption
-          ? selectedOption.label
+          ? selectedOption?.label
           : '') || '',
       onChange: (e: any) => {
         handleSearchValueChange(e)
@@ -962,5 +992,60 @@ export function useSelectControl(props: any = {}) {
     ),
     isOpen,
     __css: styles.control,
+  }
+}
+
+export function useMultiSelect(
+  props: UseMultiSelectProps = {} as UseMultiSelectProps
+): UseMultiSelectReturn {
+  const getOption = props.getOption || defaultGetOption
+  const [value, setValue] = useState(props.value)
+  const [options, setOptions] = useState<Option[]>(() =>
+    props.options.map(getOption)
+  )
+  const onChange = useCallback<SelectOnChange>(
+    (next, change) => {
+      switch (change?.action) {
+        case ChangeActions.SingleCreate:
+          setValue(next as string)
+          setOptions((o) => {
+            const opt = getOption(next as any)
+            return o.some((_o) => getOption(_o).value === opt.value)
+              ? o
+              : [{ ...opt, created: true }, ...o]
+          })
+          break
+        case ChangeActions.SingleRemove:
+          setValue(next as string)
+          break
+        case ChangeActions.SingleSelect:
+          setValue(next as string)
+          break
+        case ChangeActions.MultiCreate:
+          const nextValue = next as string[]
+          const created = next[nextValue.length - 1]
+          setValue(nextValue)
+          setOptions((o) => {
+            const opt = getOption(created as any)
+            return o.some((_o) => getOption(_o).value === opt.value)
+              ? o
+              : [{ ...opt, created: true }, ...o]
+          })
+          break
+        case ChangeActions.MultiRemove:
+          setValue(next as string[])
+          break
+        case ChangeActions.MultiSelect:
+        default:
+          setValue(next as string[])
+      }
+    },
+    [setValue, setOptions, getOption]
+  )
+
+  return {
+    value,
+    options,
+    onChange,
   }
 }

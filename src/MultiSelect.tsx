@@ -70,6 +70,7 @@ export interface SelectOptionItemProps extends HTMLChakraProps<'li'> {
   label?: string
   index: number
   selected?: boolean
+  created?: boolean
 }
 
 export interface SelectedItemProps extends TagProps, SelectItem {
