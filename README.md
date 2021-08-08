@@ -16,11 +16,13 @@ yarn add chakra-multiselect
 
 ## Usage
 
-Single Mode
+Ensure your application has a `ChakraProvider` wrapping your Application's main component (ex. `<App />`).
 
-```tsx
+Include the MultiSelectTheme as a component in the theme declarations.
+
+``` tsx
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
-import { MultiSelect, MultiSelectTheme } from 'chakra-multiselect'
+import {  MultiSelectTheme } from 'chakra-multiselect'
 
 const theme = extendTheme({
   components: {
@@ -28,19 +30,29 @@ const theme = extendTheme({
   }
 })
 
-const App = () => {
+const App = () => (
+  <ChakraProvider theme={theme}>
+    {/* ... */}
+  </ChakraProvider>
+)
+```
+
+Single Mode
+
+```tsx
+import { MultiSelect } from 'chakra-multiselect'
+
+const Component = () => {
   const [value, setValue] = useState('')
 
   return (
-    <ChakraProvider theme={theme}>
-      <MultiSelect
-        options={options}
-        value={value}
-        label='Choose an item'
-        onChange={setValue}
-        single
-      />
-    </ChakraProvider>
+    <MultiSelect
+      options={options}
+      value={value}
+      label='Choose an item'
+      onChange={setValue}
+      single
+    />
   )
 }
 ```
@@ -48,30 +60,69 @@ const App = () => {
 Multi Mode
 
 ```tsx
-import { ChakraProvider, extendTheme } from '@chakra-ui/react'
-import { MultiSelect, MultiSelectTheme } from 'chakra-multiselect'
+import { MultiSelect } from 'chakra-multiselect'
 
-const theme = extendTheme({
-  components: {
-    MultiSelect: MultiSelectTheme
-  }
-})
-
-const App = () => {
+const Component = () => {
   const [value, setValue] = useState([])
 
   return (
-    <ChakraProvider theme={theme}>
-      <MultiSelect
-        options={options}
-        value={value}
-        label='Choose an item'
-        onChange={setValue}
-      />
-    </ChakraProvider>
+    <MultiSelect
+      options={options}
+      value={value}
+      label='Choose an item'
+      onChange={setValue}
+    />
   )
 }
 ```
+
+Single + Create Mode
+
+```tsx
+import { MultiSelect, useMultiSelect } from 'chakra-multiselect'
+
+const Component = () => {
+  const { value, options, onChange } = useMultiSelect({
+    value: '',
+    options: []
+  })
+
+  return (
+    <MultiSelect
+      options={options}
+      value={value}
+      label='Choose or create an item'
+      onChange={onChange}
+      create
+      single
+    />
+  )
+}
+```
+
+Multi + Create Mode
+
+```tsx
+import { MultiSelect, useMultiSelect } from 'chakra-multiselect'
+
+const Component = () => {
+  const { value, options, onChange } = useMultiSelect({
+    value: [],
+    options: []
+  })
+
+  return (
+    <MultiSelect
+      options={options}
+      value={value}
+      label='Choose or create items'
+      onChange={onChange}
+      create
+    />
+  )
+}
+```
+
 
 ## License
 
