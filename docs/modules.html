@@ -121,14 +121,18 @@
 								<li class="tsd-kind-variable"><a href="modules.html#SelectCombobox" class="tsd-kind-icon">Select<wbr>Combobox</a></li>
 								<li class="tsd-kind-variable"><a href="modules.html#SelectControl" class="tsd-kind-icon">Select<wbr>Control</a></li>
 								<li class="tsd-kind-variable"><a href="modules.html#SelectInput" class="tsd-kind-icon">Select<wbr>Input</a></li>
+								<li class="tsd-kind-variable"><a href="modules.html#SelectInputProvider" class="tsd-kind-icon">Select<wbr>Input<wbr>Provider</a></li>
 								<li class="tsd-kind-variable"><a href="modules.html#SelectLabel" class="tsd-kind-icon">Select<wbr>Label</a></li>
 								<li class="tsd-kind-variable"><a href="modules.html#SelectList" class="tsd-kind-icon">Select<wbr>List</a></li>
 								<li class="tsd-kind-variable"><a href="modules.html#SelectOptionGroup" class="tsd-kind-icon">Select<wbr>Option<wbr>Group</a></li>
 								<li class="tsd-kind-variable"><a href="modules.html#SelectOptionItem" class="tsd-kind-icon">Select<wbr>Option<wbr>Item</a></li>
 								<li class="tsd-kind-variable"><a href="modules.html#SelectProvider" class="tsd-kind-icon">Select<wbr>Provider</a></li>
 								<li class="tsd-kind-variable"><a href="modules.html#SelectToggleButton" class="tsd-kind-icon">Select<wbr>Toggle<wbr>Button</a></li>
+								<li class="tsd-kind-variable"><a href="modules.html#SelectToggleProvider" class="tsd-kind-icon">Select<wbr>Toggle<wbr>Provider</a></li>
 								<li class="tsd-kind-variable"><a href="modules.html#SelectedItem" class="tsd-kind-icon">Selected<wbr>Item</a></li>
 								<li class="tsd-kind-variable"><a href="modules.html#SelectedList" class="tsd-kind-icon">Selected<wbr>List</a></li>
+								<li class="tsd-kind-variable"><a href="modules.html#SelectedListProvider" class="tsd-kind-icon">Selected<wbr>List<wbr>Provider</a></li>
+								<li class="tsd-kind-variable"><a href="modules.html#SelectedProvider" class="tsd-kind-icon">Selected<wbr>Provider</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -143,11 +147,15 @@
 								<li class="tsd-kind-function"><a href="modules.html#useSelectContext" class="tsd-kind-icon">use<wbr>Select<wbr>Context</a></li>
 								<li class="tsd-kind-function"><a href="modules.html#useSelectControl" class="tsd-kind-icon">use<wbr>Select<wbr>Control</a></li>
 								<li class="tsd-kind-function"><a href="modules.html#useSelectInput" class="tsd-kind-icon">use<wbr>Select<wbr>Input</a></li>
+								<li class="tsd-kind-function"><a href="modules.html#useSelectInputContext" class="tsd-kind-icon">use<wbr>Select<wbr>Input<wbr>Context</a></li>
 								<li class="tsd-kind-function"><a href="modules.html#useSelectItem" class="tsd-kind-icon">use<wbr>Select<wbr>Item</a></li>
 								<li class="tsd-kind-function"><a href="modules.html#useSelectLabel" class="tsd-kind-icon">use<wbr>Select<wbr>Label</a></li>
 								<li class="tsd-kind-function"><a href="modules.html#useSelectList" class="tsd-kind-icon">use<wbr>Select<wbr>List</a></li>
+								<li class="tsd-kind-function"><a href="modules.html#useSelectToggleContext" class="tsd-kind-icon">use<wbr>Select<wbr>Toggle<wbr>Context</a></li>
+								<li class="tsd-kind-function"><a href="modules.html#useSelectedContext" class="tsd-kind-icon">use<wbr>Selected<wbr>Context</a></li>
 								<li class="tsd-kind-function"><a href="modules.html#useSelectedItem" class="tsd-kind-icon">use<wbr>Selected<wbr>Item</a></li>
 								<li class="tsd-kind-function"><a href="modules.html#useSelectedList" class="tsd-kind-icon">use<wbr>Selected<wbr>List</a></li>
+								<li class="tsd-kind-function"><a href="modules.html#useSelectedListContext" class="tsd-kind-icon">use<wbr>Selected<wbr>List<wbr>Context</a></li>
 							</ul>
 						</section>
 					</div>
@@ -161,7 +169,7 @@
 					<div class="tsd-signature tsd-kind-icon">Get<wbr>Debounce<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">: </span><a href="interfaces/Option.html" class="tsd-signature-type" data-tsd-kind="Interface">Option</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/use-select.ts#L51">src/use-select.ts:51</a></li>
+							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/use-select.ts#L51">src/use-select.ts:51</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -192,7 +200,7 @@
 					<div class="tsd-signature tsd-kind-icon">Get<wbr>Option<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>option<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">{ </span>label<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-symbol">{ </span>label<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/use-select.ts#L70">src/use-select.ts:70</a></li>
+							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/use-select.ts#L70">src/use-select.ts:70</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -231,7 +239,7 @@
 					<div class="tsd-signature tsd-kind-icon">Key<wbr>Handler<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/use-select.ts#L42">src/use-select.ts:42</a></li>
+							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/use-select.ts#L42">src/use-select.ts:42</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -256,7 +264,7 @@
 					<div class="tsd-signature tsd-kind-icon">Keyboard<wbr>Event<wbr>Handler<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>e<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">KeyboardEvent</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/use-select.ts#L40">src/use-select.ts:40</a></li>
+							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/use-select.ts#L40">src/use-select.ts:40</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -287,7 +295,7 @@
 					<div class="tsd-signature tsd-kind-icon">Scroll<wbr>ToIndex<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, ref<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">MutableRefObject</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span>, optionsRef<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">MutableRefObject</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span>, enabledRef<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">MutableRefObject</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/use-select.ts#L44">src/use-select.ts:44</a></li>
+							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/use-select.ts#L44">src/use-select.ts:44</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -327,7 +335,7 @@
 					<div class="tsd-signature tsd-kind-icon">Select<wbr>Filter<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">: </span><a href="interfaces/Option.html" class="tsd-signature-type" data-tsd-kind="Interface">Option</a><span class="tsd-signature-symbol">[]</span>, searchValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span>, getOption<span class="tsd-signature-symbol">: </span><a href="modules.html#GetOption" class="tsd-signature-type" data-tsd-kind="Type alias">GetOption</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="interfaces/Option.html" class="tsd-signature-type" data-tsd-kind="Interface">Option</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/use-select.ts#L75">src/use-select.ts:75</a></li>
+							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/use-select.ts#L75">src/use-select.ts:75</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -364,7 +372,7 @@
 					<div class="tsd-signature tsd-kind-icon">Select<wbr>List<wbr>Props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">MenuListProps</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/MultiSelect.tsx#L66">src/MultiSelect.tsx:66</a></li>
+							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/MultiSelect.tsx#L70">src/MultiSelect.tsx:70</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -374,7 +382,7 @@
 					<div class="tsd-signature tsd-kind-icon">Select<wbr>OnChange<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span>, change<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>action<span class="tsd-signature-symbol">: </span><a href="enums/ChangeActions.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ChangeActions</a><span class="tsd-signature-symbol">; </span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/use-select.ts#L62">src/use-select.ts:62</a></li>
+							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/use-select.ts#L62">src/use-select.ts:62</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -416,7 +424,7 @@
 					<div class="tsd-signature tsd-kind-icon">Select<wbr>Option<wbr>Group<wbr>Props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">MenuOptionGroupProps</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/MultiSelect.tsx#L67">src/MultiSelect.tsx:67</a></li>
+							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/MultiSelect.tsx#L71">src/MultiSelect.tsx:71</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -426,7 +434,7 @@
 					<div class="tsd-signature tsd-kind-icon">Select<wbr>Remove<wbr>Value<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>index<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/use-select.ts#L81">src/use-select.ts:81</a></li>
+							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/use-select.ts#L81">src/use-select.ts:81</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -457,7 +465,7 @@
 					<div class="tsd-signature tsd-kind-icon">Select<wbr>Set<wbr>Open<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>open<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/use-select.ts#L83">src/use-select.ts:83</a></li>
+							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/use-select.ts#L83">src/use-select.ts:83</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -488,7 +496,7 @@
 					<div class="tsd-signature tsd-kind-icon">Select<wbr>Set<wbr>Search<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>searchValue<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/use-select.ts#L85">src/use-select.ts:85</a></li>
+							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/use-select.ts#L85">src/use-select.ts:85</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -519,7 +527,7 @@
 					<div class="tsd-signature tsd-kind-icon">Select<wbr>State<wbr>Updater<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>updater<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>old<span class="tsd-signature-symbol">: </span><a href="interfaces/SelectState.html" class="tsd-signature-type" data-tsd-kind="Interface">SelectState</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="interfaces/SelectState.html" class="tsd-signature-type" data-tsd-kind="Interface">SelectState</a>, action<span class="tsd-signature-symbol">: </span><a href="enums/SelectActions.html" class="tsd-signature-type" data-tsd-kind="Enumeration">SelectActions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/use-select.ts#L93">src/use-select.ts:93</a></li>
+							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/use-select.ts#L93">src/use-select.ts:93</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -571,7 +579,7 @@
 					<div class="tsd-signature tsd-kind-icon">State<wbr>Reducer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>old<span class="tsd-signature-symbol">: </span><a href="interfaces/SelectState.html" class="tsd-signature-type" data-tsd-kind="Interface">SelectState</a>, newState<span class="tsd-signature-symbol">: </span><a href="interfaces/SelectState.html" class="tsd-signature-type" data-tsd-kind="Interface">SelectState</a>, action<span class="tsd-signature-symbol">: </span><a href="enums/SelectActions.html" class="tsd-signature-type" data-tsd-kind="Enumeration">SelectActions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="interfaces/SelectState.html" class="tsd-signature-type" data-tsd-kind="Interface">SelectState</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/use-select.ts#L98">src/use-select.ts:98</a></li>
+							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/use-select.ts#L98">src/use-select.ts:98</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -1152,7 +1160,7 @@
 					<div class="tsd-signature tsd-kind-icon">Chakra<wbr>Svg<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ChakraComponent</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">&quot;svg&quot;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/MultiSelect.tsx#L84">src/MultiSelect.tsx:84</a></li>
+							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/MultiSelect.tsx#L88">src/MultiSelect.tsx:88</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1162,7 +1170,7 @@
 					<div class="tsd-signature tsd-kind-icon">Multi<wbr>Select<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">React.FC</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/MultiSelectProps.html" class="tsd-signature-type" data-tsd-kind="Interface">MultiSelectProps</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/MultiSelect.tsx#L315">src/MultiSelect.tsx:315</a></li>
+							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/MultiSelect.tsx#L342">src/MultiSelect.tsx:342</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1172,7 +1180,7 @@
 					<div class="tsd-signature tsd-kind-icon">Select<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">React.FC</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/SelectProps.html" class="tsd-signature-type" data-tsd-kind="Interface">SelectProps</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/MultiSelect.tsx#L86">src/MultiSelect.tsx:86</a></li>
+							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/MultiSelect.tsx#L90">src/MultiSelect.tsx:90</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1182,7 +1190,7 @@
 					<div class="tsd-signature tsd-kind-icon">Select<wbr>Combobox<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">NamedExoticComponent</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/MultiSelect.tsx#L292">src/MultiSelect.tsx:292</a></li>
+							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/MultiSelect.tsx#L319">src/MultiSelect.tsx:319</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1192,7 +1200,7 @@
 					<div class="tsd-signature tsd-kind-icon">Select<wbr>Control<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ComponentWithAs</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">&quot;div&quot;</span><span class="tsd-signature-symbol">, </span><a href="interfaces/SelectControlProps.html" class="tsd-signature-type" data-tsd-kind="Interface">SelectControlProps</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/MultiSelect.tsx#L303">src/MultiSelect.tsx:303</a></li>
+							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/MultiSelect.tsx#L330">src/MultiSelect.tsx:330</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1202,8 +1210,15 @@
 					<div class="tsd-signature tsd-kind-icon">Select<wbr>Input<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">NamedExoticComponent</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/MultiSelect.tsx#L214">src/MultiSelect.tsx:214</a></li>
+							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/MultiSelect.tsx#L242">src/MultiSelect.tsx:242</a></li>
 						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-variable">
+					<a name="SelectInputProvider" class="tsd-anchor"></a>
+					<h3>Select<wbr>Input<wbr>Provider</h3>
+					<div class="tsd-signature tsd-kind-icon">Select<wbr>Input<wbr>Provider<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Provider</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Pick</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/UseSelectReturn.html" class="tsd-signature-type" data-tsd-kind="Interface">UseSelectReturn</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;getInputProps&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-variable">
@@ -1212,7 +1227,7 @@
 					<div class="tsd-signature tsd-kind-icon">Select<wbr>Label<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">NamedExoticComponent</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">HTMLChakraProps</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">&quot;label&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/MultiSelect.tsx#L104">src/MultiSelect.tsx:104</a></li>
+							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/MultiSelect.tsx#L132">src/MultiSelect.tsx:132</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1222,7 +1237,7 @@
 					<div class="tsd-signature tsd-kind-icon">Select<wbr>List<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">MemoExoticComponent</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Element</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/MultiSelect.tsx#L141">src/MultiSelect.tsx:141</a></li>
+							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/MultiSelect.tsx#L169">src/MultiSelect.tsx:169</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1232,7 +1247,7 @@
 					<div class="tsd-signature tsd-kind-icon">Select<wbr>Option<wbr>Group<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">React.FC</span><span class="tsd-signature-symbol">&lt;</span><a href="modules.html#SelectOptionGroupProps" class="tsd-signature-type" data-tsd-kind="Type alias">SelectOptionGroupProps</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/MultiSelect.tsx#L190">src/MultiSelect.tsx:190</a></li>
+							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/MultiSelect.tsx#L218">src/MultiSelect.tsx:218</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1242,7 +1257,7 @@
 					<div class="tsd-signature tsd-kind-icon">Select<wbr>Option<wbr>Item<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">NamedExoticComponent</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/SelectOptionItemProps.html" class="tsd-signature-type" data-tsd-kind="Interface">SelectOptionItemProps</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/MultiSelect.tsx#L111">src/MultiSelect.tsx:111</a></li>
+							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/MultiSelect.tsx#L139">src/MultiSelect.tsx:139</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1259,17 +1274,24 @@
 					<div class="tsd-signature tsd-kind-icon">Select<wbr>Toggle<wbr>Button<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">NamedExoticComponent</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/MultiSelect.tsx#L240">src/MultiSelect.tsx:240</a></li>
+							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/MultiSelect.tsx#L267">src/MultiSelect.tsx:267</a></li>
 						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-variable">
+					<a name="SelectToggleProvider" class="tsd-anchor"></a>
+					<h3>Select<wbr>Toggle<wbr>Provider</h3>
+					<div class="tsd-signature tsd-kind-icon">Select<wbr>Toggle<wbr>Provider<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Provider</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Pick</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/UseSelectReturn.html" class="tsd-signature-type" data-tsd-kind="Interface">UseSelectReturn</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;isOpen&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;setOpen&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-variable">
 					<a name="SelectedItem" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagConst">Const</span> Selected<wbr>Item</h3>
-					<div class="tsd-signature tsd-kind-icon">Selected<wbr>Item<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">React.FC</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/SelectedItemProps.html" class="tsd-signature-type" data-tsd-kind="Interface">SelectedItemProps</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = ...</span></div>
+					<div class="tsd-signature tsd-kind-icon">Selected<wbr>Item<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">NamedExoticComponent</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/SelectedItemProps.html" class="tsd-signature-type" data-tsd-kind="Interface">SelectedItemProps</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/MultiSelect.tsx#L221">src/MultiSelect.tsx:221</a></li>
+							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/MultiSelect.tsx#L249">src/MultiSelect.tsx:249</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1279,8 +1301,22 @@
 					<div class="tsd-signature tsd-kind-icon">Selected<wbr>List<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">NamedExoticComponent</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/MultiSelect.tsx#L272">src/MultiSelect.tsx:272</a></li>
+							<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/MultiSelect.tsx#L299">src/MultiSelect.tsx:299</a></li>
 						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-variable">
+					<a name="SelectedListProvider" class="tsd-anchor"></a>
+					<h3>Selected<wbr>List<wbr>Provider</h3>
+					<div class="tsd-signature tsd-kind-icon">Selected<wbr>List<wbr>Provider<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Provider</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Pick</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/UseSelectReturn.html" class="tsd-signature-type" data-tsd-kind="Interface">UseSelectReturn</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;value&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;multi&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-variable">
+					<a name="SelectedProvider" class="tsd-anchor"></a>
+					<h3>Selected<wbr>Provider</h3>
+					<div class="tsd-signature tsd-kind-icon">Selected<wbr>Provider<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Provider</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Pick</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/UseSelectReturn.html" class="tsd-signature-type" data-tsd-kind="Interface">UseSelectReturn</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;removeValue&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
 					</aside>
 				</section>
 			</section>
@@ -1296,7 +1332,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/use-select.ts#L141">src/use-select.ts:141</a></li>
+									<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/use-select.ts#L141">src/use-select.ts:141</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1322,7 +1358,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/use-select.ts#L139">src/use-select.ts:139</a></li>
+									<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/use-select.ts#L139">src/use-select.ts:139</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1345,7 +1381,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/use-select.ts#L998">src/use-select.ts:998</a></li>
+									<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/use-select.ts#L1043">src/use-select.ts:1043</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1368,7 +1404,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/use-select.ts#L334">src/use-select.ts:334</a></li>
+									<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/use-select.ts#L369">src/use-select.ts:369</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1391,7 +1427,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/use-select.ts#L883">src/use-select.ts:883</a></li>
+									<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/use-select.ts#L928">src/use-select.ts:928</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1414,7 +1450,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/use-select.ts#L856">src/use-select.ts:856</a></li>
+									<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/use-select.ts#L901">src/use-select.ts:901</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1454,7 +1490,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/use-select.ts#L981">src/use-select.ts:981</a></li>
+									<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/use-select.ts#L1026">src/use-select.ts:1026</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1477,7 +1513,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/use-select.ts#L864">src/use-select.ts:864</a></li>
+									<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/use-select.ts#L909">src/use-select.ts:909</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1491,6 +1527,23 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function">
+					<a name="useSelectInputContext" class="tsd-anchor"></a>
+					<h3>use<wbr>Select<wbr>Input<wbr>Context</h3>
+					<ul class="tsd-signatures tsd-kind-function">
+						<li class="tsd-signature tsd-kind-icon">use<wbr>Select<wbr>Input<wbr>Context<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Pick</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/UseSelectReturn.html" class="tsd-signature-type" data-tsd-kind="Interface">UseSelectReturn</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;getInputProps&quot;</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in node_modules/@chakra-ui/react-utils/dist/types/context.d.ts:17</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Pick</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/UseSelectReturn.html" class="tsd-signature-type" data-tsd-kind="Interface">UseSelectReturn</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;getInputProps&quot;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function">
 					<a name="useSelectItem" class="tsd-anchor"></a>
 					<h3>use<wbr>Select<wbr>Item</h3>
 					<ul class="tsd-signatures tsd-kind-function">
@@ -1500,7 +1553,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/use-select.ts#L923">src/use-select.ts:923</a></li>
+									<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/use-select.ts#L968">src/use-select.ts:968</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1523,7 +1576,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/use-select.ts#L874">src/use-select.ts:874</a></li>
+									<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/use-select.ts#L919">src/use-select.ts:919</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1546,7 +1599,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/use-select.ts#L954">src/use-select.ts:954</a></li>
+									<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/use-select.ts#L999">src/use-select.ts:999</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1560,6 +1613,40 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function">
+					<a name="useSelectToggleContext" class="tsd-anchor"></a>
+					<h3>use<wbr>Select<wbr>Toggle<wbr>Context</h3>
+					<ul class="tsd-signatures tsd-kind-function">
+						<li class="tsd-signature tsd-kind-icon">use<wbr>Select<wbr>Toggle<wbr>Context<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Pick</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/UseSelectReturn.html" class="tsd-signature-type" data-tsd-kind="Interface">UseSelectReturn</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;isOpen&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;setOpen&quot;</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in node_modules/@chakra-ui/react-utils/dist/types/context.d.ts:17</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Pick</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/UseSelectReturn.html" class="tsd-signature-type" data-tsd-kind="Interface">UseSelectReturn</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;isOpen&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;setOpen&quot;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function">
+					<a name="useSelectedContext" class="tsd-anchor"></a>
+					<h3>use<wbr>Selected<wbr>Context</h3>
+					<ul class="tsd-signatures tsd-kind-function">
+						<li class="tsd-signature tsd-kind-icon">use<wbr>Selected<wbr>Context<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Pick</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/UseSelectReturn.html" class="tsd-signature-type" data-tsd-kind="Interface">UseSelectReturn</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;removeValue&quot;</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in node_modules/@chakra-ui/react-utils/dist/types/context.d.ts:17</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Pick</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/UseSelectReturn.html" class="tsd-signature-type" data-tsd-kind="Interface">UseSelectReturn</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;removeValue&quot;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function">
 					<a name="useSelectedItem" class="tsd-anchor"></a>
 					<h3>use<wbr>Selected<wbr>Item</h3>
 					<ul class="tsd-signatures tsd-kind-function">
@@ -1569,7 +1656,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/use-select.ts#L906">src/use-select.ts:906</a></li>
+									<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/use-select.ts#L951">src/use-select.ts:951</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1592,7 +1679,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/9065f56/src/use-select.ts#L969">src/use-select.ts:969</a></li>
+									<li>Defined in <a href="https://github.com/bmartel/chakra-multiselect/blob/0e328b3/src/use-select.ts#L1014">src/use-select.ts:1014</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1602,6 +1689,23 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function">
+					<a name="useSelectedListContext" class="tsd-anchor"></a>
+					<h3>use<wbr>Selected<wbr>List<wbr>Context</h3>
+					<ul class="tsd-signatures tsd-kind-function">
+						<li class="tsd-signature tsd-kind-icon">use<wbr>Selected<wbr>List<wbr>Context<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Pick</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/UseSelectReturn.html" class="tsd-signature-type" data-tsd-kind="Interface">UseSelectReturn</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;value&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;multi&quot;</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in node_modules/@chakra-ui/react-utils/dist/types/context.d.ts:17</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Pick</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/UseSelectReturn.html" class="tsd-signature-type" data-tsd-kind="Interface">UseSelectReturn</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;value&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;multi&quot;</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -1729,6 +1833,9 @@
 						<a href="modules.html#SelectInput" class="tsd-kind-icon">Select<wbr>Input</a>
 					</li>
 					<li class=" tsd-kind-variable">
+						<a href="modules.html#SelectInputProvider" class="tsd-kind-icon">Select<wbr>Input<wbr>Provider</a>
+					</li>
+					<li class=" tsd-kind-variable">
 						<a href="modules.html#SelectLabel" class="tsd-kind-icon">Select<wbr>Label</a>
 					</li>
 					<li class=" tsd-kind-variable">
@@ -1747,10 +1854,19 @@
 						<a href="modules.html#SelectToggleButton" class="tsd-kind-icon">Select<wbr>Toggle<wbr>Button</a>
 					</li>
 					<li class=" tsd-kind-variable">
+						<a href="modules.html#SelectToggleProvider" class="tsd-kind-icon">Select<wbr>Toggle<wbr>Provider</a>
+					</li>
+					<li class=" tsd-kind-variable">
 						<a href="modules.html#SelectedItem" class="tsd-kind-icon">Selected<wbr>Item</a>
 					</li>
 					<li class=" tsd-kind-variable">
 						<a href="modules.html#SelectedList" class="tsd-kind-icon">Selected<wbr>List</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#SelectedListProvider" class="tsd-kind-icon">Selected<wbr>List<wbr>Provider</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#SelectedProvider" class="tsd-kind-icon">Selected<wbr>Provider</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="modules.html#idFromOption" class="tsd-kind-icon">id<wbr>From<wbr>Option</a>
@@ -1780,6 +1896,9 @@
 						<a href="modules.html#useSelectInput" class="tsd-kind-icon">use<wbr>Select<wbr>Input</a>
 					</li>
 					<li class=" tsd-kind-function">
+						<a href="modules.html#useSelectInputContext" class="tsd-kind-icon">use<wbr>Select<wbr>Input<wbr>Context</a>
+					</li>
+					<li class=" tsd-kind-function">
 						<a href="modules.html#useSelectItem" class="tsd-kind-icon">use<wbr>Select<wbr>Item</a>
 					</li>
 					<li class=" tsd-kind-function">
@@ -1789,10 +1908,19 @@
 						<a href="modules.html#useSelectList" class="tsd-kind-icon">use<wbr>Select<wbr>List</a>
 					</li>
 					<li class=" tsd-kind-function">
+						<a href="modules.html#useSelectToggleContext" class="tsd-kind-icon">use<wbr>Select<wbr>Toggle<wbr>Context</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#useSelectedContext" class="tsd-kind-icon">use<wbr>Selected<wbr>Context</a>
+					</li>
+					<li class=" tsd-kind-function">
 						<a href="modules.html#useSelectedItem" class="tsd-kind-icon">use<wbr>Selected<wbr>Item</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="modules.html#useSelectedList" class="tsd-kind-icon">use<wbr>Selected<wbr>List</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#useSelectedListContext" class="tsd-kind-icon">use<wbr>Selected<wbr>List<wbr>Context</a>
 					</li>
 				</ul>
 			</nav>
