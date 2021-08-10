@@ -149,6 +149,7 @@ export const SelectOptionLabel = memo<
     )}
   </HStack>
 ))
+SelectOptionLabel.displayName = 'SelectOptionLabel'
 
 export const SelectOptionItem = memo<SelectOptionItemProps>(
   ({ value, label, index, selected, created, ...props }) => {
