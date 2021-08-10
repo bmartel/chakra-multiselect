@@ -328,8 +328,43 @@ const [SelectProvider, useSelectContext] = createContext<UseSelectReturn>({
   strict: false,
   name: 'SelectContext',
 })
+const [SelectInputProvider, useSelectInputContext] = createContext<
+  Pick<UseSelectReturn, 'getInputProps'>
+>({
+  strict: false,
+  name: 'SelectInputContext',
+})
+const [SelectedProvider, useSelectedContext] = createContext<
+  Pick<UseSelectReturn, 'removeValue'>
+>({
+  strict: false,
+  name: 'SelectedContext',
+})
+const [SelectedListProvider, useSelectedListContext] = createContext<
+  Pick<UseSelectReturn, 'value' | 'multi'>
+>({
+  strict: false,
+  name: 'SelectedContext',
+})
+const [SelectToggleProvider, useSelectToggleContext] = createContext<
+  Pick<UseSelectReturn, 'isOpen' | 'setOpen'>
+>({
+  strict: false,
+  name: 'SelectedContext',
+})
 
-export { SelectProvider, useSelectContext }
+export {
+  SelectProvider,
+  SelectInputProvider,
+  SelectedProvider,
+  SelectedListProvider,
+  SelectToggleProvider,
+  useSelectContext,
+  useSelectedContext,
+  useSelectedListContext,
+  useSelectInputContext,
+  useSelectToggleContext,
+}
 
 export function useSelect({
   create = false,
@@ -448,7 +483,7 @@ export function useSelect({
       return [{ created: true, ...getOption(searchValue) }, ...options!]
     }
     return options
-  }, [create, searchValue, options])
+  }, [create, searchValue, options, getOption])
 
   // Actions
 
@@ -461,6 +496,14 @@ export function useSelect({
     },
     [setState]
   )
+
+  const Close = useCallback(() => {
+    setOpen(false)
+  }, [setOpen])
+
+  const Open = useCallback(() => {
+    setOpen(true)
+  }, [setOpen])
 
   const setResolvedSearch = useDebounce((value) => {
     setState(
@@ -530,10 +573,10 @@ export function useSelect({
         setSearch('')
       }
       if (!multi) {
-        setOpen(false)
+        Close()
       }
     },
-    [multi, create, options, duplicates, value, setOpen]
+    [multi, create, options, duplicates, value, getOption, setSearch, Close]
   )
 
   const removeValue = useCallback(
@@ -556,24 +599,25 @@ export function useSelect({
         })
       }
     },
-    [value]
+    [value, getOption]
   )
 
   // Handlers
 
-  const handleSearchValueChange = (e: any) => {
-    setSearch(e.target.value)
-    setOpen(true)
-  }
+  const handleSearchValueChange = useCallback(
+    (e: any) => {
+      setSearch(e.target.value)
+      Open()
+    },
+    [Open, setSearch]
+  )
 
-  const handleSearchClick = () => {
+  const handleSearchClick = useCallback(() => {
     if (!create || multi) {
       setSearch('')
     }
-    setOpen(true)
-  }
-
-  const handleSearchFocus = () => handleSearchClick()
+    Open()
+  }, [Open, setSearch, create, multi])
 
   // Prop Getters
 
@@ -587,7 +631,7 @@ export function useSelect({
           : defaultShift || shift
           ? shiftAmount - 1
           : 1
-      setOpen(true)
+      Open()
       enableScrollRef.current = true
       highlightIndex((old: number) => old - amount)
     }
@@ -602,37 +646,32 @@ export function useSelect({
           : defaultShift || shift
           ? shiftAmount - 1
           : 1
-      setOpen(true)
+      Open()
       enableScrollRef.current = true
       highlightIndex((old: number) => old + amount)
     }
 
-  const Enter = (_: any, e: any) => {
-    if (isOpen) {
-      if (searchValue || options![highlightedIndex]) {
-        e.preventDefault()
+  const Enter = useCallback(
+    (_: any, e: any) => {
+      if (isOpen) {
+        if (searchValue || options![highlightedIndex]) {
+          e.preventDefault()
+        }
+        if (options![highlightedIndex]) {
+          selectIndex(highlightedIndex)
+        }
       }
-      if (options![highlightedIndex]) {
-        selectIndex(highlightedIndex)
-      }
-    }
-  }
+    },
+    [isOpen, highlightedIndex, searchValue, options, selectIndex]
+  )
 
-  const Escape = () => {
-    setOpen(false)
-  }
-
-  const Tab = () => {
-    setOpen(false)
-  }
-
-  const Backspace = () => {
+  const Backspace = useCallback(() => {
     const lastValue = multi ? value[value.length - 1] : value
     if ((multi && !searchValue) || (!multi && lastValue)) {
       removeValue(lastValue)
       setSearch('')
     }
-  }
+  }, [value, searchValue, multi, removeValue, setSearch])
 
   const getKeyProps = useKeys({
     ArrowUp: ArrowUp(),
@@ -641,110 +680,116 @@ export function useSelect({
     PageDown: ArrowDown(true),
     Home: ArrowUp(false, true),
     End: ArrowDown(false, true),
+    Escape: Close,
+    Tab: Close,
     Enter,
-    Escape,
-    Tab,
     Backspace,
   } as any)
 
-  const getInputProps = (
-    {
-      refKey = 'ref',
-      ref,
-      onChange,
-      onFocus,
-      onClick,
-      onBlur,
-      ...rest
-    } = {} as any
-  ) => {
-    return getKeyProps({
-      [refKey]: (el: HTMLElement) => {
-        ;(inputRef.current as any) = el
-        if (ref) {
-          ref.current = el
-        }
-      },
-      value:
-        (isOpen
-          ? searchValue || selectedOption.label
-          : selectedOption
-          ? selectedOption?.label
-          : '') || '',
-      onChange: (e: any) => {
-        handleSearchValueChange(e)
-        if (onChange) {
-          onChange(e)
-        }
-      },
-      onFocus: (e: any) => {
-        handleSearchFocus()
-        if (onFocus) {
-          onFocus(e)
-        }
-      },
-      onClick: (e: any) => {
-        handleSearchClick()
-        if (onClick) {
-          onClick(e)
-        }
-      },
-      onBlur: (e: any) => {
-        if (onBlur) {
-          e.persist()
-          ;(onBlurRef.current as any).cb = onBlur
-          ;(onBlurRef.current as any).event = e
-        }
-      },
-      ...rest,
-    })
-  }
+  const getInputProps = useCallback(
+    (
+      {
+        refKey = 'ref',
+        ref,
+        onChange,
+        onFocus,
+        onClick,
+        onBlur,
+        ...rest
+      } = {} as any
+    ) => {
+      return getKeyProps({
+        [refKey]: (el: HTMLElement) => {
+          ;(inputRef.current as any) = el
+          if (ref) {
+            ref.current = el
+          }
+        },
+        value:
+          (isOpen
+            ? searchValue || selectedOption.label
+            : selectedOption
+            ? selectedOption?.label
+            : '') || '',
+        onChange: (e: any) => {
+          handleSearchValueChange(e)
+          if (onChange) {
+            onChange(e)
+          }
+        },
+        onFocus: (e: any) => {
+          handleSearchClick()
+          if (onFocus) {
+            onFocus(e)
+          }
+        },
+        onClick: (e: any) => {
+          handleSearchClick()
+          if (onClick) {
+            onClick(e)
+          }
+        },
+        onBlur: (e: any) => {
+          if (onBlur) {
+            e.persist()
+            ;(onBlurRef.current as any).cb = onBlur
+            ;(onBlurRef.current as any).event = e
+          }
+        },
+        ...rest,
+      })
+    },
+    [
+      isOpen,
+      searchValue,
+      selectedOption,
+      getKeyProps,
+      handleSearchClick,
+      handleSearchValueChange,
+    ]
+  )
 
-  const getOptionProps = (
-    { index, key = index, onClick, onMouseEnter, option, ...rest } = {} as any
-  ) => {
-    if (typeof index !== 'number' || index < 0) {
-      throw new Error(
-        `useSelect: The getOptionProps prop getter requires an index property, eg. 'getOptionProps({index: 1})'`
-      )
-    }
+  const getOptionProps = useCallback(
+    (
+      { index, key = index, onClick, onMouseEnter, option, ...rest } = {} as any
+    ) => {
+      if (typeof index !== 'number' || index < 0) {
+        throw new Error(
+          `useSelect: The getOptionProps prop getter requires an index property, eg. 'getOptionProps({index: 1})'`
+        )
+      }
 
-    return {
-      key,
-      option,
-      ...rest,
-      onClick: (e: any) => {
-        if (option.selected !== undefined && option.selected) {
-          removeValue(option.value)
-        } else {
-          selectIndex(index)
-        }
-        if (onClick) {
-          onClick(e)
-        }
-      },
-      onMouseEnter: (e: any) => {
-        enableScrollRef.current = false
-        highlightIndex(index)
-        if (onMouseEnter) {
-          onMouseEnter(e)
-        }
-      },
-    }
-  }
+      return {
+        key,
+        option,
+        ...rest,
+        onClick: (e: any) => {
+          if (option.selected !== undefined && option.selected) {
+            removeValue(option.value)
+          } else {
+            selectIndex(index)
+          }
+          if (onClick) {
+            onClick(e)
+          }
+        },
+        onMouseEnter: (e: any) => {
+          enableScrollRef.current = false
+          highlightIndex(index)
+          if (onMouseEnter) {
+            onMouseEnter(e)
+          }
+        },
+      }
+    },
+    [highlightIndex, selectIndex, removeValue]
+  )
 
   // Effects
 
   // When the user clicks outside of the options box or input
   // while open, we need to close the dropdown
-  useClickOutsideRef(
-    isOpen,
-    () => {
-      setOpen(false)
-    },
-    optionsRef!,
-    controlRef!
-  )
+  useClickOutsideRef(isOpen, Close, optionsRef!, controlRef!)
 
   // When searching, activate the first option
   useEffect(() => {
@@ -862,7 +907,7 @@ export function useSelectCombobox(props: any = {}) {
 }
 
 export function useSelectInput(props: any = {}) {
-  const { getInputProps } = useSelectContext()
+  const { getInputProps } = useSelectInputContext()
   const styles = useStyles()
 
   return {
@@ -881,7 +926,7 @@ export function useSelectLabel(props: any = {}) {
 }
 
 export function useSelectButton(props: any = {}) {
-  const { isOpen, setOpen } = useSelectContext()
+  const { isOpen, setOpen } = useSelectToggleContext()
   const onClick = useCallback(
     (e) => {
       e.preventDefault()
@@ -904,7 +949,7 @@ export function useSelectButton(props: any = {}) {
 }
 
 export function useSelectedItem(props: any = {}) {
-  const { removeValue } = useSelectContext()
+  const { removeValue } = useSelectedContext()
   const styles = useStyles()
 
   const onClick = useCallback(
@@ -967,7 +1012,7 @@ export function useSelectList(props: any = {}) {
 }
 
 export function useSelectedList(props: any = {}) {
-  const { value: selectedItems, multi } = useSelectContext()
+  const { value: selectedItems, multi } = useSelectedListContext()
   const styles = useStyles()
 
   return {

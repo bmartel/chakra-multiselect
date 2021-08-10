@@ -34,6 +34,10 @@ import {
   UseSelectProps,
   idFromOption,
   labelFromValue,
+  SelectedProvider,
+  SelectInputProvider,
+  SelectedListProvider,
+  SelectToggleProvider,
 } from './use-select'
 
 // @see https://github.com/chakra-ui/chakra-ui/issues/140
@@ -91,13 +95,37 @@ export const Select: React.FC<SelectProps> = (props) => {
 
   const ctx = useSelect(ownProps as any)
   const context = useMemo(() => ctx, [ctx])
+  const selectInputContext = useMemo(
+    () => ({ getInputProps: ctx.getInputProps }),
+    [ctx.getInputProps]
+  )
+  const selectedContext = useMemo(
+    () => ({ removeValue: ctx.removeValue }),
+    [ctx.removeValue]
+  )
+  const selectedListContext = useMemo(
+    () => ({ value: ctx.value, multi: ctx.multi }),
+    [ctx.value, ctx.multi]
+  )
+  const selectToggleContext = useMemo(
+    () => ({ isOpen: ctx.isOpen, setOpen: ctx.setOpen }),
+    [ctx.isOpen, ctx.setOpen]
+  )
 
   return (
-    <SelectProvider value={context}>
-      <StylesProvider value={styles}>
-        <chakra.div pos='relative'>{children}</chakra.div>
-      </StylesProvider>
-    </SelectProvider>
+    <StylesProvider value={styles}>
+      <SelectProvider value={context}>
+        <SelectInputProvider value={selectInputContext}>
+          <SelectedListProvider value={selectedListContext}>
+            <SelectedProvider value={selectedContext}>
+              <SelectToggleProvider value={selectToggleContext}>
+                <chakra.div pos='relative'>{children}</chakra.div>
+              </SelectToggleProvider>
+            </SelectedProvider>
+          </SelectedListProvider>
+        </SelectInputProvider>
+      </SelectProvider>
+    </StylesProvider>
   )
 }
 
@@ -218,24 +246,23 @@ export const SelectInput = memo((props) => {
 })
 SelectInput.displayName = 'SelectInput'
 
-export const SelectedItem: React.FC<SelectedItemProps> = ({
-  value,
-  index,
-  ...props
-}) => {
-  const { onClick, __css, ...itemProps } = useSelectedItem({
-    value,
-    index,
-    ...props,
-  })
+export const SelectedItem = memo<SelectedItemProps>(
+  ({ value, index, ...props }) => {
+    const { onClick, __css, ...itemProps } = useSelectedItem({
+      value,
+      index,
+      ...props,
+    })
 
-  return (
-    <Tag {...__css} {...itemProps}>
-      <TagLabel>{value}</TagLabel>
-      <TagCloseButton onClick={onClick} />
-    </Tag>
-  )
-}
+    return (
+      <Tag {...__css} {...itemProps}>
+        <TagLabel>{value}</TagLabel>
+        <TagCloseButton onClick={onClick} />
+      </Tag>
+    )
+  }
+)
+SelectedItem.displayName = 'SelectedItem'
 
 export const SelectToggleButton = memo((props) => {
   const {
