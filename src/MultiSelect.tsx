@@ -17,6 +17,7 @@ import {
   TagLabel,
   TagCloseButton,
   TagProps,
+  StackProps,
 } from '@chakra-ui/react'
 import { memo, ReactNode, useCallback, useMemo } from 'react'
 import {
@@ -77,9 +78,7 @@ export interface SelectOptionItemProps extends HTMLChakraProps<'li'> {
   created?: boolean
 }
 
-export interface SelectedItemProps extends TagProps, SelectItem {
-  index: number
-}
+export interface SelectedItemProps extends TagProps, SelectItem {}
 
 export interface MultiSelectProps extends Omit<SelectProps, 'children'> {
   children?: ReactNode
@@ -136,6 +135,21 @@ export const SelectLabel = memo<HTMLChakraProps<'label'>>((props) => {
 })
 SelectLabel.displayName = 'SelectLabel'
 
+export const SelectOptionLabel = memo<
+  StackProps & { label: string; created: boolean }
+>(({ label, created }) => (
+  <HStack justifyContent='space-between' w='full'>
+    <Box>{label}</Box>
+    {!!created && (
+      <Tag flexShrink={0}>
+        <TagLabel fontSize='xs' fontWeight='bold'>
+          New
+        </TagLabel>
+      </Tag>
+    )}
+  </HStack>
+))
+
 export const SelectOptionItem = memo<SelectOptionItemProps>(
   ({ value, label, index, selected, created, ...props }) => {
     const { highlightedRef, option, ...itemProps } = useSelectItem({
@@ -151,16 +165,7 @@ export const SelectOptionItem = memo<SelectOptionItemProps>(
         {...props}
         {...itemProps}
       >
-        <HStack justifyContent='space-between' w='full'>
-          <Box>{option?.label || value}</Box>
-          {!!created && (
-            <Tag flexShrink={0}>
-              <TagLabel fontSize='xs' fontWeight='bold'>
-                New
-              </TagLabel>
-            </Tag>
-          )}
-        </HStack>
+        <SelectOptionLabel label={option?.label || value} created={!!created} />
       </chakra.li>
     )
   }
@@ -246,22 +251,20 @@ export const SelectInput = memo((props) => {
 })
 SelectInput.displayName = 'SelectInput'
 
-export const SelectedItem = memo<SelectedItemProps>(
-  ({ value, index, ...props }) => {
-    const { onClick, __css, ...itemProps } = useSelectedItem({
-      value,
-      index,
-      ...props,
-    })
+export const SelectedItem = memo<SelectedItemProps>(({ value, ...props }) => {
+  console.log({ value, props })
+  const { onClick, __css, ...itemProps } = useSelectedItem({
+    value,
+    ...props,
+  })
 
-    return (
-      <Tag {...__css} {...itemProps}>
-        <TagLabel>{value}</TagLabel>
-        <TagCloseButton onClick={onClick} />
-      </Tag>
-    )
-  }
-)
+  return (
+    <Tag {...__css} {...itemProps}>
+      <TagLabel>{value}</TagLabel>
+      <TagCloseButton onClick={onClick} />
+    </Tag>
+  )
+})
 SelectedItem.displayName = 'SelectedItem'
 
 export const SelectToggleButton = memo((props) => {
@@ -303,11 +306,10 @@ export const SelectedList = memo(({ children, ...props }) => {
   return (
     <Box {...__css} {...selectedListProps}>
       {multi &&
-        selectedItems?.map((selectedItem: any, index: number) => (
+        selectedItems?.map((selectedItem: any) => (
           <SelectedItem
-            key={`selected-item-${index}`}
+            key={`selected-item-${selectedItem}`}
             value={selectedItem}
-            index={index}
           />
         ))}
       {children}

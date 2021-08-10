@@ -953,8 +953,8 @@ export function useSelectedItem(props: any = {}) {
   const styles = useStyles()
 
   const onClick = useCallback(
-    () => removeValue(props.index),
-    [props.index, removeValue]
+    () => removeValue(props.value),
+    [props.value, removeValue]
   )
 
   return {
