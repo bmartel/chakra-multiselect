@@ -239,9 +239,11 @@ export const SelectOptionGroup: React.FC<SelectOptionGroupProps> = (props) => {
 
 const SelectToggleIcon: React.FC<
   HTMLChakraProps<'svg'> & { isActive?: boolean }
-> = ({ isActive, width = '1.25rem', height = '1.25rem', __css, ...props }) => (
+> = ({ isActive, width = 4, height = 4, __css, ...props }) => (
   <ChakraSvg
     viewBox='0 0 24 24'
+    stroke='currentColor'
+    fill='none'
     width={width}
     height={height}
     __css={{
@@ -251,15 +253,17 @@ const SelectToggleIcon: React.FC<
     {...props}
   >
     <path
-      fill='currentColor'
-      d='M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z'
+      strokeLinecap='round'
+      strokeLinejoin='round'
+      strokeWidth='2'
+      d='M19 9l-7 7-7-7'
     />
   </ChakraSvg>
 )
 
 const SelectClearIcon: React.FC<
   HTMLChakraProps<'svg'> & { isActive?: boolean }
-> = ({ width = '1.25rem', height = '1.25rem', ...props }) => (
+> = ({ width = 4, height = 4, ...props }) => (
   <ChakraSvg
     viewBox='0 0 24 24'
     stroke='currentColor'
