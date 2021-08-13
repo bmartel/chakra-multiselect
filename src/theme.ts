@@ -27,6 +27,7 @@ function baseStyleList(props: Record<string, any>) {
     borderWidth: '1px',
     maxH: '64',
     overflowY: 'auto',
+    overscrollBehaviorY: 'contain',
   }
 }
 
