@@ -18,13 +18,14 @@ import {
   TagCloseButton,
   TagProps,
   StackProps,
+  ButtonProps,
 } from '@chakra-ui/react'
 import { memo, ReactNode, useCallback, useMemo } from 'react'
 import {
   SelectProvider,
   useSelect,
   useSelectButton,
-  useSelectCombobox,
+  useSelectActionGroup,
   useSelectControl,
   useSelectInput,
   useSelectedItem,
@@ -38,7 +39,9 @@ import {
   SelectedProvider,
   SelectInputProvider,
   SelectedListProvider,
-  SelectToggleProvider,
+  SelectActionProvider,
+  SelectionVisibilityMode,
+  useClearButton,
 } from './use-select'
 
 // @see https://github.com/chakra-ui/chakra-ui/issues/140
@@ -103,12 +106,21 @@ export const Select: React.FC<SelectProps> = (props) => {
     [ctx.removeValue]
   )
   const selectedListContext = useMemo(
-    () => ({ value: ctx.value, multi: ctx.multi }),
-    [ctx.value, ctx.multi]
+    () => ({
+      value: ctx.value,
+      multi: ctx.multi,
+      selectionVisibleIn: ctx.selectionVisibleIn,
+    }),
+    [ctx.value, ctx.multi, ctx.selectionVisibleIn]
   )
-  const selectToggleContext = useMemo(
-    () => ({ isOpen: ctx.isOpen, setOpen: ctx.setOpen }),
-    [ctx.isOpen, ctx.setOpen]
+  const selectActionContext = useMemo(
+    () => ({
+      isOpen: ctx.isOpen,
+      setOpen: ctx.setOpen,
+      clearable: ctx.clearable,
+      clearAll: ctx.clearAll,
+    }),
+    [ctx.isOpen, ctx.setOpen, ctx.clearable, ctx.clearAll]
   )
 
   return (
@@ -117,9 +129,9 @@ export const Select: React.FC<SelectProps> = (props) => {
         <SelectInputProvider value={selectInputContext}>
           <SelectedListProvider value={selectedListContext}>
             <SelectedProvider value={selectedContext}>
-              <SelectToggleProvider value={selectToggleContext}>
+              <SelectActionProvider value={selectActionContext}>
                 <chakra.div pos='relative'>{children}</chakra.div>
-              </SelectToggleProvider>
+              </SelectActionProvider>
             </SelectedProvider>
           </SelectedListProvider>
         </SelectInputProvider>
@@ -245,6 +257,26 @@ const SelectToggleIcon: React.FC<
   </ChakraSvg>
 )
 
+const SelectClearIcon: React.FC<
+  HTMLChakraProps<'svg'> & { isActive?: boolean }
+> = ({ width = '1.25rem', height = '1.25rem', ...props }) => (
+  <ChakraSvg
+    viewBox='0 0 24 24'
+    stroke='currentColor'
+    fill='none'
+    width={width}
+    height={height}
+    {...props}
+  >
+    <path
+      strokeLinecap='round'
+      strokeLinejoin='round'
+      strokeWidth='2'
+      d='M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z'
+    />
+  </ChakraSvg>
+)
+
 export const SelectInput = memo((props) => {
   const inputProps = useSelectInput(props)
 
@@ -253,7 +285,6 @@ export const SelectInput = memo((props) => {
 SelectInput.displayName = 'SelectInput'
 
 export const SelectedItem = memo<SelectedItemProps>(({ value, ...props }) => {
-  console.log({ value, props })
   const { onClick, __css, ...itemProps } = useSelectedItem({
     value,
     ...props,
@@ -268,7 +299,7 @@ export const SelectedItem = memo<SelectedItemProps>(({ value, ...props }) => {
 })
 SelectedItem.displayName = 'SelectedItem'
 
-export const SelectToggleButton = memo((props) => {
+export const SelectToggleButton = memo<ButtonProps>((props) => {
   const {
     __css,
     size = 'sm',
@@ -300,35 +331,71 @@ export const SelectToggleButton = memo((props) => {
 })
 SelectToggleButton.displayName = 'SelectToggleButton'
 
+export const SelectClearButton = memo<ButtonProps>((props) => {
+  const {
+    __css,
+    size = 'sm',
+    ariaLabel = 'clear all selected',
+    Icon = SelectClearIcon,
+    ...buttonProps
+  } = useClearButton(props)
+
+  return (
+    <IconButton
+      tabIndex={0}
+      size={size}
+      aria-label={ariaLabel}
+      icon={<Icon />}
+      {...__css}
+      {...buttonProps}
+    />
+  )
+})
+SelectClearButton.displayName = 'SelectClearButton'
+
 export const SelectedList = memo(({ children, ...props }) => {
-  const { __css, selectedItems, multi, ...selectedListProps } =
-    useSelectedList(props)
+  const {
+    __css,
+    textList,
+    selectedItems,
+    multi,
+    selectionVisibleIn,
+    ...selectedListProps
+  } = useSelectedList(props)
 
   return (
     <Box {...__css} {...selectedListProps}>
-      {multi &&
+      {multi && // Both || Input
+        selectionVisibleIn !== SelectionVisibilityMode.List &&
         selectedItems?.map((selectedItem: any) => (
           <SelectedItem
             key={`selected-item-${selectedItem}`}
             value={selectedItem}
           />
         ))}
+      {multi && // List only
+        selectionVisibleIn === SelectionVisibilityMode.List &&
+        !!selectedItems?.length && (
+          <Box {...textList?.__css}>{selectedItems?.join(', ')}</Box>
+        )}
       {children}
     </Box>
   )
 })
 SelectedList.displayName = 'SelectedList'
 
-export const SelectCombobox = memo((props) => {
-  const { __css, ...comboboxProps } = useSelectCombobox(props)
+export const SelectActionGroup = memo((props) => {
+  const { __css, clearable, clearOnClick, ...toggleActionProps } =
+    useSelectActionGroup(props)
 
   return (
-    <HStack {...__css} {...comboboxProps}>
+    <HStack {...__css} {...toggleActionProps}>
+      {clearable && <SelectClearButton onClick={clearOnClick} />}
       <SelectToggleButton />
     </HStack>
   )
 })
-SelectCombobox.displayName = 'SelectCombobox'
+SelectActionGroup.displayName = 'SelectActionGroup'
 
 export const SelectControl = forwardRef<SelectControlProps, 'div'>(
   ({ children }, ref) => {
@@ -353,7 +420,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
         <SelectedList>
           <SelectInput />
         </SelectedList>
-        <SelectCombobox />
+        <SelectActionGroup />
       </SelectControl>
       <SelectList />
     </Select>

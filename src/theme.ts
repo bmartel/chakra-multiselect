@@ -4,8 +4,9 @@ const parts = [
   'item',
   'selectedItem',
   'list',
+  'textList',
   'selectedList',
-  'combobox',
+  'actionGroup',
   'control',
   'input',
   'button',
@@ -63,7 +64,7 @@ function baseStyleItem(props: Record<string, any>) {
       bg: mode(`gray.100`, `whiteAlpha.100`)(props),
     },
     _selected: {
-      bg: mode(`gray.300`, `whiteAlpha.300`)(props),
+      bg: mode(`gray.200`, `whiteAlpha.300`)(props),
     },
     _disabled: {
       opacity: 0.4,
@@ -84,10 +85,10 @@ function baseStyleButton(props: Record<string, any>) {
   return {
     variant: 'ghost',
     _hover: {
-      bg: mode(`gray.300`, `whiteAlpha.300`)(props),
+      bg: mode(`gray.200`, `whiteAlpha.300`)(props),
     },
     _focus: {
-      bg: mode(`gray.300`, `whiteAlpha.300`)(props),
+      bg: mode(`gray.200`, `whiteAlpha.300`)(props),
       boxShadow: 'outline',
     },
     _active: {
@@ -109,7 +110,7 @@ const baseStyleInput = (_props: Record<string, any>) => ({
   outline: 0,
 })
 
-const baseStyleCombobox = {
+const baseStyleActionGroup = {
   d: 'flex',
   alignItems: 'center',
 }
@@ -133,7 +134,7 @@ const baseStyle = (props: Record<string, any>) => ({
   item: baseStyleItem(props),
   selectedItem: baseStyleSelectedItem(props),
   button: baseStyleButton(props),
-  combobox: baseStyleCombobox,
+  actionGroup: baseStyleActionGroup,
   control: baseStyleControl,
   input: baseStyleInput(props),
   groupTitle: baseStyleGroupTitle,
@@ -151,12 +152,16 @@ export const sizes = {
     input: {
       m: 'px',
     },
-    combobox: {
-      spacing: '1',
+    actionGroup: {
+      spacing: '0',
     },
     item: {
       py: 1,
       px: 2,
+    },
+    textList: {
+      py: 0,
+      px: 1,
     },
     selectedItem: {
       m: 'px',
@@ -179,12 +184,15 @@ export const sizes = {
     input: {
       m: '2px',
     },
-    combobox: {
-      spacing: '1',
+    actionGroup: {
+      spacing: '0',
     },
     item: {
       py: 2,
       px: 3,
+    },
+    textList: {
+      p: 1,
     },
     selectedItem: {
       m: '2px',
@@ -207,12 +215,16 @@ export const sizes = {
     input: {
       m: 1,
     },
-    combobox: {
-      spacing: '2',
+    actionGroup: {
+      spacing: '0',
     },
     item: {
       py: 2,
       px: 3,
+    },
+    textList: {
+      py: 1,
+      px: 2,
     },
     selectedItem: {
       m: 1,

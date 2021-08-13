@@ -54,9 +54,11 @@ export enum ChangeActions {
   SingleCreate = 'singleCreate', // eslint-disable-line
   SingleRemove = 'singleRemove', // eslint-disable-line
   SingleSelect = 'singleSelect', // eslint-disable-line
+  SingleClear = 'singleClear', // eslint-disable-line
   MultiCreate = 'multiCreate', // eslint-disable-line
   MultiRemove = 'multiRemove', // eslint-disable-line
   MultiSelect = 'multiSelect', // eslint-disable-line
+  MultiClear = 'multiClear', // eslint-disable-line
 }
 
 export type SelectOnChange = (
@@ -322,6 +324,8 @@ export interface UseSelectReturn {
   getOption: GetOption
   optionsRef: MutableRefObject<any>
   controlRef: MutableRefObject<any>
+  clearAll: () => void
+  clearable: boolean
 }
 
 const [SelectProvider, useSelectContext] = createContext<UseSelectReturn>({
@@ -341,16 +345,16 @@ const [SelectedProvider, useSelectedContext] = createContext<
   name: 'SelectedContext',
 })
 const [SelectedListProvider, useSelectedListContext] = createContext<
-  Pick<UseSelectReturn, 'value' | 'multi'>
+  Pick<UseSelectReturn, 'value' | 'multi' | 'selectionVisibleIn'>
 >({
   strict: false,
-  name: 'SelectedContext',
+  name: 'SelectedListContext',
 })
-const [SelectToggleProvider, useSelectToggleContext] = createContext<
-  Pick<UseSelectReturn, 'isOpen' | 'setOpen'>
+const [SelectActionProvider, useSelectActionContext] = createContext<
+  Pick<UseSelectReturn, 'isOpen' | 'setOpen' | 'clearable' | 'clearAll'>
 >({
   strict: false,
-  name: 'SelectedContext',
+  name: 'SelectActionContext',
 })
 
 export {
@@ -358,12 +362,12 @@ export {
   SelectInputProvider,
   SelectedProvider,
   SelectedListProvider,
-  SelectToggleProvider,
+  SelectActionProvider,
   useSelectContext,
   useSelectedContext,
   useSelectedListContext,
   useSelectInputContext,
-  useSelectToggleContext,
+  useSelectActionContext,
 }
 
 export function useSelect({
@@ -463,8 +467,7 @@ export function useSelect({
   }, [multi, value, originalOptions, getOption])
 
   // If there is a search value, filter the options for that value
-  // TODO: This is likely where we will perform async option fetching
-  // in the future.
+  // This needs to be reworked to handle async loading
   options = useMemo(() => {
     if (resolvedSearchValue) {
       return (filterFnRef.current as any)?.(
@@ -578,6 +581,13 @@ export function useSelect({
     },
     [multi, create, options, duplicates, value, getOption, setSearch, Close]
   )
+
+  const clearAll = useCallback(() => {
+    ;(onChangeRef.current as any)?.(multi ? [] : '', {
+      action: multi ? ChangeActions.MultiClear : ChangeActions.SingleClear,
+      value: '',
+    })
+  }, [multi])
 
   const removeValue = useCallback(
     (v: number | string) => {
@@ -826,6 +836,8 @@ export function useSelect({
 
   return {
     multi,
+    clearable: multi && !!(Array.isArray(value) ? value.length > 0 : !!value),
+    clearAll,
     optionsRef,
     controlRef,
     popper,
@@ -869,21 +881,18 @@ function useClickOutsideRef(
   const elControlRef =
     controlRef || (localControlRef as unknown as MutableRefObject<HTMLElement>)
 
-  const handle = useCallback(
-    (e) => {
-      const isTouch = e.type === 'touchstart'
-      if (e.type === 'click' && isTouch) {
-        return
-      }
+  const handle = useCallback((e) => {
+    const isTouch = e.type === 'touchstart'
+    if (e.type === 'click' && isTouch) {
+      return
+    }
 
-      const elControl = elControlRef.current as HTMLElement
-      const elDropdown = elDropdownRef.current as HTMLElement
-      if (!(elControl?.contains(e.target) || elDropdown?.contains(e.target))) {
-        ;(fnRef.current as any)(e)
-      }
-    },
-    [elControlRef, elDropdownRef]
-  )
+    const elControl = elControlRef.current as HTMLElement
+    const elDropdown = elDropdownRef.current as HTMLElement
+    if (!(elControl?.contains(e.target) || elDropdown?.contains(e.target))) {
+      ;(fnRef.current as any)(e)
+    }
+  }, [])
 
   useEffect(() => {
     if (enable) {
@@ -898,11 +907,21 @@ function useClickOutsideRef(
   }, [enable, handle])
 }
 
-export function useSelectCombobox(props: any = {}) {
+export function useSelectActionGroup(props: any = {}) {
+  const { clearAll, clearable } = useSelectActionContext()
   const styles = useStyles()
+
+  const clearOnClick = useCallback((e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    clearAll()
+  }, [])
+
   return {
     ...props,
-    __css: styles.combobox,
+    clearOnClick,
+    clearable,
+    __css: styles.actionGroup,
   }
 }
 
@@ -926,7 +945,7 @@ export function useSelectLabel(props: any = {}) {
 }
 
 export function useSelectButton(props: any = {}) {
-  const { isOpen, setOpen } = useSelectToggleContext()
+  const { isOpen, setOpen } = useSelectActionContext()
   const onClick = useCallback(
     (e) => {
       e.preventDefault()
@@ -945,6 +964,17 @@ export function useSelectButton(props: any = {}) {
     },
     isOpen,
     onClick,
+  }
+}
+
+export function useClearButton(props: any = {}) {
+  const styles = useStyles()
+
+  return {
+    ...props,
+    __css: {
+      ...styles.button,
+    },
   }
 }
 
@@ -1012,14 +1042,22 @@ export function useSelectList(props: any = {}) {
 }
 
 export function useSelectedList(props: any = {}) {
-  const { value: selectedItems, multi } = useSelectedListContext()
+  const {
+    value: selectedItems,
+    multi,
+    selectionVisibleIn,
+  } = useSelectedListContext()
   const styles = useStyles()
 
   return {
     ...props,
     multi,
     selectedItems,
+    selectionVisibleIn,
     __css: styles.selectedList,
+    textList: {
+      __css: styles.textList,
+    },
   }
 }
 
@@ -1060,6 +1098,7 @@ export function useMultiSelect(
               : [{ ...opt, created: true }, ...o]
           })
           break
+        case ChangeActions.SingleClear:
         case ChangeActions.SingleRemove:
           setValue(next as string)
           break
@@ -1077,6 +1116,7 @@ export function useMultiSelect(
               : [{ ...opt, created: true }, ...o]
           })
           break
+        case ChangeActions.MultiClear:
         case ChangeActions.MultiRemove:
           setValue(next as string[])
           break

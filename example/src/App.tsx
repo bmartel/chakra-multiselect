@@ -144,6 +144,11 @@ const App = () => {
               label='Choose multiple items with list selection'
               selectionVisibleIn={SelectionVisibilityMode.List}
             />
+            <StatefulMultiSelect
+              options={_options}
+              label='Choose multiple items with both selection'
+              selectionVisibleIn={SelectionVisibilityMode.Both}
+            />
           </VStack>
         </VStack>
       </ChakraProvider>
