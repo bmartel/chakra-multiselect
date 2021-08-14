@@ -253,6 +253,7 @@ export const SelectList = memo(() => {
     </chakra.ul>
   )
 })
+SelectList.displayName = 'SelectList'
 
 export const SelectOptionGroup: React.FC<SelectOptionGroupProps> = (props) => {
   return <MenuOptionGroup {...props} />
