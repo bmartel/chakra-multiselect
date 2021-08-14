@@ -197,6 +197,7 @@ export const EmptySelectResults = memo<{ label?: string }>(
     )
   }
 )
+EmptySelectResults.displayName = 'EmptySelectResults'
 
 export const SelectList = memo(() => {
   const {
