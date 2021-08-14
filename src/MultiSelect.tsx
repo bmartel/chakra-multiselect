@@ -176,6 +176,8 @@ export const SelectOptionItem = memo<SelectOptionItemProps>(
     return (
       <chakra.li
         ref={highlightedRef && highlightedRef}
+        role='option'
+        {...(selected && { 'aria-selected': selected })}
         {...props}
         {...itemProps}
       >
@@ -232,6 +234,8 @@ export const SelectList = memo(() => {
         }),
         [dropdownVisible, __css]
       )}
+      aria-orientation='vertical'
+      role='listbox'
       {...listProps}
     >
       {dropdownVisible && visibleOptions.length > 0 ? (
@@ -311,7 +315,7 @@ export const SelectedItem = memo<SelectedItemProps>(({ value, ...props }) => {
   })
 
   return (
-    <Tag {...__css} {...itemProps}>
+    <Tag {...(__css as any)} {...itemProps}>
       <TagLabel>{value}</TagLabel>
       <TagCloseButton onClick={onClick} />
     </Tag>
@@ -334,6 +338,8 @@ export const SelectToggleButton = memo<ButtonProps>((props) => {
       tabIndex={0}
       size={size}
       aria-label={ariaLabel}
+      aria-haspopup={true}
+      aria-expanded={isOpen}
       icon={
         <Icon
           isActive={isOpen}

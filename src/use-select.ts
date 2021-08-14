@@ -805,7 +805,9 @@ export function useSelect({
 
   // When searching, activate the first option
   useEffect(() => {
-    highlightIndex(0)
+    if (searchValue) {
+      highlightIndex(0)
+    }
   }, [searchValue, highlightIndex])
 
   // When we open and close the options, set the highlightedIndex to 0

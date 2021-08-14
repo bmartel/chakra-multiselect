@@ -55,17 +55,17 @@ function baseStyleItem(props: Record<string, any>) {
     cursor: 'pointer',
     transition: 'background 50ms ease-out',
     _focus: {
-      bg: mode(`gray.100`, `whiteAlpha.100`)(props),
+      bg: mode(`gray.50`, `whiteAlpha.100`)(props),
       boxShadow: 'outline',
     },
     _active: {
-      bg: mode(`gray.100`, `whiteAlpha.100`)(props),
+      bg: mode(`gray.50`, `whiteAlpha.100`)(props),
     },
     _expanded: {
-      bg: mode(`gray.100`, `whiteAlpha.100`)(props),
+      bg: mode(`gray.50`, `whiteAlpha.100`)(props),
     },
     _selected: {
-      bg: mode(`gray.200`, `whiteAlpha.300`)(props),
+      bg: mode(`gray.100`, `whiteAlpha.300`)(props),
     },
     _disabled: {
       opacity: 0.4,
@@ -101,7 +101,7 @@ function baseStyleButton(props: Record<string, any>) {
 
 const baseStyleControl = {
   h: 'auto',
-  minW: 72
+  minW: 72,
 }
 
 // eslint-disable-next-line
