@@ -19,6 +19,7 @@ import {
   TagProps,
   StackProps,
   ButtonProps,
+  useStyles,
 } from '@chakra-ui/react'
 import { memo, ReactNode, useCallback, useMemo } from 'react'
 import {
@@ -148,7 +149,7 @@ export const SelectLabel = memo<HTMLChakraProps<'label'>>((props) => {
 SelectLabel.displayName = 'SelectLabel'
 
 export const SelectOptionLabel = memo<
-  StackProps & { label: string; created: boolean }
+  StackProps & { label: string; created?: boolean }
 >(({ label, created }) => (
   <HStack justifyContent='space-between' w='full'>
     <Box>{label}</Box>
@@ -184,6 +185,17 @@ export const SelectOptionItem = memo<SelectOptionItemProps>(
   }
 )
 
+export const EmptySelectResults = memo<{ label?: string }>(
+  ({ label = 'No results found' }) => {
+    const styles = useStyles()
+    return (
+      <chakra.li __css={styles.item}>
+        <SelectOptionLabel label={label} />
+      </chakra.li>
+    )
+  }
+)
+
 export const SelectList = memo(() => {
   const {
     __css,
@@ -192,43 +204,47 @@ export const SelectList = memo(() => {
     getOption,
     ref: listRef,
     ...listProps
-  } = useSelectList({})
+  } = useSelectList()
 
-  const dropdownVisible = !!(isOpen && visibleOptions.length)
-  const optionItemProps = useCallback(
-    (option, index) => {
-      const optionItem = getOption(option)
-      return {
-        key: optionItem.id || idFromOption(optionItem, 'option-'),
-        value: optionItem.value,
-        label: optionItem.label || labelFromValue(optionItem.value),
-        selected: optionItem.selected,
-        created: optionItem.created,
-        index,
-      }
-    },
-    [getOption]
-  )
+  const dropdownVisible = isOpen
+  const optionItemProps = useCallback((option, index) => {
+    const optionItem = getOption(option) as any
+    return {
+      key: optionItem.id || idFromOption(optionItem, 'option-'),
+      value: optionItem.value,
+      label: optionItem.label || labelFromValue(optionItem.value),
+      selected: optionItem.selected,
+      created: optionItem.created,
+      index,
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <chakra.ul
       ref={listRef}
-      __css={{
-        listStyle: 'none',
-        position: 'absolute',
-        ...(!dropdownVisible && { display: 'none' }),
-        ...__css,
-      }}
+      __css={useMemo(
+        () => ({
+          listStyle: 'none',
+          position: 'absolute',
+          ...(!dropdownVisible && { display: 'none' }),
+          ...__css,
+        }),
+        [dropdownVisible, __css]
+      )}
       {...listProps}
     >
-      {dropdownVisible &&
+      {dropdownVisible && visibleOptions.length > 0 ? (
         visibleOptions.map((item: any, index: number) => {
           const { key: itemKey, ...restItemProps } = optionItemProps(
             item,
             index
           )
           return <SelectOptionItem key={itemKey} {...restItemProps} />
-        })}
+        })
+      ) : (
+        <EmptySelectResults />
+      )}
     </chakra.ul>
   )
 })

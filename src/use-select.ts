@@ -307,13 +307,13 @@ export interface UseSelectReturn {
   multi: boolean
   searchValue: string
   isOpen: boolean
-  highlightedIndex: number
   selectedOption: Option
   visibleOptions: Option[]
   selectionVisibleIn: SelectionVisibilityMode
   selectIndex: (index: number) => any
   highlightIndex: (value: any) => any
-  highlightedIndexRef: MutableRefObject<HTMLElement | undefined>
+  highlightedValueRef: MutableRefObject<HTMLElement | undefined>
+  highlightedIndexRef: MutableRefObject<number>
   enableScrollRef: MutableRefObject<boolean>
   removeValue: SelectRemoveValue
   setOpen: SelectSetOpen
@@ -396,19 +396,23 @@ export function useSelect({
   // Refs
 
   const optionsRef = useRef()
+  const optionsItemsRef = useRef<Option[]>([])
+  const valueRef = useRef<string | Array<string>>('')
   const inputRef = useRef()
   const controlRef = useRef()
   const onBlurRef = useRef({})
   const onChangeRef = useRef()
   const filterFnRef = useRef()
   const scrollToIndexRef = useRef()
-  const highlightedIndexRef = useRef<HTMLElement | undefined>()
+  const highlightedIndexRef = useRef<number>(highlightedIndex)
+  const highlightedValueRef = useRef<HTMLElement | undefined>()
   const enableScrollRef = useRef(false)
 
   const popper = usePopper({
     placement,
   })
 
+  highlightedIndexRef.current = highlightedIndex
   ;(filterFnRef.current as any) = filterFn
   ;(scrollToIndexRef.current as any) = scrollToIndex
   ;(onChangeRef.current as any) = onChange
@@ -488,25 +492,25 @@ export function useSelect({
     return options
   }, [create, searchValue, options, getOption])
 
+  valueRef.current = value
+  optionsItemsRef.current = options as Option[]
+
   // Actions
 
-  const setOpen = useCallback(
-    (newIsOpen) => {
-      setState(
-        (old) => updateReducerState(old, newIsOpen, 'isOpen'),
-        SelectActions.SetOpen
-      )
-    },
-    [setState]
-  )
+  const setOpen = useCallback((newIsOpen) => {
+    setState(
+      (old) => updateReducerState(old, newIsOpen, 'isOpen'),
+      SelectActions.SetOpen
+    )
+  }, [])
 
   const Close = useCallback(() => {
     setOpen(false)
-  }, [setOpen])
+  }, [])
 
   const Open = useCallback(() => {
     setOpen(true)
-  }, [setOpen])
+  }, [])
 
   const setResolvedSearch = useDebounce((value) => {
     setState(
@@ -515,38 +519,33 @@ export function useSelect({
     )
   }, getDebounce(options!))
 
-  const setSearch = useCallback(
-    (value) => {
-      setState(
-        (old) => updateReducerState(old, value, 'searchValue'),
-        SelectActions.SetSearch
-      )
-      setResolvedSearch(value)
-    },
-    [setState, setResolvedSearch]
-  )
+  const setSearch = useCallback((value) => {
+    setState(
+      (old) => updateReducerState(old, value, 'searchValue'),
+      SelectActions.SetSearch
+    )
+    setResolvedSearch(value)
+  }, [])
 
-  const highlightIndex = useCallback(
-    (value) => {
-      setState((old) => {
-        return {
-          ...old,
-          highlightedIndex: Math.min(
-            Math.max(
-              0,
-              typeof value === 'function' ? value(old.highlightedIndex) : value
-            ),
-            options!.length - 1
+  const highlightIndex = useCallback((value) => {
+    const _options = optionsItemsRef.current
+    setState((old) => {
+      return {
+        ...old,
+        highlightedIndex: Math.min(
+          Math.max(
+            0,
+            typeof value === 'function' ? value(old.highlightedIndex) : value
           ),
-        }
-      }, SelectActions.HighlightIndex)
-    },
-    [options, setState]
-  )
+          _options.length - 1
+        ),
+      }
+    }, SelectActions.HighlightIndex)
+  }, [])
 
   const selectIndex = useCallback(
     (index) => {
-      const option = options![index]
+      const option = optionsItemsRef.current![index]
       if (option) {
         const selectedOption = getOption(option) as any
 
@@ -558,11 +557,14 @@ export function useSelect({
             value: selectedOption,
           })
         } else {
+          const _value = valueRef.current as Array<string>
           if (
             duplicates ||
-            !value.some((v: any) => getOption(v).value === selectedOption.value)
+            !_value.some(
+              (v: any) => getOption(v).value === selectedOption.value
+            )
           ) {
-            ;(onChangeRef.current as any)?.([...value, selectedOption.value], {
+            ;(onChangeRef.current as any)?.([..._value, selectedOption.value], {
               action: selectedOption.created
                 ? ChangeActions.MultiCreate
                 : ChangeActions.MultiSelect,
@@ -579,7 +581,7 @@ export function useSelect({
         Close()
       }
     },
-    [multi, create, options, duplicates, value, getOption, setSearch, Close]
+    [multi, create, duplicates, getOption]
   )
 
   const clearAll = useCallback(() => {
@@ -592,8 +594,10 @@ export function useSelect({
   const removeValue = useCallback(
     (v: number | string) => {
       const isIndex = typeof v === 'number'
-      const _multi = Array.isArray(value)
-      const _value = _multi ? value : [value]
+      const _multi = Array.isArray(valueRef.current)
+      const _value = (
+        _multi ? valueRef.current : [valueRef.current]
+      ) as Array<string>
       const _next = _value.filter((_v: string, i: number) =>
         isIndex ? i !== v : v !== _v
       )
@@ -609,25 +613,22 @@ export function useSelect({
         })
       }
     },
-    [value, getOption]
+    [getOption]
   )
 
   // Handlers
 
-  const handleSearchValueChange = useCallback(
-    (e: any) => {
-      setSearch(e.target.value)
-      Open()
-    },
-    [Open, setSearch]
-  )
+  const handleSearchValueChange = useCallback((e: any) => {
+    setSearch(e.target.value)
+    Open()
+  }, [])
 
   const handleSearchClick = useCallback(() => {
     if (!create || multi) {
       setSearch('')
     }
     Open()
-  }, [Open, setSearch, create, multi])
+  }, [create, multi])
 
   // Prop Getters
 
@@ -664,24 +665,26 @@ export function useSelect({
   const Enter = useCallback(
     (_: any, e: any) => {
       if (isOpen) {
-        if (searchValue || options![highlightedIndex]) {
+        const _options = optionsItemsRef.current
+        if (searchValue || _options![highlightedIndexRef!.current as number]) {
           e.preventDefault()
         }
-        if (options![highlightedIndex]) {
-          selectIndex(highlightedIndex)
+        if (_options![highlightedIndexRef!.current as number]) {
+          selectIndex(highlightedIndexRef!.current as number)
         }
       }
     },
-    [isOpen, highlightedIndex, searchValue, options, selectIndex]
+    [isOpen, searchValue]
   )
 
   const Backspace = useCallback(() => {
-    const lastValue = multi ? value[value.length - 1] : value
+    const _value = valueRef.current
+    const lastValue = multi ? _value[_value.length - 1] : _value
     if ((multi && !searchValue) || (!multi && lastValue)) {
-      removeValue(lastValue)
+      removeValue(lastValue as string)
       setSearch('')
     }
-  }, [value, searchValue, multi, removeValue, setSearch])
+  }, [searchValue, multi])
 
   const getKeyProps = useKeys({
     ArrowUp: ArrowUp(),
@@ -753,7 +756,6 @@ export function useSelect({
       isOpen,
       searchValue,
       selectedOption,
-      getKeyProps,
       handleSearchClick,
       handleSearchValueChange,
     ]
@@ -792,7 +794,7 @@ export function useSelect({
         },
       }
     },
-    [highlightIndex, selectIndex, removeValue]
+    []
   )
 
   // Effects
@@ -814,13 +816,13 @@ export function useSelect({
       ;(onBlurRef.current as any)?.cb((onBlurRef.current as any).event)
       ;(onBlurRef.current as any).event = null
     }
-  }, [isOpen, highlightIndex])
+  }, [isOpen])
 
   // When the highlightedIndex changes, scroll to that item
   useEffect(() => {
     ;(scrollToIndexRef.current as any)?.(
       highlightedIndex,
-      highlightedIndexRef,
+      highlightedValueRef,
       optionsRef,
       enableScrollRef
     )
@@ -845,8 +847,8 @@ export function useSelect({
     value,
     searchValue,
     isOpen,
-    highlightedIndex,
     highlightedIndexRef,
+    highlightedValueRef,
     enableScrollRef,
     selectedOption,
     visibleOptions: options!,
@@ -982,63 +984,69 @@ export function useSelectedItem(props: any = {}) {
   const { removeValue } = useSelectedContext()
   const styles = useStyles()
 
-  const onClick = useCallback(
-    () => removeValue(props.value),
-    [props.value, removeValue]
-  )
+  const onClick = useCallback(() => removeValue(props.value), [props.value])
 
-  return {
-    key: props.value,
-    onClick,
-    __css: styles.selectedItem,
-    ...props,
-  }
+  return useMemo(
+    () => ({
+      key: props.key || props.value,
+      onClick,
+      __css: styles.selectedItem,
+    }),
+    [props.value, props.key, onClick, styles.selectedItem]
+  )
 }
 
 export function useSelectItem({ selected, ...props }: any = {}) {
-  const { getOptionProps, highlightedIndex, highlightedIndexRef } =
+  const { getOptionProps, highlightedIndexRef, highlightedValueRef } =
     useSelectContext()
   const styles = useStyles()
-  const highlighted = highlightedIndex === props.index
+  const highlighted = highlightedIndexRef.current === props.index
 
-  return {
-    ...props,
-    ...useMemo(() => {
-      const option = {
-        value: props.value,
-        label: props.label || labelFromValue(props.value),
-        selected,
-      }
-      return {
-        ...getOptionProps!({
-          option,
-          key: props.key || idFromOption(option),
-          index: props.index,
-        }),
-        highlightedRef: highlighted ? highlightedIndexRef : undefined,
-        __css: {
-          ...styles.item,
-          ...(selected && (styles.item as any))?._selected,
-          ...(highlighted && (styles.item as any))?._active,
-        },
-      }
-    }, [highlighted, getOptionProps, props.value, props.index, styles.item]),
-  }
+  return useMemo(() => {
+    const option = {
+      value: props.value,
+      label: props.label || labelFromValue(props.value),
+      selected,
+    }
+    return {
+      ...getOptionProps!({
+        option,
+        key: props.key || idFromOption(option),
+        index: props.index,
+      }),
+      highlightedRef: highlighted ? highlightedValueRef : undefined,
+      __css: {
+        ...styles.item,
+        ...(selected && (styles.item as any))?._selected,
+        ...(highlighted && (styles.item as any))?._active,
+      },
+    }
+  }, [
+    highlighted,
+    selected,
+    props.key,
+    props.label,
+    props.value,
+    props.index,
+    styles.item,
+  ])
 }
 
-export function useSelectList(props: any = {}) {
+export function useSelectList() {
   const { isOpen, getOption, optionsRef, popper, visibleOptions } =
     useSelectContext()
   const styles = useStyles()
 
-  return {
-    ...props,
-    ref: mergeRefs(optionsRef, popper.popperRef),
-    isOpen,
-    visibleOptions,
-    getOption,
-    __css: styles.list,
-  }
+  return useMemo(
+    () => ({
+      ref: mergeRefs(optionsRef, popper.popperRef),
+      isOpen,
+      visibleOptions,
+      getOption,
+      __css: styles.list,
+    }),
+    [isOpen, visibleOptions, styles.list]
+  )
 }
 
 export function useSelectedList(props: any = {}) {

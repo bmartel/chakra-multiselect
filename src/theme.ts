@@ -101,6 +101,7 @@ function baseStyleButton(props: Record<string, any>) {
 
 const baseStyleControl = {
   h: 'auto',
+  minW: 72
 }
 
 // eslint-disable-next-line
