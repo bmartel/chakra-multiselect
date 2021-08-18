@@ -5,7 +5,7 @@ import {
   useStyles,
 } from '@chakra-ui/react'
 import { EventKeys } from '@chakra-ui/utils'
-import { createContext, mergeRefs } from '@chakra-ui/react-utils'
+import { createContext } from '@chakra-ui/react-utils'
 import {
   useEffect,
   useRef,
@@ -80,7 +80,7 @@ export type SelectFilter = (
   getOption: GetOption
 ) => Option[]
 
-export type SelectRemoveValue = (index: number) => void
+export type SelectRemoveValue = (indexOrValue: number | string) => void
 
 export type SelectSetOpen = (open: boolean) => void
 
@@ -332,43 +332,8 @@ const [SelectProvider, useSelectContext] = createContext<UseSelectReturn>({
   strict: false,
   name: 'SelectContext',
 })
-const [SelectInputProvider, useSelectInputContext] = createContext<
-  Pick<UseSelectReturn, 'getInputProps'>
->({
-  strict: false,
-  name: 'SelectInputContext',
-})
-const [SelectedProvider, useSelectedContext] = createContext<
-  Pick<UseSelectReturn, 'removeValue'>
->({
-  strict: false,
-  name: 'SelectedContext',
-})
-const [SelectedListProvider, useSelectedListContext] = createContext<
-  Pick<UseSelectReturn, 'value' | 'multi' | 'selectionVisibleIn'>
->({
-  strict: false,
-  name: 'SelectedListContext',
-})
-const [SelectActionProvider, useSelectActionContext] = createContext<
-  Pick<UseSelectReturn, 'isOpen' | 'setOpen' | 'clearable' | 'clearAll'>
->({
-  strict: false,
-  name: 'SelectActionContext',
-})
 
-export {
-  SelectProvider,
-  SelectInputProvider,
-  SelectedProvider,
-  SelectedListProvider,
-  SelectActionProvider,
-  useSelectContext,
-  useSelectedContext,
-  useSelectedListContext,
-  useSelectInputContext,
-  useSelectActionContext,
-}
+export { SelectProvider, useSelectContext }
 
 export function useSelect({
   create = false,
@@ -911,63 +876,12 @@ function useClickOutsideRef(
   }, [enable, handle])
 }
 
-export function useSelectActionGroup(props: any = {}) {
-  const { clearAll, clearable } = useSelectActionContext()
-  const styles = useStyles()
-
-  const clearOnClick = useCallback((e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    clearAll()
-  }, [])
-
-  return {
-    ...props,
-    clearOnClick,
-    clearable,
-    __css: styles.actionGroup,
-  }
-}
-
-export function useSelectInput(props: any = {}) {
-  const { getInputProps } = useSelectInputContext()
-  const styles = useStyles()
-
-  return {
-    ...props,
-    ...getInputProps(),
-    __css: styles.input,
-  }
-}
 export function useSelectLabel(props: any = {}) {
   const styles = useStyles()
 
   return {
     ...props,
     __css: styles.label,
-  }
-}
-
-export function useSelectButton(props: any = {}) {
-  const { isOpen, setOpen } = useSelectActionContext()
-  const onClick = useCallback(
-    (e) => {
-      e.preventDefault()
-      e.stopPropagation()
-      ;(setOpen as any)((o: any) => !o)
-    },
-    [setOpen]
-  )
-  const styles = useStyles()
-
-  return {
-    ...props,
-    __css: {
-      ...styles.button,
-      ...(isOpen && (styles.button as any))?._active,
-    },
-    isOpen,
-    onClick,
   }
 }
 
@@ -980,22 +894,6 @@ export function useClearButton(props: any = {}) {
       ...styles.button,
     },
   }
-}
-
-export function useSelectedItem(props: any = {}) {
-  const { removeValue } = useSelectedContext()
-  const styles = useStyles()
-
-  const onClick = useCallback(() => removeValue(props.value), [props.value])
-
-  return useMemo(
-    () => ({
-      key: props.key || props.value,
-      onClick,
-      __css: styles.selectedItem,
-    }),
-    [props.value, props.key, onClick, styles.selectedItem]
-  )
 }
 
 export function useSelectItem({ selected, ...props }: any = {}) {
@@ -1032,60 +930,6 @@ export function useSelectItem({ selected, ...props }: any = {}) {
     props.index,
     styles.item,
   ])
-}
-
-export function useSelectList() {
-  const { isOpen, getOption, optionsRef, popper, visibleOptions } =
-    useSelectContext()
-  const styles = useStyles()
-
-  return useMemo(
-    () => ({
-      ref: mergeRefs(optionsRef, popper.popperRef),
-      isOpen,
-      visibleOptions,
-      getOption,
-      __css: styles.list,
-    }),
-    [isOpen, visibleOptions, styles.list]
-  )
-}
-
-export function useSelectedList(props: any = {}) {
-  const {
-    value: selectedItems,
-    multi,
-    selectionVisibleIn,
-  } = useSelectedListContext()
-  const styles = useStyles()
-
-  return {
-    ...props,
-    multi,
-    selectedItems,
-    selectionVisibleIn,
-    __css: styles.selectedList,
-    textList: {
-      __css: styles.textList,
-    },
-  }
-}
-
-export function useSelectControl(props: any = {}) {
-  const { isOpen, popper, controlRef } = useSelectContext()
-  const styles = useStyles()
-
-  return {
-    ...props,
-    ...useMemo(
-      () => ({
-        ref: mergeRefs(props.ref, controlRef, popper.referenceRef),
-      }),
-      [props.ref, controlRef, popper.referenceRef]
-    ),
-    isOpen,
-    __css: styles.control,
-  }
 }
 
 export function useMultiSelect(
