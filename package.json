@@ -76,5 +76,11 @@
   },
   "files": [
     "dist"
+  ],
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not op_mini all",
+    "not ie 11"
   ]
 }
