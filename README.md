@@ -20,6 +20,8 @@ Ensure your application has a `ChakraProvider` wrapping your Application's main 
 
 Include the MultiSelectTheme as a component in the theme declarations.
 
+See https://bmartel.github.io/chakra-multiselect/docs for full documentation.
+
 ``` tsx
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 import {  MultiSelectTheme } from 'chakra-multiselect'
