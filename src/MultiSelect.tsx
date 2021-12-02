@@ -1,10 +1,6 @@
 import {
   HTMLChakraProps,
-  MenuOptionGroup,
-  MenuProps,
   Input,
-  MenuListProps,
-  MenuOptionGroupProps,
   Box,
   IconButton,
   chakra,
@@ -18,10 +14,11 @@ import {
   TagCloseButton,
   TagProps,
   StackProps,
-  ButtonProps,
   useStyles,
+  BoxProps,
+  IconButtonProps,
 } from '@chakra-ui/react'
-import { memo, ReactNode, useCallback, useMemo } from 'react'
+import { FC, memo, ReactNode, useCallback, useMemo } from 'react'
 import {
   SelectProvider,
   useSelect,
@@ -57,23 +54,27 @@ export interface SelectProps
       HTMLChakraProps<'select'>,
       'value' | 'size' | 'onChange' | 'onSelect' | 'children'
     >,
-    Omit<MenuProps, 'children'>,
     UseSelectProps {
   label?: string
   children?: ReactNode
 }
 
 export interface SelectControlProps
-  extends Omit<HTMLChakraProps<'select'>, 'size'>,
-    Omit<MenuProps, 'children'> {
+  extends Omit<HTMLChakraProps<'select'>, 'size'> {
   defaultIsOpen?: boolean
   isLazy?: true
   closeOnSelect?: false
   children?: ReactNode
 }
 
-export type SelectListProps = MenuListProps
-export type SelectOptionGroupProps = MenuOptionGroupProps
+export type SelectListProps = HTMLChakraProps<'ul'>
+export type SelectedListProps = BoxProps
+export type SelectLabelProps = HTMLChakraProps<'label'>
+export interface SelectActionGroupProps extends StackProps {
+  clearButtonProps?: IconButtonProps
+  toggleButtonProps?: IconButtonProps
+}
+
 export interface SelectOptionItemProps extends HTMLChakraProps<'li'> {
   highlighted?: boolean
   label?: string
@@ -86,15 +87,20 @@ export interface SelectedItemProps extends TagProps, SelectItem {}
 
 export interface MultiSelectProps extends Omit<SelectProps, 'children'> {
   children?: ReactNode
+  labelProps?: SelectLabelProps
+  controlProps?: SelectControlProps
+  listProps?: SelectListProps
+  selectedListProps?: SelectedListProps
+  actionGroupProps?: SelectActionGroupProps
 }
 
 export const ChakraSvg = chakra('svg')
 
-export const Select: React.FC<SelectProps> = (props) => {
+export const Select = memo<SelectProps>((props) => {
   const { children } = props
 
   const styles = useMultiStyleConfig('MultiSelect', props)
-  const ownProps = omitThemingProps(props)
+  const ownProps = omitThemingProps(props as any)
 
   const ctx = useSelect(ownProps as any)
   const context = useMemo(() => ctx, [ctx])
@@ -139,9 +145,10 @@ export const Select: React.FC<SelectProps> = (props) => {
       </SelectProvider>
     </StylesProvider>
   )
-}
+})
+Select.displayName = 'Select'
 
-export const SelectLabel = memo<HTMLChakraProps<'label'>>((props) => {
+export const SelectLabel = memo<SelectLabelProps>((props) => {
   const labelProps = useSelectLabel()
 
   return <chakra.label {...props} {...labelProps} />
@@ -199,7 +206,7 @@ export const EmptySelectResults = memo<{ label?: string }>(
 )
 EmptySelectResults.displayName = 'EmptySelectResults'
 
-export const SelectList = memo(() => {
+export const SelectList = memo<SelectListProps>((props) => {
   const {
     __css,
     visibleOptions,
@@ -238,6 +245,7 @@ export const SelectList = memo(() => {
       aria-orientation='vertical'
       role='listbox'
       {...listProps}
+      {...props}
     >
       {dropdownVisible && visibleOptions.length > 0 ? (
         visibleOptions.map((item: any, index: number) => {
@@ -255,13 +263,13 @@ export const SelectList = memo(() => {
 })
 SelectList.displayName = 'SelectList'
 
-export const SelectOptionGroup: React.FC<SelectOptionGroupProps> = (props) => {
-  return <MenuOptionGroup {...props} />
-}
-
-const SelectToggleIcon: React.FC<
-  HTMLChakraProps<'svg'> & { isActive?: boolean }
-> = ({ isActive, width = 4, height = 4, __css, ...props }) => (
+const SelectToggleIcon: FC<HTMLChakraProps<'svg'> & { isActive?: boolean }> = ({
+  isActive,
+  width = 4,
+  height = 4,
+  __css,
+  ...props
+}) => (
   <ChakraSvg
     viewBox='0 0 24 24'
     stroke='currentColor'
@@ -283,9 +291,11 @@ const SelectToggleIcon: React.FC<
   </ChakraSvg>
 )
 
-const SelectClearIcon: React.FC<
-  HTMLChakraProps<'svg'> & { isActive?: boolean }
-> = ({ width = 4, height = 4, ...props }) => (
+const SelectClearIcon: FC<HTMLChakraProps<'svg'> & { isActive?: boolean }> = ({
+  width = 4,
+  height = 4,
+  ...props
+}) => (
   <ChakraSvg
     viewBox='0 0 24 24'
     stroke='currentColor'
@@ -325,12 +335,12 @@ export const SelectedItem = memo<SelectedItemProps>(({ value, ...props }) => {
 })
 SelectedItem.displayName = 'SelectedItem'
 
-export const SelectToggleButton = memo<ButtonProps>((props) => {
+export const SelectToggleButton = memo<IconButtonProps>((props) => {
   const {
     __css,
     size = 'sm',
     ariaLabel = 'toggle menu',
-    Icon = SelectToggleIcon,
+    icon: Icon = SelectToggleIcon,
     isOpen,
     ...buttonProps
   } = useSelectButton(props)
@@ -359,12 +369,12 @@ export const SelectToggleButton = memo<ButtonProps>((props) => {
 })
 SelectToggleButton.displayName = 'SelectToggleButton'
 
-export const SelectClearButton = memo<ButtonProps>((props) => {
+export const SelectClearButton = memo<IconButtonProps>((props) => {
   const {
     __css,
     size = 'sm',
     ariaLabel = 'clear all selected',
-    Icon = SelectClearIcon,
+    icon: Icon = SelectClearIcon,
     ...buttonProps
   } = useClearButton(props)
 
@@ -381,76 +391,91 @@ export const SelectClearButton = memo<ButtonProps>((props) => {
 })
 SelectClearButton.displayName = 'SelectClearButton'
 
-export const SelectedList = memo(({ children, ...props }) => {
-  const {
-    __css,
-    textList,
-    selectedItems,
-    multi,
-    selectionVisibleIn,
-    ...selectedListProps
-  } = useSelectedList(props)
+export const SelectedList = memo<SelectedListProps>(
+  ({ children, ...props }) => {
+    const {
+      __css,
+      textList,
+      selectedItems,
+      multi,
+      selectionVisibleIn,
+      ...selectedListProps
+    } = useSelectedList(props)
 
-  return (
-    <Box {...__css} {...selectedListProps}>
-      {multi && // Both || Input
-        selectionVisibleIn !== SelectionVisibilityMode.List &&
-        selectedItems?.map((selectedItem: any) => (
-          <SelectedItem
-            key={`selected-item-${selectedItem}`}
-            value={selectedItem}
-          />
-        ))}
-      {multi && // List only
-        selectionVisibleIn === SelectionVisibilityMode.List &&
-        !!selectedItems?.length && (
-          <Box {...textList?.__css}>{selectedItems?.join(', ')}</Box>
-        )}
-      {children}
-    </Box>
-  )
-})
+    return (
+      <Box {...__css} {...selectedListProps}>
+        {multi && // Both || Input
+          selectionVisibleIn !== SelectionVisibilityMode.List &&
+          selectedItems?.map((selectedItem: any) => (
+            <SelectedItem
+              key={`selected-item-${selectedItem}`}
+              value={selectedItem}
+            />
+          ))}
+        {multi && // List only
+          selectionVisibleIn === SelectionVisibilityMode.List &&
+          !!selectedItems?.length && (
+            <Box {...textList?.__css}>{selectedItems?.join(', ')}</Box>
+          )}
+        {children}
+      </Box>
+    )
+  }
+)
 SelectedList.displayName = 'SelectedList'
 
-export const SelectActionGroup = memo((props) => {
-  const { __css, clearable, clearOnClick, ...toggleActionProps } =
-    useSelectActionGroup(props)
+export const SelectActionGroup = memo<SelectActionGroupProps>((props) => {
+  const {
+    __css,
+    clearable,
+    clearOnClick,
+    clearButtonProps,
+    toggleButtonProps,
+    ...toggleActionProps
+  } = useSelectActionGroup(props)
 
   return (
     <HStack {...__css} {...toggleActionProps}>
-      {clearable && <SelectClearButton onClick={clearOnClick} />}
-      <SelectToggleButton />
+      {clearable && (
+        <SelectClearButton onClick={clearOnClick} {...clearButtonProps} />
+      )}
+      <SelectToggleButton {...toggleButtonProps} />
     </HStack>
   )
 })
 SelectActionGroup.displayName = 'SelectActionGroup'
 
 export const SelectControl = forwardRef<SelectControlProps, 'div'>(
-  ({ children }, ref) => {
+  ({ children, ...props }, ref) => {
     const { ref: controlRef, __css } = useSelectControl({ ref })
 
     return (
-      <Input ref={controlRef} as={HStack} {...__css}>
+      <Input ref={controlRef} as={HStack} {...__css} {...props}>
         {children}
       </Input>
     )
   }
 )
 
-export const MultiSelect: React.FC<MultiSelectProps> = ({
+export const MultiSelect: FC<MultiSelectProps> = ({
   label,
+  labelProps,
+  controlProps,
+  listProps,
+  selectedListProps,
+  actionGroupProps,
   ...props
 }) => {
   return (
     <Select {...props}>
-      {label && <SelectLabel>{label}</SelectLabel>}
-      <SelectControl>
-        <SelectedList>
+      {label && <SelectLabel {...labelProps}>{label}</SelectLabel>}
+      <SelectControl {...controlProps}>
+        <SelectedList {...selectedListProps}>
           <SelectInput />
         </SelectedList>
-        <SelectActionGroup />
+        <SelectActionGroup {...actionGroupProps} />
       </SelectControl>
-      <SelectList />
+      <SelectList {...listProps} />
     </Select>
   )
 }
