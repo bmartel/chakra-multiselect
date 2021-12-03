@@ -1,6 +1,6 @@
 {
   "name": "chakra-multiselect",
-  "version": "0.1.17",
+  "version": "0.2.0",
   "description": "A Multiselect component using ChakraUI",
   "author": "bmartel",
   "license": "MIT",
