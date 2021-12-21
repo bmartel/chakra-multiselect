@@ -158,11 +158,11 @@ SelectLabel.displayName = 'SelectLabel'
 export const SelectOptionLabel = memo<
   StackProps & { label: string; created?: boolean }
 >(({ label, created }) => (
-  <HStack justifyContent='space-between' w='full'>
+  <HStack justifyContent='space-between' w='full' role='list'>
     <Box>{label}</Box>
     {!!created && (
       <Tag flexShrink={0}>
-        <TagLabel fontSize='xs' fontWeight='bold'>
+        <TagLabel fontSize='xs' fontWeight='bold' role='listitem'>
           New
         </TagLabel>
       </Tag>
