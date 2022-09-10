@@ -1568,7 +1568,7 @@
   resolved "https://registry.yarnpkg.com/@chakra-ui/react-use-update-effect/-/react-use-update-effect-2.0.3.tgz#5b0128fe1325b5b1413690db6bc8dd0712d01e29"
   integrity sha512-8hkP1o/UUUA49w/R+XyAlPiCjxXTCWCNsHWUOEhAitjJfoCNUjgaNKOD52hT07kc5ACJEcJQHA5327LnwtiIlg==
 
-"@chakra-ui/react-utils@2.0.6":
+"@chakra-ui/react-utils@2.0.6", "@chakra-ui/react-utils@^2.0.6":
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/@chakra-ui/react-utils/-/react-utils-2.0.6.tgz#bb471ce2bff724b99563685962145a2cc56bf61d"
   integrity sha512-ZL0FPaolovXOxMzYRSLHgBYtvxIkA/c5GTSYpXL8DcC+TBLZnAmQ8BPTS2b6xys6xvwdQjkZRUeQ0cBNFaryJg==
@@ -1576,12 +1576,57 @@
     "@chakra-ui/utils" "2.0.9"
 
 "@chakra-ui/react@^2.3.2":
-  version "0.0.0"
-  uid ""
-
-"@chakra-ui/react@link:../node_modules/@chakra-ui/react":
-  version "0.0.0"
-  uid ""
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/@chakra-ui/react/-/react-2.3.2.tgz#4ffcd5b79d21d14e240efc37adab7831f2aac37f"
+  integrity sha512-qOcDLbA1x4pnpJPtF4YJ7pZzK/ki6SoQl9Vj7fsR+hJw1lt3y1475NSyYGiA6qgho/8twUgYLhcdrTbQPcmOHg==
+  dependencies:
+    "@chakra-ui/accordion" "2.0.12"
+    "@chakra-ui/alert" "2.0.9"
+    "@chakra-ui/avatar" "2.1.0"
+    "@chakra-ui/breadcrumb" "2.0.9"
+    "@chakra-ui/button" "2.0.9"
+    "@chakra-ui/checkbox" "2.1.8"
+    "@chakra-ui/close-button" "2.0.9"
+    "@chakra-ui/control-box" "2.0.9"
+    "@chakra-ui/counter" "2.0.9"
+    "@chakra-ui/css-reset" "2.0.7"
+    "@chakra-ui/editable" "2.0.9"
+    "@chakra-ui/form-control" "2.0.9"
+    "@chakra-ui/hooks" "2.0.9"
+    "@chakra-ui/icon" "3.0.9"
+    "@chakra-ui/image" "2.0.10"
+    "@chakra-ui/input" "2.0.9"
+    "@chakra-ui/layout" "2.1.6"
+    "@chakra-ui/live-region" "2.0.9"
+    "@chakra-ui/media-query" "3.2.5"
+    "@chakra-ui/menu" "2.0.13"
+    "@chakra-ui/modal" "2.1.7"
+    "@chakra-ui/number-input" "2.0.9"
+    "@chakra-ui/pin-input" "2.0.12"
+    "@chakra-ui/popover" "2.0.9"
+    "@chakra-ui/popper" "3.0.7"
+    "@chakra-ui/portal" "2.0.9"
+    "@chakra-ui/progress" "2.0.10"
+    "@chakra-ui/provider" "2.0.16"
+    "@chakra-ui/radio" "2.0.10"
+    "@chakra-ui/react-env" "2.0.9"
+    "@chakra-ui/select" "2.0.10"
+    "@chakra-ui/skeleton" "2.0.15"
+    "@chakra-ui/slider" "2.0.10"
+    "@chakra-ui/spinner" "2.0.9"
+    "@chakra-ui/stat" "2.0.9"
+    "@chakra-ui/switch" "2.0.11"
+    "@chakra-ui/system" "2.2.9"
+    "@chakra-ui/table" "2.0.9"
+    "@chakra-ui/tabs" "2.1.1"
+    "@chakra-ui/tag" "2.0.9"
+    "@chakra-ui/textarea" "2.0.10"
+    "@chakra-ui/theme" "2.1.11"
+    "@chakra-ui/toast" "3.0.10"
+    "@chakra-ui/tooltip" "2.0.10"
+    "@chakra-ui/transition" "2.0.9"
+    "@chakra-ui/utils" "2.0.9"
+    "@chakra-ui/visually-hidden" "2.0.9"
 
 "@chakra-ui/select@2.0.10":
   version "2.0.10"
@@ -1693,7 +1738,7 @@
   dependencies:
     "@chakra-ui/form-control" "2.0.9"
 
-"@chakra-ui/theme-tools@2.0.11":
+"@chakra-ui/theme-tools@2.0.11", "@chakra-ui/theme-tools@^2.0.11":
   version "2.0.11"
   resolved "https://registry.yarnpkg.com/@chakra-ui/theme-tools/-/theme-tools-2.0.11.tgz#de97b422799627b5a514ae424ca08c1d348bc2a5"
   integrity sha512-0Juf98bAyOgnBeQ39nMKWqRsOxZDw75BbAB8o0oVyjhYVS1wJh7tFX1ZRV8N/+AN6fuRXEznZPpyUh3J+ZTiRg==
@@ -1738,7 +1783,7 @@
   resolved "https://registry.yarnpkg.com/@chakra-ui/transition/-/transition-2.0.9.tgz#1967fd77f44b57681a9efe4e87561c82420cd2a2"
   integrity sha512-cVfKdZl128AEj0LDS8M9dzXao4wmTVj3gRJBnm91Qcg243Pm8OlgIBNbHEwsq/Fps+PsN431BtEGfL4w79wQEA==
 
-"@chakra-ui/utils@2.0.9":
+"@chakra-ui/utils@2.0.9", "@chakra-ui/utils@^2.0.9":
   version "2.0.9"
   resolved "https://registry.yarnpkg.com/@chakra-ui/utils/-/utils-2.0.9.tgz#1af3882b31fb46e0a411998d8e3607656f8d5043"
   integrity sha512-7ct5562Jw6pZdtj63XfUkEUXXsCCVqdqIXyLtQ9VgOKtRQWwDxzc8uPI5Zjdw9AleEITZFUH8TNKWn75nm54kQ==
@@ -1928,12 +1973,18 @@
   integrity sha512-G/YwXTkv7Den9mXDO7AhLWkE3q+I92B+VqAE+dYG4NGPaHZGvt3G8Q0p9vmE+sq7rTGphUbAvmQ9YpbfMQGGlA==
 
 "@emotion/react@^11.10.4":
-  version "0.0.0"
-  uid ""
-
-"@emotion/react@link:../node_modules/@emotion/react":
-  version "0.0.0"
-  uid ""
+  version "11.10.4"
+  resolved "https://registry.yarnpkg.com/@emotion/react/-/react-11.10.4.tgz#9dc6bccbda5d70ff68fdb204746c0e8b13a79199"
+  integrity sha512-j0AkMpr6BL8gldJZ6XQsQ8DnS9TxEQu1R+OGmDZiWjBAJtCcbt0tS3I/YffoqHXxH6MjgI7KdMbYKw3MEiU9eA==
+  dependencies:
+    "@babel/runtime" "^7.18.3"
+    "@emotion/babel-plugin" "^11.10.0"
+    "@emotion/cache" "^11.10.0"
+    "@emotion/serialize" "^1.1.0"
+    "@emotion/use-insertion-effect-with-fallbacks" "^1.0.0"
+    "@emotion/utils" "^1.2.0"
+    "@emotion/weak-memoize" "^0.3.0"
+    hoist-non-react-statics "^3.3.1"
 
 "@emotion/serialize@^1.1.0":
   version "1.1.0"
@@ -5340,12 +5391,18 @@ fraction.js@^4.2.0:
   integrity sha512-MhLuK+2gUcnZe8ZHlaaINnQLl0xRIGRfcGk2yl8xoQAfHrSsL3rYu6FCmBdkdbhc9EPlwyGHewaRsvwRMJtAlA==
 
 framer-motion@^7.3.2:
-  version "0.0.0"
-  uid ""
-
-"framer-motion@link:../node_modules/framer-motion":
-  version "0.0.0"
-  uid ""
+  version "7.3.2"
+  resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-7.3.2.tgz#9768092cd98cf0ebaf70864f1248f2e703305a15"
+  integrity sha512-BTG0BqJSwxoFBWpwaaxS/954DGZFsluF+dUv9Hfq53VNkwUt5g+wYTEM66oTUhiH/+6R/y0Rq+BmkUBcmzbyMQ==
+  dependencies:
+    "@motionone/dom" "10.13.1"
+    framesync "6.1.2"
+    hey-listen "^1.0.8"
+    popmotion "11.0.5"
+    style-value-types "5.1.2"
+    tslib "2.4.0"
+  optionalDependencies:
+    "@emotion/is-prop-valid" "^0.8.2"
 
 framesync@5.3.0:
   version "5.3.0"

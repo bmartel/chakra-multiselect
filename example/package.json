@@ -10,9 +10,9 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
-    "@chakra-ui/react": "link:../node_modules/@chakra-ui/react",
-    "@emotion/react": "link:../node_modules/@emotion/react",
-    "framer-motion": "link:../node_modules/framer-motion",
+    "@chakra-ui/react": "^2.3.2",
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
     "@testing-library/jest-dom": "link:../node_modules/@testing-library/jest-dom",
     "@testing-library/react": "link:../node_modules/@testing-library/react",
     "@testing-library/user-event": "link:../node_modules/@testing-library/user-event",
@@ -20,11 +20,12 @@
     "@types/node": "link:../node_modules/@types/node",
     "@types/react": "link:../node_modules/@types/react",
     "@types/react-dom": "link:../node_modules/@types/react-dom",
+    "chakra-multiselect": "link:..",
+    "framer-motion": "^7.3.2",
     "react": "link:../node_modules/react",
     "react-dom": "link:../node_modules/react-dom",
-    "typescript": "link:../node_modules/typescript",
-    "chakra-multiselect": "link:..",
-    "react-scripts": "5.0.1"
+    "react-scripts": "5.0.1",
+    "typescript": "link:../node_modules/typescript"
   },
   "devDependencies": {
     "@babel/plugin-syntax-object-rest-spread": "^7.8.3"
