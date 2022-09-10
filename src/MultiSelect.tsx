@@ -217,7 +217,7 @@ export const SelectList = memo<SelectListProps>((props) => {
   } = useSelectList()
 
   const dropdownVisible = isOpen
-  const optionItemProps = useCallback((option, index) => {
+  const optionItemProps = useCallback((option: string, index: number) => {
     const optionItem = getOption(option) as any
     return {
       key: optionItem.id || idFromOption(optionItem, 'option-'),
