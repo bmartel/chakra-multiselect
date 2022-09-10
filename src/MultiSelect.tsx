@@ -193,6 +193,7 @@ export const SelectOptionItem = memo<SelectOptionItemProps>(
     )
   }
 )
+SelectOptionItem.displayName = 'SelectOptionItem'
 
 export const EmptySelectResults = memo<{ label?: string }>(
   ({ label = 'No results found' }) => {
