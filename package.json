@@ -6,16 +6,17 @@
   "license": "MIT",
   "repository": "bmartel/chakra-multiselect",
   "homepage": "http://bmartel.github.io/chakra-multiselect",
-  "main": "dist/index.js",
-  "module": "dist/index.modern.mjs",
-  "source": "src/index.tsx",
+  "source": "./src/index.tsx",
+  "main": "./dist/index.js",
+  "module": "./dist/index.module.mjs",
+  "exports": "./dist/index.modern.mjs",
   "engines": {
     "node": ">=14"
   },
   "scripts": {
-    "build": "microbundle --format modern,cjs",
+    "build": "microbundle",
     "prepare": "run-s build",
-    "start": "microbundle watch --no-compress --format modern,cjs",
+    "start": "microbundle watch --no-compress",
     "test": "run-s test:unit test:lint test:build",
     "test:build": "run-s build",
     "test:lint": "eslint ./src --fix",
@@ -29,9 +30,9 @@
   },
   "dependencies": {
     "@chakra-ui/react": "^2.3.2",
-    "@emotion/react": "^11.10.4",
-    "@emotion/styled": "^11.10.4",
-    "framer-motion": "^7.3.2",
+    "@chakra-ui/react-utils": "^2.0.6",
+    "@chakra-ui/theme-tools": "^2.0.11",
+    "@chakra-ui/utils": "^2.0.9",
     "react": ">=18.0.0"
   },
   "peerDependencies": {
@@ -42,9 +43,6 @@
     "react": ">=18.0.0"
   },
   "devDependencies": {
-    "@chakra-ui/react-utils": "^1.1.2",
-    "@chakra-ui/theme-tools": "^1.1.8",
-    "@chakra-ui/utils": "^1.8.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
