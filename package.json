@@ -28,15 +28,14 @@
     "predeploy": "run-s example:build docs:build",
     "deploy": "gh-pages -d example/build"
   },
-  "dependencies": {
-    "@chakra-ui/react-utils": "^2.0.6",
-    "@chakra-ui/theme-tools": "^2.0.11",
-    "@chakra-ui/utils": "^2.0.9"
-  },
+  "dependencies": {},
   "peerDependencies": {
     "@chakra-ui/react": ">=2",
     "@emotion/react": ">=11",
     "@emotion/styled": ">=11",
+    "@chakra-ui/react-utils": ">=2",
+    "@chakra-ui/theme-tools": ">=2",
+    "@chakra-ui/utils": ">=2",
     "framer-motion": ">=7",
     "react": ">=18.0.0"
   },
@@ -70,6 +69,9 @@
     "@chakra-ui/react": "^2.3.2",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
+    "@chakra-ui/react-utils": "^2.0.6",
+    "@chakra-ui/theme-tools": "^2.0.11",
+    "@chakra-ui/utils": "^2.0.9",
     "framer-motion": "^7.3.2",
     "react": ">=18.0.0",
     "typedoc": "^0.23.14",
