@@ -29,14 +29,9 @@
     "deploy": "gh-pages -d example/build"
   },
   "dependencies": {
-    "@chakra-ui/react": "^2.3.2",
     "@chakra-ui/react-utils": "^2.0.6",
     "@chakra-ui/theme-tools": "^2.0.11",
-    "@chakra-ui/utils": "^2.0.9",
-    "@emotion/react": "^11.10.4",
-    "@emotion/styled": "^11.10.4",
-    "framer-motion": "^7.3.2",
-    "react": ">=18.0.0"
+    "@chakra-ui/utils": "^2.0.9"
   },
   "peerDependencies": {
     "@chakra-ui/react": ">=2",
@@ -72,6 +67,11 @@
     "react-scripts": "5.0.1",
     "rimraf": "^3.0.2",
     "rollup-plugin-typescript": "^1.0.1",
+    "@chakra-ui/react": "^2.3.2",
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "framer-motion": "^7.3.2",
+    "react": ">=18.0.0",
     "typedoc": "^0.23.14",
     "typescript": "^4.8.3"
   },
