@@ -7,7 +7,7 @@
   "repository": "bmartel/chakra-multiselect",
   "homepage": "http://bmartel.github.io/chakra-multiselect",
   "main": "dist/index.js",
-  "module": "dist/index.modern.js",
+  "module": "dist/index.modern.mjs",
   "source": "src/index.tsx",
   "engines": {
     "node": ">=14"
