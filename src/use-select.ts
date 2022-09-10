@@ -178,7 +178,7 @@ function useDebounce(fn: AnyFunc, time = 0) {
   }, [time])
 
   return useCallback(
-    async (...args) => {
+    async (...args: any[]) => {
       if (ref.current) {
         clearTimeout(ref.current as unknown as number)
       }
@@ -224,7 +224,7 @@ function useHoistedState(
   ;(reducerRef.current as any) = reducer
   const [state, _setState] = useState(initialState)
   const setState = useCallback(
-    (updater, action) => {
+    (updater: (old: SelectState) => SelectState, action: SelectActions) => {
       if (!action) {
         throw new Error('An action type is required to update the state')
       }
@@ -241,11 +241,9 @@ function useHoistedState(
   return [state, setState]
 }
 
-const useKeys = (
-  userKeys: {
-    [K in EventKeys]: (opts: { shift: any; meta: any }, e?: any) => K | any
-  }
-) => {
+const useKeys = (userKeys: {
+  [K in EventKeys]: (opts: { shift: any; meta: any }, e?: any) => K | any
+}) => {
   return ({ onKeyDown, ...rest } = {} as any) => {
     return {
       ...rest,
@@ -497,19 +495,22 @@ export function useSelect({
 
   // Actions
 
-  const setOpen = useCallback((newIsOpen) => {
+  const setOpen = useCallback((newIsOpen: boolean) => {
     setState(
       (old) => updateReducerState(old, newIsOpen, 'isOpen'),
       SelectActions.SetOpen
     )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const Close = useCallback(() => {
     setOpen(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const Open = useCallback(() => {
     setOpen(true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const setResolvedSearch = useDebounce((value) => {
@@ -519,32 +520,37 @@ export function useSelect({
     )
   }, getDebounce(options!))
 
-  const setSearch = useCallback((value) => {
+  const setSearch = useCallback((value: string) => {
     setState(
       (old) => updateReducerState(old, value, 'searchValue'),
       SelectActions.SetSearch
     )
     setResolvedSearch(value)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const highlightIndex = useCallback((value) => {
-    const _options = optionsItemsRef.current
-    setState((old) => {
-      return {
-        ...old,
-        highlightedIndex: Math.min(
-          Math.max(
-            0,
-            typeof value === 'function' ? value(old.highlightedIndex) : value
+  const highlightIndex = useCallback(
+    (value: number | ((prev: number) => number)) => {
+      const _options = optionsItemsRef.current
+      setState((old) => {
+        return {
+          ...old,
+          highlightedIndex: Math.min(
+            Math.max(
+              0,
+              typeof value === 'function' ? value(old.highlightedIndex) : value
+            ),
+            _options.length - 1
           ),
-          _options.length - 1
-        ),
-      }
-    }, SelectActions.HighlightIndex)
-  }, [])
+        }
+      }, SelectActions.HighlightIndex)
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  )
 
   const selectIndex = useCallback(
-    (index) => {
+    (index: number) => {
       const option = optionsItemsRef.current![index]
       if (option) {
         const selectedOption = getOption(option) as any
@@ -581,6 +587,7 @@ export function useSelect({
         Close()
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [multi, create, duplicates, getOption]
   )
 
@@ -621,6 +628,7 @@ export function useSelect({
   const handleSearchValueChange = useCallback((e: any) => {
     setSearch(e.target.value)
     Open()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleSearchClick = useCallback(() => {
@@ -628,6 +636,7 @@ export function useSelect({
       setSearch('')
     }
     Open()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [create, multi])
 
   // Prop Getters
@@ -674,6 +683,7 @@ export function useSelect({
         }
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [isOpen, searchValue]
   )
 
@@ -684,6 +694,7 @@ export function useSelect({
       removeValue(lastValue as string)
       setSearch('')
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchValue, multi])
 
   const getKeyProps = useKeys({
@@ -752,6 +763,7 @@ export function useSelect({
         ...rest,
       })
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       isOpen,
       searchValue,
@@ -794,6 +806,7 @@ export function useSelect({
         },
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   )
 
@@ -818,6 +831,7 @@ export function useSelect({
       ;(onBlurRef.current as any)?.cb((onBlurRef.current as any).event)
       ;(onBlurRef.current as any).event = null
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen])
 
   // When the highlightedIndex changes, scroll to that item
@@ -873,7 +887,7 @@ function useClickOutsideRef(
   fn: AnyFunc,
   dropdownRef: MutableRefObject<any>,
   controlRef: MutableRefObject<any>
-) {
+): void {
   const localDropdownRef = useRef()
   const localControlRef = useRef()
   const fnRef = useRef()
@@ -885,7 +899,7 @@ function useClickOutsideRef(
   const elControlRef =
     controlRef || (localControlRef as unknown as MutableRefObject<HTMLElement>)
 
-  const handle = useCallback((e) => {
+  const handle = useCallback((e: TouchEvent | MouseEvent) => {
     const isTouch = e.type === 'touchstart'
     if (e.type === 'click' && isTouch) {
       return
@@ -893,9 +907,15 @@ function useClickOutsideRef(
 
     const elControl = elControlRef.current as HTMLElement
     const elDropdown = elDropdownRef.current as HTMLElement
-    if (!(elControl?.contains(e.target) || elDropdown?.contains(e.target))) {
+    if (
+      !(
+        elControl?.contains((e as any).target) ||
+        elDropdown?.contains((e as any).target)
+      )
+    ) {
       ;(fnRef.current as any)(e)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -915,10 +935,11 @@ export function useSelectActionGroup(props: any = {}) {
   const { clearAll, clearable } = useSelectActionContext()
   const styles = useStyles()
 
-  const clearOnClick = useCallback((e) => {
+  const clearOnClick = useCallback((e: MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
     clearAll()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return {
@@ -951,7 +972,7 @@ export function useSelectLabel(props: any = {}) {
 export function useSelectButton(props: any = {}) {
   const { isOpen, setOpen } = useSelectActionContext()
   const onClick = useCallback(
-    (e) => {
+    (e: MouseEvent) => {
       e.preventDefault()
       e.stopPropagation()
       ;(setOpen as any)((o: any) => !o)
@@ -986,6 +1007,7 @@ export function useSelectedItem(props: any = {}) {
   const { removeValue } = useSelectedContext()
   const styles = useStyles()
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const onClick = useCallback(() => removeValue(props.value), [props.value])
 
   return useMemo(
@@ -1023,6 +1045,7 @@ export function useSelectItem({ selected, ...props }: any = {}) {
         ...(highlighted && (styles.item as any))?._active,
       },
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     highlighted,
     selected,
@@ -1047,6 +1070,7 @@ export function useSelectList() {
       getOption,
       __css: styles.list,
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [isOpen, visibleOptions, styles.list]
   )
 }
