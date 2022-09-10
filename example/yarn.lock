@@ -1576,57 +1576,12 @@
     "@chakra-ui/utils" "2.0.9"
 
 "@chakra-ui/react@^2.3.2":
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/@chakra-ui/react/-/react-2.3.2.tgz#4ffcd5b79d21d14e240efc37adab7831f2aac37f"
-  integrity sha512-qOcDLbA1x4pnpJPtF4YJ7pZzK/ki6SoQl9Vj7fsR+hJw1lt3y1475NSyYGiA6qgho/8twUgYLhcdrTbQPcmOHg==
-  dependencies:
-    "@chakra-ui/accordion" "2.0.12"
-    "@chakra-ui/alert" "2.0.9"
-    "@chakra-ui/avatar" "2.1.0"
-    "@chakra-ui/breadcrumb" "2.0.9"
-    "@chakra-ui/button" "2.0.9"
-    "@chakra-ui/checkbox" "2.1.8"
-    "@chakra-ui/close-button" "2.0.9"
-    "@chakra-ui/control-box" "2.0.9"
-    "@chakra-ui/counter" "2.0.9"
-    "@chakra-ui/css-reset" "2.0.7"
-    "@chakra-ui/editable" "2.0.9"
-    "@chakra-ui/form-control" "2.0.9"
-    "@chakra-ui/hooks" "2.0.9"
-    "@chakra-ui/icon" "3.0.9"
-    "@chakra-ui/image" "2.0.10"
-    "@chakra-ui/input" "2.0.9"
-    "@chakra-ui/layout" "2.1.6"
-    "@chakra-ui/live-region" "2.0.9"
-    "@chakra-ui/media-query" "3.2.5"
-    "@chakra-ui/menu" "2.0.13"
-    "@chakra-ui/modal" "2.1.7"
-    "@chakra-ui/number-input" "2.0.9"
-    "@chakra-ui/pin-input" "2.0.12"
-    "@chakra-ui/popover" "2.0.9"
-    "@chakra-ui/popper" "3.0.7"
-    "@chakra-ui/portal" "2.0.9"
-    "@chakra-ui/progress" "2.0.10"
-    "@chakra-ui/provider" "2.0.16"
-    "@chakra-ui/radio" "2.0.10"
-    "@chakra-ui/react-env" "2.0.9"
-    "@chakra-ui/select" "2.0.10"
-    "@chakra-ui/skeleton" "2.0.15"
-    "@chakra-ui/slider" "2.0.10"
-    "@chakra-ui/spinner" "2.0.9"
-    "@chakra-ui/stat" "2.0.9"
-    "@chakra-ui/switch" "2.0.11"
-    "@chakra-ui/system" "2.2.9"
-    "@chakra-ui/table" "2.0.9"
-    "@chakra-ui/tabs" "2.1.1"
-    "@chakra-ui/tag" "2.0.9"
-    "@chakra-ui/textarea" "2.0.10"
-    "@chakra-ui/theme" "2.1.11"
-    "@chakra-ui/toast" "3.0.10"
-    "@chakra-ui/tooltip" "2.0.10"
-    "@chakra-ui/transition" "2.0.9"
-    "@chakra-ui/utils" "2.0.9"
-    "@chakra-ui/visually-hidden" "2.0.9"
+  version "0.0.0"
+  uid ""
+
+"@chakra-ui/react@link:../node_modules/@chakra-ui/react":
+  version "0.0.0"
+  uid ""
 
 "@chakra-ui/select@2.0.10":
   version "2.0.10"
@@ -1973,18 +1928,12 @@
   integrity sha512-G/YwXTkv7Den9mXDO7AhLWkE3q+I92B+VqAE+dYG4NGPaHZGvt3G8Q0p9vmE+sq7rTGphUbAvmQ9YpbfMQGGlA==
 
 "@emotion/react@^11.10.4":
-  version "11.10.4"
-  resolved "https://registry.yarnpkg.com/@emotion/react/-/react-11.10.4.tgz#9dc6bccbda5d70ff68fdb204746c0e8b13a79199"
-  integrity sha512-j0AkMpr6BL8gldJZ6XQsQ8DnS9TxEQu1R+OGmDZiWjBAJtCcbt0tS3I/YffoqHXxH6MjgI7KdMbYKw3MEiU9eA==
-  dependencies:
-    "@babel/runtime" "^7.18.3"
-    "@emotion/babel-plugin" "^11.10.0"
-    "@emotion/cache" "^11.10.0"
-    "@emotion/serialize" "^1.1.0"
-    "@emotion/use-insertion-effect-with-fallbacks" "^1.0.0"
-    "@emotion/utils" "^1.2.0"
-    "@emotion/weak-memoize" "^0.3.0"
-    hoist-non-react-statics "^3.3.1"
+  version "0.0.0"
+  uid ""
+
+"@emotion/react@link:../node_modules/@emotion/react":
+  version "0.0.0"
+  uid ""
 
 "@emotion/serialize@^1.1.0":
   version "1.1.0"
@@ -2013,6 +1962,10 @@
     "@emotion/serialize" "^1.1.0"
     "@emotion/use-insertion-effect-with-fallbacks" "^1.0.0"
     "@emotion/utils" "^1.2.0"
+
+"@emotion/styled@link:../packages/styled":
+  version "0.0.0"
+  uid ""
 
 "@emotion/unitless@^0.8.0":
   version "0.8.0"
@@ -5404,6 +5357,10 @@ framer-motion@^7.3.2:
   optionalDependencies:
     "@emotion/is-prop-valid" "^0.8.2"
 
+"framer-motion@link:../node_modules/framer-motion":
+  version "0.0.0"
+  uid ""
+
 framesync@5.3.0:
   version "5.3.0"
   resolved "https://registry.yarnpkg.com/framesync/-/framesync-5.3.0.tgz#0ecfc955e8f5a6ddc8fdb0cc024070947e1a0d9b"
@@ -8445,8 +8402,11 @@ react-style-singleton@^2.2.1:
     tslib "^2.0.0"
 
 react@>=18.0.0:
-  version "0.0.0"
-  uid ""
+  version "18.2.0"
+  resolved "https://registry.yarnpkg.com/react/-/react-18.2.0.tgz#555bd98592883255fa00de14f1151a917b5d77d5"
+  integrity sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==
+  dependencies:
+    loose-envify "^1.1.0"
 
 "react@link:../node_modules/react":
   version "0.0.0"
