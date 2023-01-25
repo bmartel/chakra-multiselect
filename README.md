@@ -6,16 +6,20 @@
 [![Package Size](https://badgen.net/bundlephobia/min/chakra-multiselect)](https://badgen.net/bundlephobia/min/chakra-multiselect)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-prettier-hotpink.svg)](https://prettier.io)
 
+[![CodeSandbox](https://img.shields.io/badge/Codesandbox-040404?style=for-the-badge&logo=codesandbox&logoColor=DBDBDB)](https://codesandbox.io/p/sandbox/quizzical-lumiere-ih4jxu?file=%2FREADME.md)
+
 ## Install [ChakraUI](https://chakra-ui.com/getting-started)
 
 ```bash
 npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion
+or
+yarn add @chakra-ui/react @emotion/react @emotion/styled framer-motion
 ```
 
 ## Install ChakraMultiselect
 
 ```bash
-npm install --save chakra-multiselect
+npm i chakra-multiselect
 or
 yarn add chakra-multiselect
 ```
