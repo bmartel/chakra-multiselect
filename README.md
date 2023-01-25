@@ -6,7 +6,13 @@
 [![Package Size](https://badgen.net/bundlephobia/min/chakra-multiselect)](https://badgen.net/bundlephobia/min/chakra-multiselect)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-prettier-hotpink.svg)](https://prettier.io)
 
-## Install
+## Install [ChakraUI](https://chakra-ui.com/getting-started)
+
+```bash
+npm i @chakra-ui/react @emotion/react @emotion/styled framer-motion
+```
+
+## Install ChakraMultiselect
 
 ```bash
 npm install --save chakra-multiselect
