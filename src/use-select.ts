@@ -1021,7 +1021,7 @@ export function useSelectedItem(props: any = {}) {
 }
 
 export function useSelectItem({ selected, ...props }: any = {}) {
-  const { getOptionProps, highlightedIndexRef, highlightedValueRef } =
+  const { getOptionProps, highlightedIndexRef, highlightedValueRef, multi } =
     useSelectContext()
   const styles = useStyles()
   const highlighted = highlightedIndexRef.current === props.index
@@ -1038,6 +1038,7 @@ export function useSelectItem({ selected, ...props }: any = {}) {
         key: props.key || idFromOption(option),
         index: props.index,
       }),
+      multi,
       highlightedRef: highlighted ? highlightedValueRef : undefined,
       __css: {
         ...styles.item,
@@ -1054,11 +1055,12 @@ export function useSelectItem({ selected, ...props }: any = {}) {
     props.value,
     props.index,
     styles.item,
+    multi,
   ])
 }
 
 export function useSelectList() {
-  const { isOpen, getOption, optionsRef, popper, visibleOptions } =
+  const { isOpen, getOption, optionsRef, popper, visibleOptions, multi } =
     useSelectContext()
   const styles = useStyles()
 
@@ -1069,9 +1071,11 @@ export function useSelectList() {
       visibleOptions,
       getOption,
       __css: styles.list,
+      'aria-multiselectable': multi,
+      'aria-hidden': !isOpen,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [isOpen, visibleOptions, styles.list]
+    [isOpen, visibleOptions, styles.list, multi]
   )
 }
 
