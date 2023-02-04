@@ -25,6 +25,7 @@
     "docs:build": "typedoc",
     "rm:deploy": "rimraf example/build",
     "example:build": "cd example && yarn install && yarn run build",
+    "example:start": "cd example && yarn install && yarn run start",
     "predeploy": "run-s example:build docs:build",
     "deploy": "gh-pages -d example/build"
   },

@@ -1,0 +1,82 @@
+{
+  // These tasks will run in order when initializing your CodeSandbox project.
+  "setupTasks": [
+    {
+      "name": "Install Dependencies",
+      "command": "yarn install"
+    }
+  ],
+
+  // These tasks can be run from CodeSandbox. Running one will open a log in the app.
+  "tasks": {
+    "build": {
+      "name": "build",
+      "command": "yarn build",
+      "runAtStart": false
+    },
+    "prepare": {
+      "name": "prepare",
+      "command": "yarn prepare",
+      "runAtStart": false
+    },
+    "start": {
+      "name": "start",
+      "command": "yarn start",
+      "runAtStart": true
+    },
+    "test": {
+      "name": "test",
+      "command": "yarn test",
+      "runAtStart": false
+    },
+    "test:build": {
+      "name": "test:build",
+      "command": "yarn test:build",
+      "runAtStart": false
+    },
+    "test:lint": {
+      "name": "test:lint",
+      "command": "yarn test:lint",
+      "runAtStart": false
+    },
+    "test:unit": {
+      "name": "test:unit",
+      "command": "yarn test:unit",
+      "runAtStart": false
+    },
+    "test:watch": {
+      "name": "test:watch",
+      "command": "yarn test:watch",
+      "runAtStart": false
+    },
+    "docs:build": {
+      "name": "docs:build",
+      "command": "yarn docs:build",
+      "runAtStart": false
+    },
+    "rm:deploy": {
+      "name": "rm:deploy",
+      "command": "yarn rm:deploy",
+      "runAtStart": false
+    },
+    "example:build": {
+      "name": "example:build",
+      "command": "yarn example:build",
+      "runAtStart": false
+    },
+    "predeploy": {
+      "name": "predeploy",
+      "command": "yarn predeploy",
+      "runAtStart": false
+    },
+    "deploy": {
+      "name": "deploy",
+      "command": "yarn deploy",
+      "runAtStart": false
+    },
+    "example:start": {
+      "name": "example:start",
+      "command": "example:start"
+    }
+  }
+}

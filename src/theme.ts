@@ -32,7 +32,7 @@ function baseStyleList(props: Record<string, any>) {
 }
 
 const baseStyleSelectedList = {
-  d: 'flex',
+  display: 'flex',
   flex: 1,
   flexWrap: 'wrap',
   alignItems: 'center',
@@ -113,7 +113,7 @@ const baseStyleInput = (_props: Record<string, any>) => ({
 })
 
 const baseStyleActionGroup = {
-  d: 'flex',
+  display: 'flex',
   alignItems: 'center',
 }
 
@@ -122,7 +122,7 @@ const baseStyleGroupTitle = {
 }
 
 const baseStyleDivider = {
-  d: 'inline',
+  display: 'inline',
   h: 'full',
   border: 0,
   borderColor: 'inherit',
