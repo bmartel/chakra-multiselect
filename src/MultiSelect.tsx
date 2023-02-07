@@ -18,7 +18,7 @@ import {
   BoxProps,
   IconButtonProps,
 } from '@chakra-ui/react'
-import { FC, memo, ReactNode, useCallback, useMemo } from 'react'
+import { FC, memo, ReactNode, useCallback, useId, useMemo } from 'react'
 import {
   SelectProvider,
   useSelect,
@@ -40,6 +40,7 @@ import {
   SelectActionProvider,
   SelectionVisibilityMode,
   useClearButton,
+  SelectIdProvider,
 } from './use-select'
 
 // @see https://github.com/chakra-ui/chakra-ui/issues/140
@@ -51,10 +52,10 @@ export interface SelectItem {
 
 export interface SelectProps
   extends Omit<
-      HTMLChakraProps<'select'>,
-      'value' | 'size' | 'onChange' | 'onSelect' | 'children'
-    >,
-    UseSelectProps {
+    HTMLChakraProps<'select'>,
+    'value' | 'size' | 'onChange' | 'onSelect' | 'children'
+  >,
+  UseSelectProps {
   label?: string
   children?: ReactNode
 }
@@ -83,7 +84,7 @@ export interface SelectOptionItemProps extends HTMLChakraProps<'li'> {
   created?: boolean
 }
 
-export interface SelectedItemProps extends TagProps, SelectItem {}
+export interface SelectedItemProps extends TagProps, SelectItem { }
 
 export interface MultiSelectProps extends Omit<SelectProps, 'children'> {
   children?: ReactNode
@@ -101,6 +102,14 @@ export const Select = memo<SelectProps>((props) => {
 
   const styles = useMultiStyleConfig('MultiSelect', props)
   const ownProps = omitThemingProps(props as any)
+
+  const selectLabelId = useId()
+  const selectInputId = useId()
+
+  const selectIdContext = useMemo(() => ({
+    selectLabelId,
+    selectInputId
+  }), [])
 
   const ctx = useSelect(ownProps as any)
   const context = useMemo(() => ctx, [ctx])
@@ -132,17 +141,19 @@ export const Select = memo<SelectProps>((props) => {
 
   return (
     <StylesProvider value={styles}>
-      <SelectProvider value={context}>
-        <SelectInputProvider value={selectInputContext}>
-          <SelectedListProvider value={selectedListContext}>
-            <SelectedProvider value={selectedContext}>
-              <SelectActionProvider value={selectActionContext}>
-                <chakra.div pos='relative'>{children}</chakra.div>
-              </SelectActionProvider>
-            </SelectedProvider>
-          </SelectedListProvider>
-        </SelectInputProvider>
-      </SelectProvider>
+      <SelectIdProvider value={selectIdContext}>
+        <SelectProvider value={context}>
+          <SelectInputProvider value={selectInputContext}>
+            <SelectedListProvider value={selectedListContext}>
+              <SelectedProvider value={selectedContext}>
+                <SelectActionProvider value={selectActionContext}>
+                  <chakra.div pos='relative'>{children}</chakra.div>
+                </SelectActionProvider>
+              </SelectedProvider>
+            </SelectedListProvider>
+          </SelectInputProvider>
+        </SelectProvider>
+      </SelectIdProvider>
     </StylesProvider>
   )
 })
