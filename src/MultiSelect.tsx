@@ -339,7 +339,7 @@ export const SelectedItem = memo<SelectedItemProps>(({ value, ...props }) => {
   })
 
   return (
-    <Tag {...(__css as any)} {...itemProps} role="listitem" aria-selected={true}>
+    <Tag {...(__css as any)} {...itemProps} role="listitem">
       <TagLabel>{value}</TagLabel>
       <TagCloseButton onClick={onClick} />
     </Tag>

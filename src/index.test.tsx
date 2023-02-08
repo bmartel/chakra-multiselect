@@ -121,7 +121,6 @@ describe('MultiSelect', () => {
       const selected = queryByRole('listitem')
 
       expect(selected?.textContent).toBe("roentgenium")
-      expect(selected?.getAttribute('aria-selected')).toBeTruthy()
       expect(queryAllByRole('option').find(o => o.textContent === "Roentgenium")).toBeFalsy()
     })
   })
@@ -149,7 +148,6 @@ describe('MultiSelect', () => {
 
         expect(value).toBe(expected[i])
 
-        expect(s.getAttribute('aria-selected')).toBeTruthy()
         expect(queryAllByRole('option').find(o => o.textContent?.toLowerCase() === value)).toBeFalsy()
       })
     })
@@ -204,7 +202,6 @@ describe('MultiSelect', () => {
 
         expect(value).toBe(expected[i])
 
-        expect(s.getAttribute('aria-selected')).toBeTruthy()
         expect(queryAllByRole('option').find(o => o.textContent?.toLowerCase() === value)).toBeFalsy()
       })
     })
