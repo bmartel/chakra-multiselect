@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, act, waitFor } from '../test-helpers'
+import { render, fireEvent, act, waitFor } from '../test-helpers'
 import { MultiSelect, MultiSelectProps, useMultiSelect } from '.'
 
 const items = [
@@ -54,50 +54,49 @@ const StatefulMultiSelect: React.FC<
 
 describe('MultiSelect', () => {
   it('Correctly renders', () => {
-    render(<MultiSelect label='select an item' onChange={() => null} />)
+    const { getByLabelText, getByText, queryByRole, queryByText } = render(<MultiSelect label='select an item' onChange={() => null} />)
 
-    const toggleButton = screen.getByLabelText('toggle menu')
+    const toggleButton = getByLabelText('toggle menu')
 
     expect(toggleButton.getAttribute('aria-haspopup')).toBe('true')
     expect(toggleButton.getAttribute('aria-expanded')).toBe('false')
-    expect(screen.queryByText('select an item')).toBeInTheDocument()
-    screen.getByText('No results found')
+    expect(queryByText('select an item')).toBeInTheDocument()
+    getByText('No results found')
 
-    expect(screen.queryByRole('listbox')).toBeNull()
+    expect(queryByRole('listbox')).toBeNull()
   })
 
   it('Can toggle the list of options open and closed', () => {
-    render(<MultiSelect label='select an item' onChange={() => null} />)
+    const { getByLabelText, queryByRole } = render(<MultiSelect label='select an item' onChange={() => null} />)
+    const toggleButton = getByLabelText('toggle menu')
 
-    const toggleButton = screen.getByLabelText('toggle menu')
 
     expect(toggleButton.getAttribute('aria-expanded')).toBe('false')
-    expect(screen.queryByRole('listbox')).toBeNull()
+    expect(queryByRole('listbox')).toBeNull()
 
     fireEvent.click(toggleButton)
 
     expect(toggleButton.getAttribute('aria-expanded')).toBe('true')
-    expect(screen.queryByRole('listbox')).toBeVisible()
+    expect(queryByRole('listbox')).toBeVisible()
 
     fireEvent.click(toggleButton)
 
     expect(toggleButton.getAttribute('aria-expanded')).toBe('false')
-    expect(screen.queryByRole('listbox')).toBeNull()
+    expect(queryByRole('listbox')).toBeNull()
 
-    const input = screen.getByLabelText('select an item')
+    const input = getByLabelText('select an item')
 
     fireEvent.click(input)
 
     expect(toggleButton.getAttribute('aria-expanded')).toBe('true')
-    expect(screen.queryByRole('listbox')).toBeVisible()
+    expect(queryByRole('listbox')).toBeVisible()
   })
 
   it('Can select an option', async () => {
 
-    render(<StatefulMultiSelect label='select an item' options={options} />)
+    const { getByRole, getByLabelText, queryByRole, queryAllByRole } = render(<StatefulMultiSelect label='select an item' options={options} />)
 
-    const input = screen.getByLabelText('select an item')
-
+    const input = getByLabelText('select an item') as HTMLInputElement
 
     await act(async () => {
       fireEvent.click(input)
@@ -109,10 +108,131 @@ describe('MultiSelect', () => {
     })
 
     await waitFor(() => {
-      expect(screen.queryByRole('listbox')?.children.length).toBe(1)
-      expect(screen.queryByRole('option')?.textContent).toBe("Roentgenium")
-
+      expect(queryByRole('listbox')?.children.length).toBe(1)
+      expect(queryByRole('option')?.textContent).toBe("Roentgenium")
     })
 
+    const selection = getByRole('option')
+
+    fireEvent.click(selection)
+
+    await waitFor(() => {
+      expect(input.value).toBe("")
+      const selected = queryByRole('listitem')
+
+      expect(selected?.textContent).toBe("roentgenium")
+      expect(selected?.getAttribute('aria-selected')).toBeTruthy()
+      expect(queryAllByRole('option').find(o => o.textContent === "Roentgenium")).toBeFalsy()
+    })
+  })
+
+  it('Can select multiple options', async () => {
+
+    const { queryAllByRole, getByLabelText } = render(<StatefulMultiSelect label='select an item' options={options} />)
+
+    const input = getByLabelText('select an item') as HTMLInputElement
+
+    fireEvent.click(input)
+    fireEvent.click(queryAllByRole('option')?.find(o => o.textContent === "Roentgenium") as HTMLElement)
+
+    fireEvent.click(input)
+    fireEvent.click(queryAllByRole('option')?.find(o => o.textContent === "Tennessine") as HTMLElement)
+
+    await waitFor(() => {
+      const selected = queryAllByRole('listitem')
+
+      expect(selected?.length).toBe(2)
+
+      const expected = ["roentgenium", "tennessine"]
+      selected.forEach((s, i) => {
+        const value = s.textContent
+
+        expect(value).toBe(expected[i])
+
+        expect(s.getAttribute('aria-selected')).toBeTruthy()
+        expect(queryAllByRole('option').find(o => o.textContent?.toLowerCase() === value)).toBeFalsy()
+      })
+    })
+  })
+
+  it('Can only select one option in single mode', async () => {
+
+    const { queryAllByRole, getByLabelText } = render(<StatefulMultiSelect label='select an item' options={options} single />)
+
+    const input = getByLabelText('select an item') as HTMLInputElement
+
+    fireEvent.click(input)
+    fireEvent.click(queryAllByRole('option')?.find(o => o.textContent === "Roentgenium") as HTMLElement)
+
+    fireEvent.click(input)
+    fireEvent.click(queryAllByRole('option')?.find(o => o.textContent === "Tennessine") as HTMLElement)
+
+    await waitFor(() => {
+      const selected = queryAllByRole('listitem')
+
+      expect(selected?.length).toBe(0)
+      expect(input.value).toBe("Tennessine")
+    })
+  })
+
+  it('Can create an option when create mode is on', async () => {
+
+    const { queryAllByRole, getByLabelText } = render(<StatefulMultiSelect label='select an item' options={options} create />)
+
+    const input = getByLabelText('select an item') as HTMLInputElement
+
+    await act(async () => {
+      fireEvent.click(input)
+      fireEvent.input(input, {
+        target: {
+          value: "Foobar"
+        }
+      })
+      fireEvent.keyDown(input, {
+        key: 'Enter'
+      })
+    })
+
+    await waitFor(() => {
+      const selected = queryAllByRole('listitem')
+
+      expect(selected?.length).toBe(1)
+
+      const expected = ["Foobar"]
+      selected.forEach((s, i) => {
+        const value = s.textContent
+
+        expect(value).toBe(expected[i])
+
+        expect(s.getAttribute('aria-selected')).toBeTruthy()
+        expect(queryAllByRole('option').find(o => o.textContent?.toLowerCase() === value)).toBeFalsy()
+      })
+    })
+  })
+
+  it('Can create options in single mode when create mode is on', async () => {
+
+    const { queryAllByRole, getByLabelText } = render(<StatefulMultiSelect label='select an item' options={options} single create />)
+
+    const input = getByLabelText('select an item') as HTMLInputElement
+
+    await act(async () => {
+      fireEvent.click(input)
+      fireEvent.input(input, {
+        target: {
+          value: "Foobar"
+        }
+      })
+      fireEvent.keyDown(input, {
+        key: 'Enter'
+      })
+    })
+
+    await waitFor(() => {
+      const selected = queryAllByRole('listitem')
+
+      expect(selected?.length).toBe(0)
+      expect(input.value).toBe("Foobar")
+    })
   })
 })

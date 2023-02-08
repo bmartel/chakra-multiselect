@@ -169,11 +169,11 @@ SelectLabel.displayName = 'SelectLabel'
 export const SelectOptionLabel = memo<
   StackProps & { label: string; created?: boolean }
 >(({ label, created }) => (
-  <HStack justifyContent='space-between' w='full' role='list'>
+  <HStack justifyContent='space-between' w='full'>
     <Box>{label}</Box>
     {!!created && (
       <Tag flexShrink={0}>
-        <TagLabel fontSize='xs' fontWeight='bold' role='listitem'>
+        <TagLabel fontSize='xs' fontWeight='bold'>
           New
         </TagLabel>
       </Tag>
@@ -195,7 +195,7 @@ export const SelectOptionItem = memo<SelectOptionItemProps>(
       <chakra.li
         ref={highlightedRef && highlightedRef}
         role='option'
-        {...((selected || multi) && { 'aria-selected': selected })}
+        {...((selected || multi) && { 'aria-selected': !!selected })}
         {...props}
         {...itemProps}
       >
@@ -339,7 +339,7 @@ export const SelectedItem = memo<SelectedItemProps>(({ value, ...props }) => {
   })
 
   return (
-    <Tag {...(__css as any)} {...itemProps}>
+    <Tag {...(__css as any)} {...itemProps} role="listitem" aria-selected={true}>
       <TagLabel>{value}</TagLabel>
       <TagCloseButton onClick={onClick} />
     </Tag>
@@ -414,20 +414,21 @@ export const SelectedList = memo<SelectedListProps>(
       ...selectedListProps
     } = useSelectedList(props)
 
+    const shownAsTagList = multi && selectionVisibleIn !== SelectionVisibilityMode.List
+    const shownAsText = multi && selectionVisibleIn === SelectionVisibilityMode.List
+
     return (
-      <Box {...__css} {...selectedListProps}>
-        {multi && // Both || Input
-          selectionVisibleIn !== SelectionVisibilityMode.List &&
+      <Box {...__css} {...selectedListProps} {...(shownAsTagList ? { role: "list" } : null)}>
+        {shownAsTagList &&
           selectedItems?.map((selectedItem: any) => (
             <SelectedItem
               key={`selected-item-${selectedItem}`}
               value={selectedItem}
             />
           ))}
-        {multi && // List only
-          selectionVisibleIn === SelectionVisibilityMode.List &&
+        {shownAsText &&
           !!selectedItems?.length && (
-            <Box {...textList?.__css}>{selectedItems?.join(', ')}</Box>
+            <Box aria-current="true" {...textList?.__css}>{selectedItems?.join(', ')}</Box>
           )}
         {children}
       </Box>
