@@ -18,7 +18,7 @@ import {
   BoxProps,
   IconButtonProps,
 } from '@chakra-ui/react'
-import { FC, memo, ReactNode, useCallback, useMemo } from 'react'
+import { FC, memo, ReactNode, useCallback, useId, useMemo } from 'react'
 import {
   SelectProvider,
   useSelect,
@@ -40,6 +40,7 @@ import {
   SelectActionProvider,
   SelectionVisibilityMode,
   useClearButton,
+  SelectIdProvider,
 } from './use-select'
 
 // @see https://github.com/chakra-ui/chakra-ui/issues/140
@@ -51,10 +52,10 @@ export interface SelectItem {
 
 export interface SelectProps
   extends Omit<
-      HTMLChakraProps<'select'>,
-      'value' | 'size' | 'onChange' | 'onSelect' | 'children'
-    >,
-    UseSelectProps {
+    HTMLChakraProps<'select'>,
+    'value' | 'size' | 'onChange' | 'onSelect' | 'children'
+  >,
+  UseSelectProps {
   label?: string
   children?: ReactNode
 }
@@ -83,7 +84,7 @@ export interface SelectOptionItemProps extends HTMLChakraProps<'li'> {
   created?: boolean
 }
 
-export interface SelectedItemProps extends TagProps, SelectItem {}
+export interface SelectedItemProps extends TagProps, SelectItem { }
 
 export interface MultiSelectProps extends Omit<SelectProps, 'children'> {
   children?: ReactNode
@@ -101,6 +102,14 @@ export const Select = memo<SelectProps>((props) => {
 
   const styles = useMultiStyleConfig('MultiSelect', props)
   const ownProps = omitThemingProps(props as any)
+
+  const selectLabelId = useId()
+  const selectInputId = useId()
+
+  const selectIdContext = useMemo(() => ({
+    selectLabelId,
+    selectInputId
+  }), [])
 
   const ctx = useSelect(ownProps as any)
   const context = useMemo(() => ctx, [ctx])
@@ -132,17 +141,19 @@ export const Select = memo<SelectProps>((props) => {
 
   return (
     <StylesProvider value={styles}>
-      <SelectProvider value={context}>
-        <SelectInputProvider value={selectInputContext}>
-          <SelectedListProvider value={selectedListContext}>
-            <SelectedProvider value={selectedContext}>
-              <SelectActionProvider value={selectActionContext}>
-                <chakra.div pos='relative'>{children}</chakra.div>
-              </SelectActionProvider>
-            </SelectedProvider>
-          </SelectedListProvider>
-        </SelectInputProvider>
-      </SelectProvider>
+      <SelectIdProvider value={selectIdContext}>
+        <SelectProvider value={context}>
+          <SelectInputProvider value={selectInputContext}>
+            <SelectedListProvider value={selectedListContext}>
+              <SelectedProvider value={selectedContext}>
+                <SelectActionProvider value={selectActionContext}>
+                  <chakra.div pos='relative'>{children}</chakra.div>
+                </SelectActionProvider>
+              </SelectedProvider>
+            </SelectedListProvider>
+          </SelectInputProvider>
+        </SelectProvider>
+      </SelectIdProvider>
     </StylesProvider>
   )
 })
@@ -158,11 +169,11 @@ SelectLabel.displayName = 'SelectLabel'
 export const SelectOptionLabel = memo<
   StackProps & { label: string; created?: boolean }
 >(({ label, created }) => (
-  <HStack justifyContent='space-between' w='full' role='list'>
+  <HStack justifyContent='space-between' w='full'>
     <Box>{label}</Box>
     {!!created && (
       <Tag flexShrink={0}>
-        <TagLabel fontSize='xs' fontWeight='bold' role='listitem'>
+        <TagLabel fontSize='xs' fontWeight='bold'>
           New
         </TagLabel>
       </Tag>
@@ -173,7 +184,7 @@ SelectOptionLabel.displayName = 'SelectOptionLabel'
 
 export const SelectOptionItem = memo<SelectOptionItemProps>(
   ({ value, label, index, selected, created, ...props }) => {
-    const { highlightedRef, option, ...itemProps } = useSelectItem({
+    const { highlightedRef, option, multi, ...itemProps } = useSelectItem({
       value,
       label,
       index,
@@ -184,7 +195,7 @@ export const SelectOptionItem = memo<SelectOptionItemProps>(
       <chakra.li
         ref={highlightedRef && highlightedRef}
         role='option'
-        {...(selected && { 'aria-selected': selected })}
+        {...((selected || multi) && { 'aria-selected': !!selected })}
         {...props}
         {...itemProps}
       >
@@ -328,7 +339,7 @@ export const SelectedItem = memo<SelectedItemProps>(({ value, ...props }) => {
   })
 
   return (
-    <Tag {...(__css as any)} {...itemProps}>
+    <Tag {...(__css as any)} {...itemProps} role="listitem">
       <TagLabel>{value}</TagLabel>
       <TagCloseButton onClick={onClick} />
     </Tag>
@@ -403,20 +414,21 @@ export const SelectedList = memo<SelectedListProps>(
       ...selectedListProps
     } = useSelectedList(props)
 
+    const shownAsTagList = multi && selectionVisibleIn !== SelectionVisibilityMode.List
+    const shownAsText = multi && selectionVisibleIn === SelectionVisibilityMode.List
+
     return (
-      <Box {...__css} {...selectedListProps}>
-        {multi && // Both || Input
-          selectionVisibleIn !== SelectionVisibilityMode.List &&
+      <Box {...__css} {...selectedListProps} {...(shownAsTagList ? { role: "list" } : null)}>
+        {shownAsTagList &&
           selectedItems?.map((selectedItem: any) => (
             <SelectedItem
               key={`selected-item-${selectedItem}`}
               value={selectedItem}
             />
           ))}
-        {multi && // List only
-          selectionVisibleIn === SelectionVisibilityMode.List &&
+        {shownAsText &&
           !!selectedItems?.length && (
-            <Box {...textList?.__css}>{selectedItems?.join(', ')}</Box>
+            <Box aria-current="true" {...textList?.__css}>{selectedItems?.join(', ')}</Box>
           )}
         {children}
       </Box>
