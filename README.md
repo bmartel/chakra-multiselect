@@ -5,6 +5,8 @@
 [![NPM](https://img.shields.io/npm/v/chakra-multiselect.svg)](https://www.npmjs.com/package/chakra-multiselect)
 [![Package Size](https://badgen.net/bundlephobia/min/chakra-multiselect)](https://badgen.net/bundlephobia/min/chakra-multiselect)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-prettier-hotpink.svg)](https://prettier.io)
+![Tests](https://github.com/bmartel/chakra-multiselect/actions/workflows/test.yml/badge.svg)
+![Docs](https://github.com/bmartel/chakra-multiselect/actions/workflows/deploy_docs.yml/badge.svg)
 
 [![CodeSandbox](https://img.shields.io/badge/Codesandbox-040404?style=for-the-badge&logo=codesandbox&logoColor=DBDBDB)](https://codesandbox.io/p/sandbox/quizzical-lumiere-ih4jxu?file=%2FREADME.md)
 
