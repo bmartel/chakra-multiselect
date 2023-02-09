@@ -17,6 +17,8 @@
   "scripts": {
     "build": "microbundle",
     "prepare": "run-s build",
+    "postbuild": "run-s move:types",
+    "move:types": "mv dist/src/* ./dist/ && rmdir dist/src",
     "start": "microbundle watch --no-compress",
     "test": "run-s test:unit test:lint test:build",
     "test:build": "run-s build",
