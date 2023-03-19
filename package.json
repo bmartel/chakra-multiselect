@@ -34,14 +34,14 @@
   },
   "dependencies": {},
   "peerDependencies": {
-    "@chakra-ui/react": ">=2",
-    "@chakra-ui/react-utils": ">=2",
-    "@chakra-ui/theme-tools": ">=2",
-    "@chakra-ui/utils": ">=2",
+    "@chakra-ui/react": ">=1",
+    "@chakra-ui/react-utils": ">=1",
+    "@chakra-ui/theme-tools": ">=1",
+    "@chakra-ui/utils": ">=1",
     "@emotion/react": ">=11",
     "@emotion/styled": ">=11",
     "framer-motion": ">=7",
-    "react": ">=18.0.0"
+    "react": ">=17.0.0"
   },
   "devDependencies": {
     "@chakra-ui/react": "^2.3.2",
