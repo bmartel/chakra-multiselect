@@ -18,7 +18,7 @@ import {
   BoxProps,
   IconButtonProps,
 } from '@chakra-ui/react'
-import { FC, memo, ReactNode, useCallback, useId, useMemo } from 'react'
+import { FC, memo, ReactNode, useCallback, useMemo } from 'react'
 import {
   SelectProvider,
   useSelect,
@@ -40,6 +40,7 @@ import {
   SelectActionProvider,
   SelectionVisibilityMode,
   useClearButton,
+  useId,
   SelectIdProvider,
 } from './use-select'
 
@@ -52,10 +53,10 @@ export interface SelectItem {
 
 export interface SelectProps
   extends Omit<
-    HTMLChakraProps<'select'>,
-    'value' | 'size' | 'onChange' | 'onSelect' | 'children'
-  >,
-  UseSelectProps {
+      HTMLChakraProps<'select'>,
+      'value' | 'size' | 'onChange' | 'onSelect' | 'children'
+    >,
+    UseSelectProps {
   label?: string
   children?: ReactNode
 }
@@ -84,7 +85,7 @@ export interface SelectOptionItemProps extends HTMLChakraProps<'li'> {
   created?: boolean
 }
 
-export interface SelectedItemProps extends TagProps, SelectItem { }
+export interface SelectedItemProps extends TagProps, SelectItem {}
 
 export interface MultiSelectProps extends Omit<SelectProps, 'children'> {
   children?: ReactNode
@@ -106,10 +107,14 @@ export const Select = memo<SelectProps>((props) => {
   const selectLabelId = useId()
   const selectInputId = useId()
 
-  const selectIdContext = useMemo(() => ({
-    selectLabelId,
-    selectInputId
-  }), [])
+  const selectIdContext = useMemo(
+    () => ({
+      selectLabelId,
+      selectInputId,
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  )
 
   const ctx = useSelect(ownProps as any)
   const context = useMemo(() => ctx, [ctx])
@@ -339,7 +344,7 @@ export const SelectedItem = memo<SelectedItemProps>(({ value, ...props }) => {
   })
 
   return (
-    <Tag {...(__css as any)} {...itemProps} role="listitem">
+    <Tag {...(__css as any)} {...itemProps} role='listitem'>
       <TagLabel>{value}</TagLabel>
       <TagCloseButton onClick={onClick} />
     </Tag>
@@ -414,11 +419,17 @@ export const SelectedList = memo<SelectedListProps>(
       ...selectedListProps
     } = useSelectedList(props)
 
-    const shownAsTagList = multi && selectionVisibleIn !== SelectionVisibilityMode.List
-    const shownAsText = multi && selectionVisibleIn === SelectionVisibilityMode.List
+    const shownAsTagList =
+      multi && selectionVisibleIn !== SelectionVisibilityMode.List
+    const shownAsText =
+      multi && selectionVisibleIn === SelectionVisibilityMode.List
 
     return (
-      <Box {...__css} {...selectedListProps} {...(shownAsTagList ? { role: "list" } : null)}>
+      <Box
+        {...__css}
+        {...selectedListProps}
+        {...(shownAsTagList ? { role: 'list' } : null)}
+      >
         {shownAsTagList &&
           selectedItems?.map((selectedItem: any) => (
             <SelectedItem
@@ -426,10 +437,11 @@ export const SelectedList = memo<SelectedListProps>(
               value={selectedItem}
             />
           ))}
-        {shownAsText &&
-          !!selectedItems?.length && (
-            <Box aria-current="true" {...textList?.__css}>{selectedItems?.join(', ')}</Box>
-          )}
+        {shownAsText && !!selectedItems?.length && (
+          <Box aria-current='true' {...textList?.__css}>
+            {selectedItems?.join(', ')}
+          </Box>
+        )}
         {children}
       </Box>
     )

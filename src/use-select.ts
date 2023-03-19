@@ -221,7 +221,7 @@ function useHoistedState(
   reducer: StateReducer
 ): [SelectState, SelectStateUpdater] {
   const reducerRef = useRef()
-    ; (reducerRef.current as any) = reducer
+  ;(reducerRef.current as any) = reducer
   const [state, _setState] = useState(initialState)
   const setState = useCallback(
     (updater: (old: SelectState) => SelectState, action: SelectActions) => {
@@ -354,9 +354,10 @@ const [SelectActionProvider, useSelectActionContext] = createContext<
   strict: false,
   name: 'SelectActionContext',
 })
-const [SelectIdProvider, useSelectIdContext] = createContext<
-  { selectLabelId: string; selectInputId: string }
->({ strict: false, name: 'SelectIdContext' })
+const [SelectIdProvider, useSelectIdContext] = createContext<{
+  selectLabelId: string
+  selectInputId: string
+}>({ strict: false, name: 'SelectIdContext' })
 
 export {
   SelectProvider,
@@ -370,7 +371,7 @@ export {
   useSelectedListContext,
   useSelectInputContext,
   useSelectActionContext,
-  useSelectIdContext
+  useSelectIdContext,
 }
 
 export function useSelect({
@@ -416,9 +417,9 @@ export function useSelect({
   })
 
   highlightedIndexRef.current = highlightedIndex
-    ; (filterFnRef.current as any) = filterFn
-    ; (scrollToIndexRef.current as any) = scrollToIndex
-    ; (onChangeRef.current as any) = onChange
+  ;(filterFnRef.current as any) = filterFn
+  ;(scrollToIndexRef.current as any) = scrollToIndex
+  ;(onChangeRef.current as any) = onChange
 
   // Multi should always at least have an empty array as the value
   if (multi && typeof value === 'undefined') {
@@ -561,7 +562,7 @@ export function useSelect({
         const selectedOption = getOption(option) as any
 
         if (!multi) {
-          ; (onChangeRef.current as any)?.(selectedOption.value, {
+          ;(onChangeRef.current as any)?.(selectedOption.value, {
             action: selectedOption.created
               ? ChangeActions.SingleCreate
               : ChangeActions.SingleSelect,
@@ -575,7 +576,7 @@ export function useSelect({
               (v: any) => getOption(v).value === selectedOption.value
             )
           ) {
-            ; (onChangeRef.current as any)?.([..._value, selectedOption.value], {
+            ;(onChangeRef.current as any)?.([..._value, selectedOption.value], {
               action: selectedOption.created
                 ? ChangeActions.MultiCreate
                 : ChangeActions.MultiSelect,
@@ -597,7 +598,7 @@ export function useSelect({
   )
 
   const clearAll = useCallback(() => {
-    ; (onChangeRef.current as any)?.(multi ? [] : '', {
+    ;(onChangeRef.current as any)?.(multi ? [] : '', {
       action: multi ? ChangeActions.MultiClear : ChangeActions.SingleClear,
       value: '',
     })
@@ -614,12 +615,12 @@ export function useSelect({
         isIndex ? i !== v : v !== _v
       )
       if (_multi) {
-        ; (onChangeRef.current as any)(_next, {
+        ;(onChangeRef.current as any)(_next, {
           action: ChangeActions.MultiRemove,
           value: getOption(isIndex ? _value[v] : v),
         })
       } else {
-        ; (onChangeRef.current as any)(_next[0] || '', {
+        ;(onChangeRef.current as any)(_next[0] || '', {
           action: ChangeActions.SingleRemove,
           value: getOption(isIndex ? _value[v] : v),
         })
@@ -648,33 +649,33 @@ export function useSelect({
 
   const ArrowUp =
     (defaultShift?: any, defaultMeta?: any) =>
-      ({ shift, meta }: any, e: any) => {
-        e.preventDefault()
-        const amount =
-          defaultMeta || meta
-            ? 1000000000000
-            : defaultShift || shift
-              ? shiftAmount - 1
-              : 1
-        Open()
-        enableScrollRef.current = true
-        highlightIndex((old: number) => old - amount)
-      }
+    ({ shift, meta }: any, e: any) => {
+      e.preventDefault()
+      const amount =
+        defaultMeta || meta
+          ? 1000000000000
+          : defaultShift || shift
+          ? shiftAmount - 1
+          : 1
+      Open()
+      enableScrollRef.current = true
+      highlightIndex((old: number) => old - amount)
+    }
 
   const ArrowDown =
     (defaultShift?: any, defaultMeta?: any) =>
-      ({ shift, meta }: any, e: any) => {
-        e.preventDefault()
-        const amount =
-          defaultMeta || meta
-            ? 1000000000000
-            : defaultShift || shift
-              ? shiftAmount - 1
-              : 1
-        Open()
-        enableScrollRef.current = true
-        highlightIndex((old: number) => old + amount)
-      }
+    ({ shift, meta }: any, e: any) => {
+      e.preventDefault()
+      const amount =
+        defaultMeta || meta
+          ? 1000000000000
+          : defaultShift || shift
+          ? shiftAmount - 1
+          : 1
+      Open()
+      enableScrollRef.current = true
+      highlightIndex((old: number) => old + amount)
+    }
 
   const Enter = useCallback(
     (_: any, e: any) => {
@@ -729,7 +730,7 @@ export function useSelect({
     ) => {
       return getKeyProps({
         [refKey]: (el: HTMLElement) => {
-          ; (inputRef.current as any) = el
+          ;(inputRef.current as any) = el
           if (ref) {
             ref.current = el
           }
@@ -738,8 +739,8 @@ export function useSelect({
           (isOpen
             ? searchValue || selectedOption.label
             : selectedOption
-              ? selectedOption?.label
-              : '') || '',
+            ? selectedOption?.label
+            : '') || '',
         onChange: (e: any) => {
           handleSearchValueChange(e)
           if (onChange) {
@@ -761,8 +762,8 @@ export function useSelect({
         onBlur: (e: any) => {
           if (onBlur) {
             e.persist()
-              ; (onBlurRef.current as any).cb = onBlur
-              ; (onBlurRef.current as any).event = e
+            ;(onBlurRef.current as any).cb = onBlur
+            ;(onBlurRef.current as any).event = e
           }
         },
         ...rest,
@@ -833,15 +834,15 @@ export function useSelect({
     highlightIndex(0)
 
     if (!isOpen && (onBlurRef.current as any)?.event) {
-      ; (onBlurRef.current as any)?.cb((onBlurRef.current as any).event)
-        ; (onBlurRef.current as any).event = null
+      ;(onBlurRef.current as any)?.cb((onBlurRef.current as any).event)
+      ;(onBlurRef.current as any).event = null
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen])
 
   // When the highlightedIndex changes, scroll to that item
   useEffect(() => {
-    ; (scrollToIndexRef.current as any)?.(
+    ;(scrollToIndexRef.current as any)?.(
       highlightedIndex,
       highlightedValueRef,
       optionsRef,
@@ -852,7 +853,7 @@ export function useSelect({
   useEffect(() => {
     if (isOpen && inputRef.current) {
       setTimeout(() => {
-        ; (inputRef.current as any)?.focus()
+        ;(inputRef.current as any)?.focus()
       })
     }
   }, [isOpen])
@@ -897,7 +898,7 @@ function useClickOutsideRef(
   const localControlRef = useRef()
   const fnRef = useRef()
 
-    ; (fnRef.current as any) = fn
+  ;(fnRef.current as any) = fn
   const elDropdownRef =
     dropdownRef ||
     (localDropdownRef as unknown as MutableRefObject<HTMLElement>)
@@ -918,7 +919,7 @@ function useClickOutsideRef(
         elDropdown?.contains((e as any).target)
       )
     ) {
-      ; (fnRef.current as any)(e)
+      ;(fnRef.current as any)(e)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -965,7 +966,7 @@ export function useSelectInput(props: any = {}) {
     ...getInputProps(),
     __css: styles.input,
     id: selectInputId,
-    "aria-labelledby": selectLabelId
+    'aria-labelledby': selectLabelId,
   }
 }
 export function useSelectLabel(props: any = {}) {
@@ -985,7 +986,7 @@ export function useSelectButton(props: any = {}) {
     (e: MouseEvent) => {
       e.preventDefault()
       e.stopPropagation()
-        ; (setOpen as any)((o: any) => !o)
+      ;(setOpen as any)((o: any) => !o)
     },
     [setOpen]
   )
@@ -1124,6 +1125,32 @@ export function useSelectControl(props: any = {}) {
     isOpen,
     __css: styles.control,
   }
+}
+
+// inlined from nanoid
+// https://raw.githubusercontent.com/ai/nanoid/main/nanoid.js
+export const uid = (t = 21): string =>
+  crypto
+    .getRandomValues(new Uint8Array(t))
+    .reduce(
+      (t, e) =>
+        (t +=
+          (e &= 63) < 36
+            ? e.toString(36)
+            : e < 62
+            ? (e - 26).toString(36).toUpperCase()
+            : e > 62
+            ? '-'
+            : '_'),
+      ''
+    )
+
+export function useId(): string {
+  const idRef = useRef<string>()
+  if (!idRef.current) {
+    idRef.current = uid()
+  }
+  return idRef.current
 }
 
 export function useMultiSelect(
