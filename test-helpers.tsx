@@ -11,6 +11,20 @@ const theme = {
   },
 }
 
+class ResizeObserver {
+  observe() {
+    // do nothing
+  }
+  unobserve() {
+    // do nothing
+  }
+  disconnect() {
+    // do nothing
+  }
+}
+
+window.ResizeObserver = ResizeObserver
+
 window.crypto = {
   getRandomValues(buffer: any): any {
     return randomFillSync(buffer as Buffer)
@@ -27,4 +41,6 @@ const customRender = (
 ) => render(ui, { wrapper: Providers, ...options })
 
 export * from '@testing-library/react'
+export { default as userEvent } from '@testing-library/user-event'
+
 export { customRender as render }

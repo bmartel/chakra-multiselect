@@ -1,4 +1,11 @@
-import { render, fireEvent, act, waitFor } from '../test-helpers'
+import {
+  render,
+  fireEvent,
+  userEvent,
+  act,
+  waitFor,
+  within,
+} from '../test-helpers'
 import { MultiSelect, MultiSelectProps, useMultiSelect } from '.'
 
 const items = [
@@ -53,8 +60,12 @@ const StatefulMultiSelect: React.FC<
 }
 
 describe('MultiSelect', () => {
+  beforeEach(() => {
+    userEvent.setup()
+  })
+
   it('Correctly renders', () => {
-    const { getByLabelText, getByText, queryByRole, queryByText } = render(
+    const { getByLabelText, queryByRole, queryByText } = render(
       <MultiSelect label='select an item' onChange={() => null} />
     )
 
@@ -63,7 +74,6 @@ describe('MultiSelect', () => {
     expect(toggleButton.getAttribute('aria-haspopup')).toBe('true')
     expect(toggleButton.getAttribute('aria-expanded')).toBe('false')
     expect(queryByText('select an item')).toBeInTheDocument()
-    getByText('No results found')
 
     expect(queryByRole('listbox')).toBeNull()
   })
@@ -131,6 +141,22 @@ describe('MultiSelect', () => {
     })
   })
 
+  it('receive no results found message when search yields no value', async () => {
+    const { getByText, getByLabelText } = render(
+      <StatefulMultiSelect label='select an item' options={options} />
+    )
+
+    const input = getByLabelText('select an item') as HTMLInputElement
+
+    await act(async () => {
+      userEvent.type(input, 'abcdef')
+    })
+
+    await waitFor(() => {
+      getByText('No results found')
+    })
+  })
+
   it('Can select multiple options', async () => {
     const { queryAllByRole, getByLabelText } = render(
       <StatefulMultiSelect label='select an item' options={options} />
@@ -138,18 +164,38 @@ describe('MultiSelect', () => {
 
     const input = getByLabelText('select an item') as HTMLInputElement
 
-    fireEvent.click(input)
+    await act(async () => {
+      userEvent.type(input, 'Roe')
+    })
+
+    await waitFor(() => {
+      expect(input.value).toBe('Roe')
+      within(document.querySelector('[role="listbox"]')!).getByText(
+        'Roentgenium'
+      )
+    })
+
     fireEvent.click(
-      queryAllByRole('option')?.find(
-        (o) => o.textContent === 'Roentgenium'
-      ) as HTMLElement
+      within(document.querySelector('[role="listbox"]')!).getByText(
+        'Roentgenium'
+      )
     )
 
-    fireEvent.click(input)
+    await act(async () => {
+      userEvent.type(input, 'Tenn')
+    })
+
+    await waitFor(() => {
+      expect(input.value).toBe('Tenn')
+      within(document.querySelector('[role="listbox"]')!).getByText(
+        'Tennessine'
+      )
+    })
+
     fireEvent.click(
-      queryAllByRole('option')?.find(
-        (o) => o.textContent === 'Tennessine'
-      ) as HTMLElement
+      within(document.querySelector('[role="listbox"]')!).getByText(
+        'Tennessine'
+      )
     )
 
     await waitFor(() => {
@@ -179,18 +225,40 @@ describe('MultiSelect', () => {
 
     const input = getByLabelText('select an item') as HTMLInputElement
 
-    fireEvent.click(input)
+    await act(async () => {
+      userEvent.type(input, 'Roe')
+    })
+
+    await waitFor(() => {
+      expect(input.value).toBe('Roe')
+      within(document.querySelector('[role="listbox"]')!).getByText(
+        'Roentgenium'
+      )
+    })
+
     fireEvent.click(
-      queryAllByRole('option')?.find(
-        (o) => o.textContent === 'Roentgenium'
-      ) as HTMLElement
+      within(document.querySelector('[role="listbox"]')!).getByText(
+        'Roentgenium'
+      )
     )
 
-    fireEvent.click(input)
+    await act(async () => {
+      userEvent.click(input)
+      userEvent.keyboard('{backspace}')
+      userEvent.type(input, 'Tenn')
+    })
+
+    await waitFor(() => {
+      expect(input.value).toBe('Tenn')
+      within(document.querySelector('[role="listbox"]')!).getByText(
+        'Tennessine'
+      )
+    })
+
     fireEvent.click(
-      queryAllByRole('option')?.find(
-        (o) => o.textContent === 'Tennessine'
-      ) as HTMLElement
+      within(document.querySelector('[role="listbox"]')!).getByText(
+        'Tennessine'
+      )
     )
 
     await waitFor(() => {

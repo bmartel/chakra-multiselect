@@ -1078,6 +1078,7 @@ export function useSelectList() {
   return useMemo(
     () => ({
       ref: mergeRefs(optionsRef, popper.popperRef),
+      optionsRef,
       isOpen,
       visibleOptions,
       getOption,
