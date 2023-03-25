@@ -1,5 +1,4 @@
 import {
-  screen,
   render,
   fireEvent,
   userEvent,
