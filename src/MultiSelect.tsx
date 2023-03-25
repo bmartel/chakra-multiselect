@@ -19,6 +19,7 @@ import {
   IconButtonProps,
 } from '@chakra-ui/react'
 import { FC, memo, ReactNode, useCallback, useMemo } from 'react'
+import { useVirtualizer } from '@tanstack/react-virtual'
 import {
   SelectProvider,
   useSelect,
@@ -211,6 +212,36 @@ export const SelectOptionItem = memo<SelectOptionItemProps>(
 )
 SelectOptionItem.displayName = 'SelectOptionItem'
 
+export type SelectOptionVirtualItemProps = {
+  index: number
+  start: number
+  size: number
+  item: SelectItem
+  optionItemProps: (value: any, index: number) => any
+}
+
+export const SelectOptionVirtualItem = memo<SelectOptionVirtualItemProps>(
+  ({ index, size, start, item, optionItemProps, ...rest }: any) => {
+    return (
+      <SelectOptionItem
+        {...optionItemProps(item.value, index)}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: `${size}px`,
+          transform: `translateY(${start}px)`,
+        }}
+        selected={item.selected}
+        created={item.created}
+        {...rest}
+      />
+    )
+  }
+)
+SelectOptionVirtualItem.displayName = 'SelectOptionVirtualItem'
+
 export const EmptySelectResults = memo<{ label?: string }>(
   ({ label = 'No results found' }) => {
     const styles = useStyles()
@@ -230,6 +261,7 @@ export const SelectList = memo<SelectListProps>((props) => {
     isOpen,
     getOption,
     ref: listRef,
+    optionsRef: parentRef,
     ...listProps
   } = useSelectList()
 
@@ -246,6 +278,13 @@ export const SelectList = memo<SelectListProps>((props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // Virtualize the list data
+  const rowVirtualizer = useVirtualizer({
+    count: visibleOptions.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 40,
+  })
 
   return (
     <chakra.ul
@@ -265,16 +304,27 @@ export const SelectList = memo<SelectListProps>((props) => {
       {...props}
     >
       {dropdownVisible && visibleOptions.length > 0 ? (
-        visibleOptions.map((item: any, index: number) => {
-          const { key: itemKey, ...restItemProps } = optionItemProps(
-            item,
-            index
-          )
-          return <SelectOptionItem key={itemKey} {...restItemProps} />
-        })
-      ) : (
+        <div
+          style={{
+            height: `${rowVirtualizer.getTotalSize()}px`,
+            width: '100%',
+            position: 'relative',
+          }}
+        >
+          {rowVirtualizer.getVirtualItems().map((virtualItem: any) => (
+            <SelectOptionVirtualItem
+              key={virtualItem.key}
+              optionItemProps={optionItemProps}
+              item={visibleOptions[virtualItem.index]}
+              index={virtualItem.index}
+              size={virtualItem.size}
+              start={virtualItem.start}
+            />
+          ))}
+        </div>
+      ) : dropdownVisible ? (
         <EmptySelectResults />
-      )}
+      ) : null}
     </chakra.ul>
   )
 })
