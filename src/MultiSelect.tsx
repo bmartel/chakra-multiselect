@@ -70,10 +70,13 @@ export interface SelectControlProps
   children?: ReactNode
 }
 
-export type SelectListProps = HTMLChakraProps<'ul'>
+export type SelectListProps = HTMLChakraProps<'ul'> & Pick<SelectProps, 'size'>
 export type SelectedListProps = BoxProps
-export type SelectLabelProps = HTMLChakraProps<'label'>
-export interface SelectActionGroupProps extends StackProps {
+export type SelectLabelProps = HTMLChakraProps<'label'> &
+  Pick<SelectProps, 'size'>
+export interface SelectActionGroupProps
+  extends StackProps,
+    Pick<SelectProps, 'size'> {
   clearButtonProps?: IconButtonProps
   toggleButtonProps?: IconButtonProps
 }
@@ -101,7 +104,6 @@ export const ChakraSvg = chakra('svg')
 
 export const Select = memo<SelectProps>((props) => {
   const { children } = props
-
   const styles = useMultiStyleConfig('MultiSelect', props)
   const ownProps = omitThemingProps(props as any)
 
@@ -153,7 +155,13 @@ export const Select = memo<SelectProps>((props) => {
             <SelectedListProvider value={selectedListContext}>
               <SelectedProvider value={selectedContext}>
                 <SelectActionProvider value={selectActionContext}>
-                  <chakra.div pos='relative'>{children}</chakra.div>
+                  <chakra.div
+                    pos='relative'
+                    display='flex'
+                    flexDirection='column'
+                  >
+                    {children}
+                  </chakra.div>
                 </SelectActionProvider>
               </SelectedProvider>
             </SelectedListProvider>
@@ -166,7 +174,7 @@ export const Select = memo<SelectProps>((props) => {
 Select.displayName = 'Select'
 
 export const SelectLabel = memo<SelectLabelProps>((props) => {
-  const labelProps = useSelectLabel()
+  const labelProps = useSelectLabel(props)
 
   return <chakra.label {...props} {...labelProps} />
 })
@@ -380,7 +388,7 @@ const SelectClearIcon: FC<HTMLChakraProps<'svg'> & { isActive?: boolean }> = ({
   </ChakraSvg>
 )
 
-export const SelectInput = memo((props) => {
+export const SelectInput = memo<Pick<SelectProps, 'size'>>((props) => {
   const inputProps = useSelectInput(props)
 
   return <chakra.input {...inputProps} />
@@ -539,18 +547,23 @@ export const MultiSelect: FC<MultiSelectProps> = ({
   listProps,
   selectedListProps,
   actionGroupProps,
+  size = 'md',
   ...props
 }) => {
   return (
-    <Select {...props}>
-      {label && <SelectLabel {...labelProps}>{label}</SelectLabel>}
-      <SelectControl {...controlProps}>
+    <Select size={size} {...props}>
+      {label && (
+        <SelectLabel size={size} {...labelProps}>
+          {label}
+        </SelectLabel>
+      )}
+      <SelectControl size={size} {...controlProps}>
         <SelectedList {...selectedListProps}>
-          <SelectInput />
+          <SelectInput size={size} />
         </SelectedList>
-        <SelectActionGroup {...actionGroupProps} />
+        <SelectActionGroup size={size} {...actionGroupProps} />
       </SelectControl>
-      <SelectList {...listProps} />
+      <SelectList size={size} {...listProps} />
     </Select>
   )
 }

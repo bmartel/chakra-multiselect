@@ -39,15 +39,8 @@ const baseStyleSelectedList = {
 }
 
 const baseStyleLabel = {
-  fontSize: 'md',
-  marginEnd: 3,
-  mb: 2,
-  fontWeight: 'medium',
-  transition: 'all 0.2s',
-  opacity: 1,
-  _disabled: {
-    opacity: 0.4,
-  },
+  display: 'block',
+  textAlign: 'start',
 }
 
 function baseStyleItem(props: Record<string, any>) {
@@ -102,6 +95,7 @@ function baseStyleButton(props: Record<string, any>) {
 const baseStyleControl = {
   h: 'auto',
   minW: 72,
+  pr: 1,
 }
 
 // eslint-disable-next-line
@@ -148,11 +142,10 @@ export const sizes = {
   sm: {
     control: {
       minH: 8,
-      px: 1,
       spacing: 1,
     },
     input: {
-      m: 'px',
+      p: 'px',
     },
     actionGroup: {
       spacing: '0',
@@ -180,11 +173,10 @@ export const sizes = {
   md: {
     control: {
       minH: 10,
-      px: 1,
       spacing: 1,
     },
     input: {
-      m: '2px',
+      p: '2px',
     },
     actionGroup: {
       spacing: '0',
@@ -211,11 +203,10 @@ export const sizes = {
   lg: {
     control: {
       minH: 12,
-      px: 2,
       spacing: 2,
     },
     input: {
-      m: 1,
+      p: 1,
     },
     actionGroup: {
       spacing: '0',

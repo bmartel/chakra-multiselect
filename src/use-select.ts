@@ -1,4 +1,5 @@
 import {
+  useMultiStyleConfig,
   usePopper,
   UsePopperProps,
   UsePopperReturn,
@@ -293,6 +294,9 @@ export interface UseSelectProps extends UsePopperProps {
   duplicates?: boolean
   options?: Option[]
   value?: any
+  placeholder?: string
+  searchPlaceholder?: string
+  size?: 'sm' | 'md' | 'lg'
   shiftAmount?: number
   getOption?: GetOption
   getDebounce?: GetDebounce
@@ -389,6 +393,8 @@ export function useSelect({
   value,
   onChange,
   placement = 'bottom-start',
+  placeholder,
+  searchPlaceholder,
 }: UseSelectProps): UseSelectReturn {
   const [
     { searchValue, resolvedSearchValue, isOpen, highlightedIndex },
@@ -396,6 +402,8 @@ export function useSelect({
   ] = useHoistedState(initialState, stateReducer)
 
   const multi = !single
+  const hasMultiSelection =
+    multi && !!(Array.isArray(value) ? value.length > 0 : !!value)
 
   // Refs
 
@@ -741,6 +749,12 @@ export function useSelect({
             : selectedOption
             ? selectedOption?.label
             : '') || '',
+        placeholder:
+          hasMultiSelection && !searchValue
+            ? searchPlaceholder
+            : !selectedOption?.label
+            ? placeholder
+            : undefined,
         onChange: (e: any) => {
           handleSearchValueChange(e)
           if (onChange) {
@@ -776,6 +790,9 @@ export function useSelect({
       selectedOption,
       handleSearchClick,
       handleSearchValueChange,
+      placeholder,
+      searchPlaceholder,
+      hasMultiSelection,
     ]
   )
 
@@ -860,7 +877,7 @@ export function useSelect({
 
   return {
     multi,
-    clearable: multi && !!(Array.isArray(value) ? value.length > 0 : !!value),
+    clearable: hasMultiSelection,
     clearAll,
     optionsRef,
     controlRef,
@@ -959,24 +976,33 @@ export function useSelectActionGroup(props: any = {}) {
 export function useSelectInput(props: any = {}) {
   const { selectLabelId, selectInputId } = useSelectIdContext()
   const { getInputProps } = useSelectInputContext()
+  const { fontSize } = useMultiStyleConfig('Input', props).field || {}
   const styles = useStyles()
 
   return {
     ...props,
     ...getInputProps(),
-    __css: styles.input,
+    __css: {
+      fontSize,
+      ...styles.input,
+    },
     id: selectInputId,
     'aria-labelledby': selectLabelId,
   }
 }
 export function useSelectLabel(props: any = {}) {
-  const { selectLabelId } = useSelectIdContext()
+  const { selectLabelId, selectInputId } = useSelectIdContext()
+  const labelStyles = useMultiStyleConfig('FormLabel', props) || {}
   const styles = useStyles()
 
   return {
     ...props,
-    __css: styles.label,
+    __css: {
+      ...labelStyles,
+      ...styles.label,
+    },
     id: selectLabelId,
+    htmlFor: selectInputId,
   }
 }
 
@@ -1113,6 +1139,7 @@ export function useSelectedList(props: any = {}) {
 
 export function useSelectControl(props: any = {}) {
   const { isOpen, popper, controlRef } = useSelectContext()
+  const inputStyles = useMultiStyleConfig('Input', props) || {}
   const styles = useStyles()
 
   return {
@@ -1124,7 +1151,11 @@ export function useSelectControl(props: any = {}) {
       [props.ref, controlRef, popper.referenceRef]
     ),
     isOpen,
-    __css: styles.control,
+    __css: {
+      ...styles.field,
+      ...styles.control,
+      _focusWithin: (inputStyles.field as any)?._focusVisible,
+    },
   }
 }
 

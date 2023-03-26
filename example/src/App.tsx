@@ -116,37 +116,50 @@ const App = () => {
             <StatefulMultiSelect
               options={_options}
               label='Choose a single item'
+              placeholder='Select ...'
+              searchPlaceholder='Search ...'
               single
             />
             <StatefulMultiSelect
               options={_options}
               label='Choose multiple items'
+              placeholder='Select ...'
+              searchPlaceholder='Search ...'
             />
             <StatefulMultiSelect
               options={_options}
               label='Choose or create a single item'
+              placeholder='Select or create...'
               single
               create
             />
             <StatefulMultiSelect
               options={_options}
               label='Choose or create multiple items'
+              placeholder='Select or create ...'
+              searchPlaceholder='Search or create ...'
               create
             />
             <StatefulMultiSelect
               options={_options}
               label='Choose a single item with list selection'
+              placeholder='Select ...'
+              searchPlaceholder='Search ...'
               selectionVisibleIn={SelectionVisibilityMode.List}
               single
             />
             <StatefulMultiSelect
               options={_options}
               label='Choose multiple items with list selection'
+              placeholder='Select ...'
+              searchPlaceholder='Search ...'
               selectionVisibleIn={SelectionVisibilityMode.List}
             />
             <StatefulMultiSelect
               options={_options}
               label='Choose multiple items with both selection'
+              placeholder='Select ...'
+              searchPlaceholder='Search ...'
               selectionVisibleIn={SelectionVisibilityMode.Both}
             />
           </VStack>
