@@ -976,7 +976,7 @@ export function useSelectActionGroup(props: any = {}) {
 export function useSelectInput(props: any = {}) {
   const { selectLabelId, selectInputId } = useSelectIdContext()
   const { getInputProps } = useSelectInputContext()
-  const { fontSize } = useMultiStyleConfig('Input', props).field
+  const { fontSize } = useMultiStyleConfig('Input', props).field || {}
   const styles = useStyles()
 
   return {
@@ -992,7 +992,7 @@ export function useSelectInput(props: any = {}) {
 }
 export function useSelectLabel(props: any = {}) {
   const { selectLabelId, selectInputId } = useSelectIdContext()
-  const labelStyles = useMultiStyleConfig('FormLabel', props)
+  const labelStyles = useMultiStyleConfig('FormLabel', props) || {}
   const styles = useStyles()
 
   return {
@@ -1139,7 +1139,7 @@ export function useSelectedList(props: any = {}) {
 
 export function useSelectControl(props: any = {}) {
   const { isOpen, popper, controlRef } = useSelectContext()
-  const inputStyles = useMultiStyleConfig('Input', props)
+  const inputStyles = useMultiStyleConfig('Input', props) || {}
   const styles = useStyles()
 
   return {
@@ -1154,7 +1154,7 @@ export function useSelectControl(props: any = {}) {
     __css: {
       ...styles.field,
       ...styles.control,
-      _focusWithin: (inputStyles.field as any)._focusVisible,
+      _focusWithin: (inputStyles.field as any)?._focusVisible,
     },
   }
 }
