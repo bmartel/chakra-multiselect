@@ -134,7 +134,7 @@ describe('MultiSelect', () => {
       expect(input.value).toBe('')
       const selected = queryByRole('listitem')
 
-      expect(selected?.textContent).toBe('roentgenium')
+      expect(selected?.textContent).toBe('Roentgenium')
       expect(
         queryAllByRole('option').find((o) => o.textContent === 'Roentgenium')
       ).toBeFalsy()
@@ -203,7 +203,7 @@ describe('MultiSelect', () => {
 
       expect(selected?.length).toBe(2)
 
-      const expected = ['roentgenium', 'tennessine']
+      const expected = ['Roentgenium', 'Tennessine']
       selected.forEach((s, i) => {
         const value = s.textContent
 

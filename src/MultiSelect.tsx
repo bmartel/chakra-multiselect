@@ -71,7 +71,13 @@ export interface SelectControlProps
 }
 
 export type SelectListProps = HTMLChakraProps<'ul'> & Pick<SelectProps, 'size'>
-export type SelectedListProps = BoxProps
+export type SelectedListProps = BoxProps & {
+  selectedItems?: SelectItem[]
+  value?: string | string[]
+  multi?: boolean
+  selectionVisibleIn?: SelectionVisibilityMode
+  textList?: BoxProps
+}
 export type SelectLabelProps = HTMLChakraProps<'label'> &
   Pick<SelectProps, 'size'>
 export interface SelectActionGroupProps
@@ -395,19 +401,22 @@ export const SelectInput = memo<Pick<SelectProps, 'size'>>((props) => {
 })
 SelectInput.displayName = 'SelectInput'
 
-export const SelectedItem = memo<SelectedItemProps>(({ value, ...props }) => {
-  const { onClick, __css, ...itemProps } = useSelectedItem({
-    value,
-    ...props,
-  })
+export const SelectedItem = memo<SelectedItemProps>(
+  ({ value: _value, label: _label, ...props }) => {
+    const { onClick, __css, value, label, ...itemProps } = useSelectedItem({
+      value: _value,
+      label: _label,
+      ...props,
+    })
 
-  return (
-    <Tag {...(__css as any)} {...itemProps} role='listitem'>
-      <TagLabel>{value}</TagLabel>
-      <TagCloseButton onClick={onClick} />
-    </Tag>
-  )
-})
+    return (
+      <Tag {...(__css as any)} {...itemProps} role='listitem'>
+        <TagLabel>{label || value}</TagLabel>
+        <TagCloseButton onClick={onClick} />
+      </Tag>
+    )
+  }
+)
 SelectedItem.displayName = 'SelectedItem'
 
 export const SelectToggleButton = memo<IconButtonProps>((props) => {
@@ -485,19 +494,20 @@ export const SelectedList = memo<SelectedListProps>(
     return (
       <Box
         {...__css}
-        {...selectedListProps}
+        {...(selectedListProps as any)}
         {...(shownAsTagList ? { role: 'list' } : null)}
       >
         {shownAsTagList &&
-          selectedItems?.map((selectedItem: any) => (
+          selectedItems?.map((selectedItem) => (
             <SelectedItem
-              key={`selected-item-${selectedItem}`}
-              value={selectedItem}
+              key={`selected-item-${selectedItem.value}`}
+              value={selectedItem.value}
+              label={selectedItem.label}
             />
           ))}
         {shownAsText && !!selectedItems?.length && (
-          <Box aria-current='true' {...textList?.__css}>
-            {selectedItems?.join(', ')}
+          <Box aria-current='true' {...(textList?.__css as any)}>
+            {selectedItems?.map(({ label }) => label).join(', ')}
           </Box>
         )}
         {children}
