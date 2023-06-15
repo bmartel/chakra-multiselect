@@ -1174,23 +1174,18 @@ export function useSelectControl(props: any = {}) {
   }
 }
 
-// inlined from nanoid
-// https://raw.githubusercontent.com/ai/nanoid/main/nanoid.js
-export const uid = (t = 21): string =>
-  crypto
-    .getRandomValues(new Uint8Array(t))
-    .reduce(
-      (t, e) =>
-        (t +=
-          (e &= 63) < 36
-            ? e.toString(36)
-            : e < 62
-            ? (e - 26).toString(36).toUpperCase()
-            : e > 62
-            ? '-'
-            : '_'),
-      ''
-    )
+export const uid = (t = 21): string => {
+  const chars =
+    '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_'
+
+  let result = ''
+  for (let i = 0; i < t; i++) {
+    const randomIndex = Math.floor(Math.random() * chars.length)
+    result += chars[randomIndex]
+  }
+
+  return result
+}
 
 export function useId(): string {
   const idRef = useRef<string>()
