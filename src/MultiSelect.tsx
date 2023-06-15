@@ -405,7 +405,8 @@ export const SelectedItem = memo<SelectedItemProps>(
   ({ value: _value, label: _label, ...props }) => {
     const { onClick, __css, value, label, ...itemProps } = useSelectedItem({
       value: _value,
-      label: _label,
+      label: _label || '',
+      key: props.key || ('' as any),
       ...props,
     })
 
