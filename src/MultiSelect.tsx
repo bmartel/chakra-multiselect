@@ -499,16 +499,20 @@ export const SelectedList = memo<SelectedListProps>(
         {...(shownAsTagList ? { role: 'list' } : null)}
       >
         {shownAsTagList &&
-          selectedItems?.map((selectedItem) => (
-            <SelectedItem
-              key={`selected-item-${selectedItem.value}`}
-              value={selectedItem.value}
-              label={selectedItem.label}
-            />
-          ))}
+          selectedItems?.map(
+            (selectedItem: { value: string; label?: string }) => (
+              <SelectedItem
+                key={`selected-item-${selectedItem.value}`}
+                value={selectedItem.value}
+                label={selectedItem.label}
+              />
+            )
+          )}
         {shownAsText && !!selectedItems?.length && (
           <Box aria-current='true' {...(textList?.__css as any)}>
-            {selectedItems?.map(({ label }) => label).join(', ')}
+            {selectedItems
+              ?.map(({ label }: { value: string; label: string }) => label)
+              .join(', ')}
           </Box>
         )}
         {children}
