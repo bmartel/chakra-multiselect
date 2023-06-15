@@ -16,7 +16,7 @@ jobs:
       with:
         node-version: 14
         registry-url: https://registry.npmjs.org/
-    - run: yarn
+    - run: yarn install --frozen-lockfile
     - run: git config --global user.name "Brandon Martel"
     - run: git config --global user.email "brandonmartel@gmail.com"
     - run: npm version ${{ github.event.release.tag_name }}
