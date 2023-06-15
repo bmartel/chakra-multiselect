@@ -16,7 +16,6 @@ import {
   MutableRefObject,
 } from 'react'
 import computeScrollIntoView from 'compute-scroll-into-view'
-
 export interface Option {
   label: string
   value: string | number
@@ -1040,7 +1039,9 @@ export function useClearButton(props: any = {}) {
   }
 }
 
-export function useSelectedItem(props: any = {}) {
+export function useSelectedItem(
+  props: { value: any; label: string; key?: string } = {} as any
+) {
   const { removeValue } = useSelectedContext()
   const styles = useStyles()
 
@@ -1052,8 +1053,10 @@ export function useSelectedItem(props: any = {}) {
       key: props.key || props.value,
       onClick,
       __css: styles.selectedItem,
+      value: props.value,
+      label: props.label || labelFromValue(props.value),
     }),
-    [props.value, props.key, onClick, styles.selectedItem]
+    [props.value, props.label, props.key, onClick, styles.selectedItem]
   )
 }
 
@@ -1118,12 +1121,24 @@ export function useSelectList() {
 }
 
 export function useSelectedList(props: any = {}) {
-  const {
-    value: selectedItems,
-    multi,
-    selectionVisibleIn,
-  } = useSelectedListContext()
+  const { visibleOptions } = useSelectContext()
+  const { value, multi, selectionVisibleIn } = useSelectedListContext()
   const styles = useStyles()
+
+  const selectedItems = useMemo(
+    () =>
+      value && Array.isArray(value)
+        ? value.map((v: any) => {
+            const option = visibleOptions.find((o: any) => o.value === v)
+            return {
+              value: v,
+              label: option ? option.label : labelFromValue(v),
+            }
+          })
+        : [],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [value, visibleOptions]
+  )
 
   return {
     ...props,
