@@ -150,6 +150,9 @@ export const sizes = {
     actionGroup: {
       spacing: '0',
     },
+    list: {
+      fontSize: 'sm',
+    },
     item: {
       py: 1,
       px: 2,
@@ -181,6 +184,9 @@ export const sizes = {
     actionGroup: {
       spacing: '0',
     },
+    list: {
+      fontSize: 'md',
+    },
     item: {
       py: 2,
       px: 3,
@@ -210,6 +216,9 @@ export const sizes = {
     },
     actionGroup: {
       spacing: '0',
+    },
+    list: {
+      fontSize: 'lg',
     },
     item: {
       py: 2,
