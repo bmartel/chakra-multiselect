@@ -1121,21 +1121,13 @@ export function useSelectList() {
 }
 
 export function useSelectedList(props: any = {}) {
-  const { visibleOptions } = useSelectContext()
+  const { visibleOptions, getOption } = useSelectContext()
   const { value, multi, selectionVisibleIn } = useSelectedListContext()
   const styles = useStyles()
 
   const selectedItems = useMemo(
     () =>
-      value && Array.isArray(value)
-        ? value.map((v: any) => {
-            const option = visibleOptions.find((o: any) => o.value === v)
-            return {
-              value: v,
-              label: option ? option.label : labelFromValue(v),
-            }
-          })
-        : [],
+      value && Array.isArray(value) ? value.map((v: any) => getOption(v)) : [],
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [value, visibleOptions]
   )

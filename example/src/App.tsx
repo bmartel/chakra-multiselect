@@ -84,7 +84,7 @@ const StatefulMultiSelect: FC<
     Partial<Pick<MultiSelectProps, 'onChange' | 'value'>>
 > = ({ onChange: _onChange, value: _value, options: __options, ...props }) => {
   const { value, options, onChange } = useMultiSelect({
-    value: _value || props.single ? '' : [],
+    value: _value ?? (props.single ? '' : []),
     options: __options!,
     onChange: _onChange,
   })
@@ -98,6 +98,8 @@ const StatefulMultiSelect: FC<
     />
   )
 }
+
+const initialValue = _options.slice(0, 3)
 
 const App = () => {
   return (
@@ -122,9 +124,27 @@ const App = () => {
             />
             <StatefulMultiSelect
               options={_options}
-              label='Choose multiple items'
+              value={initialValue}
+              label='Choose multiple items (small)'
               placeholder='Select ...'
               searchPlaceholder='Search ...'
+              size='sm'
+            />
+            <StatefulMultiSelect
+              options={_options}
+              value={initialValue}
+              label='Choose multiple items (medium|default)'
+              placeholder='Select ...'
+              searchPlaceholder='Search ...'
+              size='md'
+            />
+            <StatefulMultiSelect
+              options={_options}
+              value={initialValue}
+              label='Choose multiple items (large)'
+              placeholder='Select ...'
+              searchPlaceholder='Search ...'
+              size='lg'
             />
             <StatefulMultiSelect
               options={_options}

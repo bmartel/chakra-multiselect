@@ -82,6 +82,7 @@ export interface SelectControlProps
 
 export type SelectListProps = HTMLChakraProps<'ul'> & Pick<SelectProps, 'size'>
 export type SelectedListProps = BoxProps & {
+  size?: SelectProps['size']
   selectedItems?: SelectItem[]
   value?: string | string[]
   multi?: boolean
@@ -93,6 +94,7 @@ export type SelectLabelProps = HTMLChakraProps<'label'> &
 export interface SelectActionGroupProps
   extends StackProps,
     Pick<SelectProps, 'size'> {
+  size?: SelectProps['size']
   clearButtonProps?: SelectIconButtonProps
   toggleButtonProps?: SelectIconButtonProps
 }
@@ -303,11 +305,17 @@ export const SelectList = memo<SelectListProps>((props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const estimatedSize = useMemo(() => {
+    if (props.size === 'lg') return 43
+    if (props.size === 'sm') return 29
+    return 40
+  }, [props.size])
+
   // Virtualize the list data
   const rowVirtualizer = useVirtualizer({
     count: visibleOptions.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 40,
+    estimateSize: () => estimatedSize,
   })
 
   return (
@@ -420,8 +428,27 @@ export const SelectedItem = memo<SelectedItemProps>(
       ...props,
     })
 
+    const tagSizeProps =
+      {
+        sm: {
+          fontSize: 'sm',
+        },
+        md: {
+          fontSize: 'md',
+        },
+        lg: {
+          fontSize: 'lg',
+        },
+      }[props.size || ('md' as any)] || {}
+
     return (
-      <Tag {...(__css as any)} {...itemProps} role='listitem'>
+      <Tag
+        size={props.size}
+        {...tagSizeProps}
+        {...(__css as any)}
+        {...itemProps}
+        role='listitem'
+      >
         <TagLabel>{label || value}</TagLabel>
         <TagCloseButton onClick={onClick} />
       </Tag>
@@ -440,6 +467,22 @@ export const SelectToggleButton = memo<IconButtonProps>((props) => {
     ...buttonProps
   } = useSelectButton(props)
 
+  const sizeProps =
+    {
+      sm: {
+        height: '6',
+        width: '6',
+      },
+      md: {
+        height: '8',
+        width: '8',
+      },
+      lg: {
+        height: '10',
+        width: '10',
+      },
+    }[size] || {}
+
   return (
     <IconButton
       tabIndex={0}
@@ -457,6 +500,8 @@ export const SelectToggleButton = memo<IconButtonProps>((props) => {
           }}
         />
       }
+      minWidth={0}
+      {...sizeProps}
       {...__css}
       {...buttonProps}
     />
@@ -473,12 +518,30 @@ export const SelectClearButton = memo<IconButtonProps>((props) => {
     ...buttonProps
   } = useClearButton(props)
 
+  const sizeProps =
+    {
+      sm: {
+        height: '6',
+        width: '6',
+      },
+      md: {
+        height: '8',
+        width: '8',
+      },
+      lg: {
+        height: '10',
+        width: '10',
+      },
+    }[size] || {}
+
   return (
     <IconButton
       tabIndex={0}
       size={size}
       aria-label={ariaLabel}
       icon={<Icon />}
+      minWidth={0}
+      {...sizeProps}
       {...__css}
       {...buttonProps}
     />
@@ -512,6 +575,7 @@ export const SelectedList = memo<SelectedListProps>(
           selectedItems?.map(
             (selectedItem: { value: string; label?: string }) => (
               <SelectedItem
+                size={props.size}
                 key={`selected-item-${selectedItem.value}`}
                 value={selectedItem.value}
                 label={selectedItem.label}
@@ -545,9 +609,13 @@ export const SelectActionGroup = memo<SelectActionGroupProps>((props) => {
   return (
     <HStack {...__css} {...toggleActionProps}>
       {clearable && (
-        <SelectClearButton onClick={clearOnClick} {...clearButtonProps} />
+        <SelectClearButton
+          size={props.size}
+          onClick={clearOnClick}
+          {...clearButtonProps}
+        />
       )}
-      <SelectToggleButton {...toggleButtonProps} />
+      <SelectToggleButton size={props.size} {...toggleButtonProps} />
     </HStack>
   )
 })
@@ -583,7 +651,7 @@ export const MultiSelect: FC<MultiSelectProps> = ({
         </SelectLabel>
       )}
       <SelectControl size={size} {...controlProps}>
-        <SelectedList {...selectedListProps}>
+        <SelectedList size={size} {...selectedListProps}>
           <SelectInput size={size} />
         </SelectedList>
         <SelectActionGroup size={size} {...actionGroupProps} />
