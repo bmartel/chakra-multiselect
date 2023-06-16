@@ -18,7 +18,14 @@ import {
   BoxProps,
   IconButtonProps,
 } from '@chakra-ui/react'
-import { FC, memo, ReactNode, useCallback, useMemo } from 'react'
+import {
+  FC,
+  JSXElementConstructor,
+  memo,
+  ReactNode,
+  useCallback,
+  useMemo,
+} from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import {
   SelectProvider,
@@ -47,6 +54,9 @@ import {
 
 // @see https://github.com/chakra-ui/chakra-ui/issues/140
 
+export type SelectIconButtonProps = Omit<IconButtonProps, 'icon'> & {
+  icon?: JSXElementConstructor<any>
+}
 export interface SelectItem {
   value: any
   label?: string
@@ -83,8 +93,8 @@ export type SelectLabelProps = HTMLChakraProps<'label'> &
 export interface SelectActionGroupProps
   extends StackProps,
     Pick<SelectProps, 'size'> {
-  clearButtonProps?: IconButtonProps
-  toggleButtonProps?: IconButtonProps
+  clearButtonProps?: SelectIconButtonProps
+  toggleButtonProps?: SelectIconButtonProps
 }
 
 export interface SelectOptionItemProps extends HTMLChakraProps<'li'> {
