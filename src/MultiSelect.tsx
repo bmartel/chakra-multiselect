@@ -261,6 +261,7 @@ export const SelectOptionVirtualItem = memo<SelectOptionVirtualItemProps>(
         }}
         selected={item.selected}
         created={item.created}
+        label={item.label}
         {...rest}
       />
     )

@@ -583,7 +583,7 @@ export function useSelect({
               (v: any) => getOption(v).value === selectedOption.value
             )
           ) {
-            ;(onChangeRef.current as any)?.([..._value, selectedOption.value], {
+            ;(onChangeRef.current as any)?.([..._value, selectedOption], {
               action: selectedOption.created
                 ? ChangeActions.MultiCreate
                 : ChangeActions.MultiSelect,
