@@ -8,7 +8,7 @@
 ![Tests](https://github.com/bmartel/chakra-multiselect/actions/workflows/test.yml/badge.svg)
 ![Docs](https://github.com/bmartel/chakra-multiselect/actions/workflows/deploy_docs.yml/badge.svg)
 
-[![CodeSandbox](https://img.shields.io/badge/Codesandbox-040404?style=for-the-badge&logo=codesandbox&logoColor=DBDBDB)](https://codesandbox.io/p/sandbox/quizzical-lumiere-ih4jxu?file=%2FREADME.md)
+[![CodeSandbox](https://img.shields.io/badge/Codesandbox-040404?style=for-the-badge&logo=codesandbox&logoColor=DBDBDB)](https://codesandbox.io/p/sandbox/eloquent-bardeen-n8qxv4?file=%2FREADME.md)
 
 ## Install [ChakraUI](https://chakra-ui.com/getting-started)
 
