@@ -289,6 +289,7 @@ export interface UseSelectProps extends UsePopperProps {
   onChange: SelectOnChange
   single?: boolean
   create?: boolean
+  disabled?: boolean
   selectionVisibleIn?: SelectionVisibilityMode
   duplicates?: boolean
   options?: Option[]
@@ -327,6 +328,7 @@ export interface UseSelectReturn {
   controlRef: MutableRefObject<any>
   clearAll: () => void
   clearable: boolean
+  disabled: boolean
 }
 
 const [SelectProvider, useSelectContext] = createContext<UseSelectReturn>({
@@ -380,6 +382,7 @@ export {
 export function useSelect({
   create = false,
   single = false,
+  disabled = false,
   selectionVisibleIn = SelectionVisibilityMode.Input,
   getDebounce = defaultGetDebounce,
   getOption = defaultGetOption,
@@ -639,18 +642,20 @@ export function useSelect({
   // Handlers
 
   const handleSearchValueChange = useCallback((e: any) => {
+    if (disabled) return
     setSearch(e.target.value)
     Open()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [disabled])
 
   const handleSearchClick = useCallback(() => {
+    if (disabled) return
     if (!create || multi) {
       setSearch('')
     }
     Open()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [create, multi])
+  }, [create, multi, disabled])
 
   // Prop Getters
 
@@ -838,6 +843,12 @@ export function useSelect({
   // while open, we need to close the dropdown
   useClickOutsideRef(isOpen, Close, optionsRef!, controlRef!)
 
+  useEffect(() => {
+    if (isOpen && disabled) {
+      setOpen(false)
+    }
+  }, [isOpen, disabled])
+
   // When searching, activate the first option
   useEffect(() => {
     if (searchValue) {
@@ -877,6 +888,7 @@ export function useSelect({
   return {
     multi,
     clearable: hasMultiSelection,
+    disabled,
     clearAll,
     optionsRef,
     controlRef,
@@ -1145,7 +1157,7 @@ export function useSelectedList(props: any = {}) {
 }
 
 export function useSelectControl(props: any = {}) {
-  const { isOpen, popper, controlRef } = useSelectContext()
+  const { isOpen, popper, controlRef, disabled } = useSelectContext()
   const inputStyles = useMultiStyleConfig('Input', props) || {}
   const styles = useStyles()
 
@@ -1158,10 +1170,12 @@ export function useSelectControl(props: any = {}) {
       [props.ref, controlRef, popper.referenceRef]
     ),
     isOpen,
+    disabled,
     __css: {
       ...styles.field,
       ...styles.control,
       _focusWithin: (inputStyles.field as any)?._focusVisible,
+      _disabled: (inputStyles.field as any)?._disabled,
     },
   }
 }
@@ -1195,11 +1209,20 @@ export function useMultiSelect(
   const [options, setOptions] = useState<Option[]>(() =>
     props.options.map(getOption)
   )
+  const onChangeRef = useRef<typeof props.onChange>()
+  onChangeRef.current = props.onChange;
+
+  const setNextValue = useCallback((value: string|number|(string|number)[]) => {
+    setValue(value as any)
+    onChangeRef.current?.(value)
+    console.log("setNextValue:", value)
+  }, [])
+
   const onChange = useCallback<SelectOnChange>(
     (next, change) => {
       switch (change?.action) {
         case ChangeActions.SingleCreate:
-          setValue(next as string)
+          setNextValue(next as string)
           setOptions((o) => {
             const opt = getOption(next as any)
             return o.some((_o) => getOption(_o).value === opt.value)
@@ -1209,15 +1232,15 @@ export function useMultiSelect(
           break
         case ChangeActions.SingleClear:
         case ChangeActions.SingleRemove:
-          setValue(next as string)
+          setNextValue(next as string)
           break
         case ChangeActions.SingleSelect:
-          setValue(next as string)
+          setNextValue(next as string)
           break
         case ChangeActions.MultiCreate:
           const nextValue = next as string[]
           const created = next[nextValue.length - 1]
-          setValue(nextValue)
+          setNextValue(nextValue)
           setOptions((o) => {
             const opt = getOption(created as any)
             return o.some((_o) => getOption(_o).value === opt.value)
@@ -1227,11 +1250,11 @@ export function useMultiSelect(
           break
         case ChangeActions.MultiClear:
         case ChangeActions.MultiRemove:
-          setValue(next as string[])
+          setNextValue(next as string[])
           break
         case ChangeActions.MultiSelect:
         default:
-          setValue(next as string[])
+          setNextValue(next as string[])
       }
     },
     [setValue, setOptions, getOption]

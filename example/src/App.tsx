@@ -15,7 +15,7 @@ import {
   SelectionVisibilityMode,
   useMultiSelect,
 } from 'chakra-multiselect'
-import { FC } from 'react'
+import { FC, useState } from 'react'
 
 const theme = extendTheme({
   components: {
@@ -102,6 +102,9 @@ const StatefulMultiSelect: FC<
 const initialValue = _options.slice(0, 3)
 
 const App = () => {
+  const [items, setItems] = useState<any>(initialValue)
+  const isDisabled = items?.length > 2
+
   return (
     <>
       <ColorModeScript initialColorMode='light' />
@@ -133,10 +136,12 @@ const App = () => {
             <StatefulMultiSelect
               options={_options}
               value={initialValue}
-              label='Choose multiple items (medium|default)'
+              label={isDisabled ? `Remove ${items.length - 2} item(s) to continue (medium|default)` : 'Choose multiple items (medium|default)'}
               placeholder='Select ...'
               searchPlaceholder='Search ...'
               size='md'
+              disabled={isDisabled}
+              onChange={setItems}
             />
             <StatefulMultiSelect
               options={_options}
