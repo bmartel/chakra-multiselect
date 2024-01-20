@@ -95,6 +95,7 @@ export interface SelectActionGroupProps
   extends StackProps,
     Pick<SelectProps, 'size'> {
   size?: SelectProps['size']
+  disabled?: boolean
   clearButtonProps?: SelectIconButtonProps
   toggleButtonProps?: SelectIconButtonProps
 }
@@ -413,7 +414,7 @@ const SelectClearIcon: FC<HTMLChakraProps<'svg'> & { isActive?: boolean }> = ({
   </ChakraSvg>
 )
 
-export const SelectInput = memo<Pick<SelectProps, 'size'>>((props) => {
+export const SelectInput = memo<Pick<SelectProps, 'size' | 'disabled'>>((props) => {
   const inputProps = useSelectInput(props)
 
   return <chakra.input {...inputProps} />
@@ -490,15 +491,15 @@ export const SelectToggleButton = memo<IconButtonProps>((props) => {
       size={size}
       aria-label={ariaLabel}
       aria-haspopup={true}
-      aria-expanded={isOpen}
+      aria-expanded={!props.disabled && isOpen}
       icon={
         <Icon
-          isActive={isOpen}
-          __css={{
+          isActive={!props.disabled && isOpen}
+          __css={(!props.disabled ? {
             transitionDuration: '200ms',
             transitionProperty: 'transform',
             _active: { transform: 'rotate(180deg)' },
-          }}
+          }: undefined)}
         />
       }
       minWidth={0}
@@ -616,7 +617,7 @@ export const SelectActionGroup = memo<SelectActionGroupProps>((props) => {
           {...clearButtonProps}
         />
       )}
-      <SelectToggleButton size={props.size} {...toggleButtonProps} />
+      <SelectToggleButton size={props.size} disabled={props.disabled} {...toggleButtonProps} />
     </HStack>
   )
 })
@@ -651,11 +652,11 @@ export const MultiSelect: FC<MultiSelectProps> = ({
           {label}
         </SelectLabel>
       )}
-      <SelectControl size={size} {...controlProps}>
+      <SelectControl size={size} disabled={props.disabled} {...controlProps}>
         <SelectedList size={size} {...selectedListProps}>
-          <SelectInput size={size} />
+          <SelectInput size={size} disabled={props.disabled} />
         </SelectedList>
-        <SelectActionGroup size={size} {...actionGroupProps} />
+        <SelectActionGroup size={size} disabled={props.disabled} {...actionGroupProps} />
       </SelectControl>
       <SelectList size={size} {...listProps} />
     </Select>
