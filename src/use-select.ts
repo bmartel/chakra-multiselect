@@ -62,7 +62,7 @@ export enum ChangeActions {
 }
 
 export type SelectOnChange = (
-  value: string | number | Array<string | number>,
+  value: Option|Option[],
   change?: {
     action: ChangeActions
     value: any
@@ -1222,7 +1222,7 @@ export function useMultiSelect(
     (next, change) => {
       switch (change?.action) {
         case ChangeActions.SingleCreate:
-          setNextValue(next as string, change)
+          setNextValue(next, change)
           setOptions((o) => {
             const opt = getOption(next as any)
             return o.some((_o) => getOption(_o).value === opt.value)
@@ -1232,13 +1232,13 @@ export function useMultiSelect(
           break
         case ChangeActions.SingleClear:
         case ChangeActions.SingleRemove:
-          setNextValue(next as string, change)
+          setNextValue(next, change)
           break
         case ChangeActions.SingleSelect:
-          setNextValue(next as string, change)
+          setNextValue(next, change)
           break
         case ChangeActions.MultiCreate:
-          const nextValue = next as string[]
+          const nextValue = next as Option[]
           const created = next[nextValue.length - 1]
           setNextValue(nextValue, change)
           setOptions((o) => {
@@ -1250,11 +1250,11 @@ export function useMultiSelect(
           break
         case ChangeActions.MultiClear:
         case ChangeActions.MultiRemove:
-          setNextValue(next as string[], change)
+          setNextValue(next, change)
           break
         case ChangeActions.MultiSelect:
         default:
-          setNextValue(next as string[], change)
+          setNextValue(next, change)
       }
     },
     [setValue, setOptions, getOption]
