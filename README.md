@@ -8,7 +8,7 @@
 ![Tests](https://github.com/bmartel/chakra-multiselect/actions/workflows/test.yml/badge.svg)
 ![Docs](https://github.com/bmartel/chakra-multiselect/actions/workflows/deploy_docs.yml/badge.svg)
 
-[![CodeSandbox](https://img.shields.io/badge/Codesandbox-040404?style=for-the-badge&logo=codesandbox&logoColor=DBDBDB)](https://codesandbox.io/p/sandbox/eloquent-bardeen-n8qxv4?file=%2FREADME.md)
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github.com/bmartel/chakra-multiselect)
 
 ## Install [ChakraUI](https://chakra-ui.com/getting-started)
 

@@ -16,6 +16,7 @@
   },
   "scripts": {
     "build": "microbundle",
+    "dev": "run-p start example:start",
     "prepare": "run-s build",
     "postbuild": "run-s move:types",
     "move:types": "mv dist/src/* ./dist/ && rmdir dist/src",
