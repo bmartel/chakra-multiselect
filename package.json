@@ -9,7 +9,18 @@
   "source": "./src/index.tsx",
   "main": "./dist/index.js",
   "module": "./dist/index.module.mjs",
-  "exports": "./dist/index.modern.mjs",
+  "exports": {
+    ".": {
+      "require": {
+        "default": "./dist/index.js",
+        "types": "./dist/index.d.ts"
+      },
+      "import": {
+        "default": "./dist/index.modern.mjs",
+        "types": "./dist/index.d.ts"
+      }
+    }
+  },
   "types": "./dist/index.d.ts",
   "engines": {
     "node": ">=14"
