@@ -283,8 +283,9 @@ export interface UseMultiSelectProps {
 export interface UseMultiSelectReturn {
   value?: string | string[]
   options: Option[]
-  onChange?: SelectOnChange
+  onChange: SelectOnChange
 }
+
 export interface UseSelectProps extends UsePopperProps {
   onChange: SelectOnChange
   single?: boolean
@@ -1212,17 +1213,16 @@ export function useMultiSelect(
   const onChangeRef = useRef<typeof props.onChange>()
   onChangeRef.current = props.onChange;
 
-  const setNextValue = useCallback((value: string|number|(string|number)[]) => {
+  const setNextValue = useCallback<SelectOnChange>((value, change) => {
     setValue(value as any)
-    onChangeRef.current?.(value)
-    console.log("setNextValue:", value)
+    onChangeRef.current?.(value, change)
   }, [])
 
   const onChange = useCallback<SelectOnChange>(
     (next, change) => {
       switch (change?.action) {
         case ChangeActions.SingleCreate:
-          setNextValue(next as string)
+          setNextValue(next as string, change)
           setOptions((o) => {
             const opt = getOption(next as any)
             return o.some((_o) => getOption(_o).value === opt.value)
@@ -1232,15 +1232,15 @@ export function useMultiSelect(
           break
         case ChangeActions.SingleClear:
         case ChangeActions.SingleRemove:
-          setNextValue(next as string)
+          setNextValue(next as string, change)
           break
         case ChangeActions.SingleSelect:
-          setNextValue(next as string)
+          setNextValue(next as string, change)
           break
         case ChangeActions.MultiCreate:
           const nextValue = next as string[]
           const created = next[nextValue.length - 1]
-          setNextValue(nextValue)
+          setNextValue(nextValue, change)
           setOptions((o) => {
             const opt = getOption(created as any)
             return o.some((_o) => getOption(_o).value === opt.value)
@@ -1250,11 +1250,11 @@ export function useMultiSelect(
           break
         case ChangeActions.MultiClear:
         case ChangeActions.MultiRemove:
-          setNextValue(next as string[])
+          setNextValue(next as string[], change)
           break
         case ChangeActions.MultiSelect:
         default:
-          setNextValue(next as string[])
+          setNextValue(next as string[], change)
       }
     },
     [setValue, setOptions, getOption]

@@ -93,7 +93,7 @@ const StatefulMultiSelect: FC<
     <MultiSelect
       value={value}
       options={options}
-      onChange={onChange!}
+      onChange={onChange}
       {...props}
     />
   )
