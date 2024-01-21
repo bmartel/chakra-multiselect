@@ -647,8 +647,8 @@ export function useSelect({
       if (disabled) return
       setSearch(e.target.value)
       Open()
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [disabled]
   )
 
@@ -851,6 +851,7 @@ export function useSelect({
     if (isOpen && disabled) {
       setOpen(false)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, disabled])
 
   // When searching, activate the first option
@@ -1260,6 +1261,7 @@ export function useMultiSelect(
           setNextValue(next, change)
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [setValue, setOptions, getOption]
   )
 
