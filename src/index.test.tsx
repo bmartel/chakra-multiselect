@@ -90,26 +90,31 @@ describe('MultiSelect', () => {
     const { getByLabelText, queryByRole } = render(
       <MultiSelect label='select an item' onChange={() => null} />
     )
-    const toggleButton = getByLabelText('toggle menu')
 
-    expect(toggleButton.getAttribute('aria-expanded')).toBe('false')
+    expect(getByLabelText('toggle menu').getAttribute('aria-expanded')).toBe(
+      'false'
+    )
     expect(queryByRole('listbox')).toBeNull()
 
     await act(async () => {
-      fireEvent.click(toggleButton)
+      fireEvent.click(getByLabelText('toggle menu'))
     })
 
     await waitFor(() => {
-      expect(toggleButton.getAttribute('aria-expanded')).toBe('true')
+      expect(getByLabelText('toggle menu').getAttribute('aria-expanded')).toBe(
+        'true'
+      )
       expect(queryByRole('listbox')).toBeVisible()
     })
 
     await act(async () => {
-      fireEvent.click(toggleButton)
+      fireEvent.click(getByLabelText('toggle menu'))
     })
 
     await waitFor(() => {
-      expect(toggleButton.getAttribute('aria-expanded')).toBe('false')
+      expect(getByLabelText('toggle menu').getAttribute('aria-expanded')).toBe(
+        'false'
+      )
       expect(queryByRole('listbox')).toBeNull()
     })
 
@@ -119,7 +124,9 @@ describe('MultiSelect', () => {
       fireEvent.click(input)
     })
 
-    expect(toggleButton.getAttribute('aria-expanded')).toBe('true')
+    expect(getByLabelText('toggle menu').getAttribute('aria-expanded')).toBe(
+      'true'
+    )
     expect(queryByRole('listbox')).toBeVisible()
   })
 
