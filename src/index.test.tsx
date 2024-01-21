@@ -99,15 +99,19 @@ describe('MultiSelect', () => {
       fireEvent.click(toggleButton)
     })
 
-    expect(toggleButton.getAttribute('aria-expanded')).toBe('true')
-    expect(queryByRole('listbox')).toBeVisible()
+    await waitFor(() => {
+      expect(toggleButton.getAttribute('aria-expanded')).toBe('true')
+      expect(queryByRole('listbox')).toBeVisible()
+    })
 
     await act(async () => {
       fireEvent.click(toggleButton)
     })
 
-    expect(toggleButton.getAttribute('aria-expanded')).toBe('false')
-    expect(queryByRole('listbox')).toBeNull()
+    await waitFor(() => {
+      expect(toggleButton.getAttribute('aria-expanded')).toBe('false')
+      expect(queryByRole('listbox')).toBeNull()
+    })
 
     const input = getByLabelText('select an item')
 
