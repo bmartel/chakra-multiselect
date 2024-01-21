@@ -31,10 +31,10 @@
     "@typescript-eslint/explicit-function-return-type": [
       "warn",
       {
-        allowExpressions: true,
-        allowConciseArrowFunctionExpressionsStartingWithVoid: true,
-      },
+        "allowExpressions": true,
+        "allowConciseArrowFunctionExpressionsStartingWithVoid": true
+      }
     ],
-    "prettier/prettier": ["error", {}, { usePrettierrc: true }],
+    "prettier/prettier": ["error", {}, { "usePrettierrc": true }]
   }
 }
