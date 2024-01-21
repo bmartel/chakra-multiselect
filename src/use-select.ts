@@ -62,7 +62,7 @@ export enum ChangeActions {
 }
 
 export type SelectOnChange = (
-  value: Option|Option[],
+  value: Option | Option[],
   change?: {
     action: ChangeActions
     value: any
@@ -642,12 +642,15 @@ export function useSelect({
 
   // Handlers
 
-  const handleSearchValueChange = useCallback((e: any) => {
-    if (disabled) return
-    setSearch(e.target.value)
-    Open()
+  const handleSearchValueChange = useCallback(
+    (e: any) => {
+      if (disabled) return
+      setSearch(e.target.value)
+      Open()
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [disabled])
+    [disabled]
+  )
 
   const handleSearchClick = useCallback(() => {
     if (disabled) return
@@ -848,6 +851,7 @@ export function useSelect({
     if (isOpen && disabled) {
       setOpen(false)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, disabled])
 
   // When searching, activate the first option
@@ -1211,7 +1215,7 @@ export function useMultiSelect(
     props.options.map(getOption)
   )
   const onChangeRef = useRef<typeof props.onChange>()
-  onChangeRef.current = props.onChange;
+  onChangeRef.current = props.onChange
 
   const setNextValue = useCallback<SelectOnChange>((value, change) => {
     setValue(value as any)
@@ -1257,6 +1261,7 @@ export function useMultiSelect(
           setNextValue(next, change)
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [setValue, setOptions, getOption]
   )
 

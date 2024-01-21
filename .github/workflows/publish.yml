@@ -8,23 +8,22 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-      with:
-        ref: ${{ github.event.release.target_commitish }}
-    - name: Use Node.js 14
-      uses: actions/setup-node@v1
-      with:
-        node-version: 14
-        registry-url: https://registry.npmjs.org/
-    - run: yarn install --frozen-lockfile
-    - run: git config --global user.name "Brandon Martel"
-    - run: git config --global user.email "brandonmartel@gmail.com"
-    - run: npm version ${{ github.event.release.tag_name }}
-    - run: yarn test
-    - run: npm publish
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-    - run: git push
-      env:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.release.target_commitish }}
+      - name: Use Node.js 18
+        uses: actions/setup-node@v1
+        with:
+          node-version: 18
+          registry-url: https://registry.npmjs.org/
+      - run: yarn install --frozen-lockfile
+      - run: git config --global user.name "Brandon Martel"
+      - run: git config --global user.email "brandonmartel@gmail.com"
+      - run: npm version ${{ github.event.release.tag_name }}
+      - run: yarn test
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: git push
+        env:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
