@@ -298,6 +298,7 @@ export interface UseSelectProps extends UsePopperProps {
   placeholder?: string
   searchPlaceholder?: string
   size?: 'sm' | 'md' | 'lg'
+  isInvalid?: boolean
   shiftAmount?: number
   getOption?: GetOption
   getDebounce?: GetDebounce
@@ -330,6 +331,7 @@ export interface UseSelectReturn {
   clearAll: () => void
   clearable: boolean
   disabled: boolean
+  isInvalid: boolean
 }
 
 const [SelectProvider, useSelectContext] = createContext<UseSelectReturn>({
@@ -384,6 +386,7 @@ export function useSelect({
   create = false,
   single = false,
   disabled = false,
+  isInvalid = false,
   selectionVisibleIn = SelectionVisibilityMode.Input,
   getDebounce = defaultGetDebounce,
   getOption = defaultGetOption,
@@ -894,6 +897,7 @@ export function useSelect({
     multi,
     clearable: hasMultiSelection,
     disabled,
+    isInvalid,
     clearAll,
     optionsRef,
     controlRef,
@@ -1162,7 +1166,7 @@ export function useSelectedList(props: any = {}) {
 }
 
 export function useSelectControl(props: any = {}) {
-  const { isOpen, popper, controlRef, disabled } = useSelectContext()
+  const { isOpen, popper, controlRef, disabled, isInvalid } = useSelectContext()
   const inputStyles = useMultiStyleConfig('Input', props) || {}
   const styles = useStyles()
 
@@ -1176,11 +1180,13 @@ export function useSelectControl(props: any = {}) {
     ),
     isOpen,
     disabled,
+    isInvalid,
     __css: {
-      ...styles.field,
-      ...styles.control,
       _focusWithin: (inputStyles.field as any)?._focusVisible,
       _disabled: (inputStyles.field as any)?._disabled,
+      _invalid: (inputStyles.field as any)?._invalid,
+      ...styles.field,
+      ...styles.control,
     },
   }
 }

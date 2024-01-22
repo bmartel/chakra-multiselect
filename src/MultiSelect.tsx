@@ -76,6 +76,7 @@ export interface SelectControlProps
   extends Omit<HTMLChakraProps<'select'>, 'size'> {
   defaultIsOpen?: boolean
   isLazy?: true
+  isInvalid?: boolean
   closeOnSelect?: false
   children?: ReactNode
 }
@@ -636,10 +637,16 @@ SelectActionGroup.displayName = 'SelectActionGroup'
 
 export const SelectControl = forwardRef<SelectControlProps, 'div'>(
   ({ children, ...props }, ref) => {
-    const { ref: controlRef, __css } = useSelectControl({ ref })
+    const { ref: controlRef, __css, isInvalid } = useSelectControl({ ref })
 
     return (
-      <Input ref={controlRef} as={HStack} {...__css} {...props}>
+      <Input
+        ref={controlRef}
+        as={HStack}
+        {...__css}
+        {...props}
+        isInvalid={isInvalid}
+      >
         {children}
       </Input>
     )
@@ -663,7 +670,12 @@ export const MultiSelect: FC<MultiSelectProps> = ({
           {label}
         </SelectLabel>
       )}
-      <SelectControl size={size} disabled={props.disabled} {...controlProps}>
+      <SelectControl
+        size={size}
+        disabled={props.disabled}
+        isInvalid={props.isInvalid}
+        {...controlProps}
+      >
         <SelectedList size={size} {...selectedListProps}>
           <SelectInput size={size} disabled={props.disabled} />
         </SelectedList>

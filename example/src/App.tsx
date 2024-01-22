@@ -18,7 +18,15 @@ import {
 import { FC, useState } from 'react'
 
 const theme = extendTheme({
+  shadows: {
+     outline: '0 0 0 3px var(--chakra-colors-green-500)'
+  },
   components: {
+    Input: {
+      defaultProps: {
+        focusBorderColor: 'green.500',
+      }
+    },
     MultiSelect: {
       ...MultiSelectTheme,
       baseStyle: (props: any) => {
@@ -27,7 +35,7 @@ const theme = extendTheme({
           ...baseStyle,
         }
       },
-    },
+    } as typeof MultiSelectTheme,
   },
 })
 
@@ -124,6 +132,7 @@ const App = () => {
               placeholder='Select ...'
               searchPlaceholder='Search ...'
               single
+              isInvalid
             />
             <StatefulMultiSelect
               options={_options}

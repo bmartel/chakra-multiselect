@@ -15,10 +15,11 @@ const parts = [
   'label',
 ]
 
-function baseStyleList(props: Record<string, any>) {
+// eslint-disable-next-line
+function baseStyleList(props: Record<string, any>, m?: typeof mode) {
   return {
-    bg: mode(`#fff`, `gray.700`)(props),
-    boxShadow: mode(`sm`, `dark-lg`)(props),
+    bg: m!(`#fff`, `gray.700`)(props),
+    boxShadow: m!(`sm`, `dark-lg`)(props),
     color: 'inherit',
     w: 'full',
     py: '2',
@@ -43,22 +44,23 @@ const baseStyleLabel = {
   textAlign: 'start',
 }
 
-function baseStyleItem(props: Record<string, any>) {
+// eslint-disable-next-line
+function baseStyleItem(props: Record<string, any>, m?: typeof mode) {
   return {
     cursor: 'pointer',
     transition: 'background 50ms ease-out',
     _focus: {
-      bg: mode(`gray.50`, `whiteAlpha.100`)(props),
+      bg: m!(`gray.50`, `whiteAlpha.100`)(props),
       boxShadow: 'outline',
     },
     _active: {
-      bg: mode(`gray.50`, `whiteAlpha.100`)(props),
+      bg: m!(`gray.50`, `whiteAlpha.100`)(props),
     },
     _expanded: {
-      bg: mode(`gray.50`, `whiteAlpha.100`)(props),
+      bg: m!(`gray.50`, `whiteAlpha.100`)(props),
     },
     _selected: {
-      bg: mode(`gray.100`, `whiteAlpha.300`)(props),
+      bg: m!(`gray.100`, `whiteAlpha.300`)(props),
     },
     _disabled: {
       opacity: 0.4,
@@ -67,7 +69,8 @@ function baseStyleItem(props: Record<string, any>) {
   }
 }
 
-function baseStyleSelectedItem(props: Record<string, any>) {
+// eslint-disable-next-line
+function baseStyleSelectedItem(props: Record<string, any>, _m?: typeof mode) {
   return {
     borderRadius: 'full',
     variant: 'solid',
@@ -75,18 +78,19 @@ function baseStyleSelectedItem(props: Record<string, any>) {
   }
 }
 
-function baseStyleButton(props: Record<string, any>) {
+// eslint-disable-next-line
+function baseStyleButton(props: Record<string, any>, m?: typeof mode) {
   return {
     variant: 'ghost',
     _hover: {
-      bg: mode(`gray.200`, `whiteAlpha.300`)(props),
+      bg: m!(`gray.200`, `whiteAlpha.300`)(props),
     },
     _focus: {
-      bg: mode(`gray.200`, `whiteAlpha.300`)(props),
+      bg: m!(`gray.200`, `whiteAlpha.300`)(props),
       boxShadow: 'outline',
     },
     _active: {
-      bg: mode(`gray.100`, `whiteAlpha.100`)(props),
+      bg: m!(`gray.100`, `whiteAlpha.100`)(props),
     },
     colorscheme: props.colorscheme,
   }
@@ -99,7 +103,7 @@ const baseStyleControl = {
 }
 
 // eslint-disable-next-line
-const baseStyleInput = (_props: Record<string, any>) => ({
+const baseStyleInput = (_props: Record<string, any>, _m?: typeof mode) => ({
   bgColor: 'transparent',
   appearance: 'none',
   flex: 1,
@@ -124,15 +128,16 @@ const baseStyleDivider = {
   opacity: 0.8,
 }
 
+// eslint-disable-next-line
 const baseStyle = (props: Record<string, any>) => ({
-  list: baseStyleList(props),
+  list: baseStyleList(props, mode),
   selectedList: baseStyleSelectedList,
-  item: baseStyleItem(props),
-  selectedItem: baseStyleSelectedItem(props),
-  button: baseStyleButton(props),
+  item: baseStyleItem(props, mode),
+  selectedItem: baseStyleSelectedItem(props, mode),
+  button: baseStyleButton(props, mode),
   actionGroup: baseStyleActionGroup,
   control: baseStyleControl,
-  input: baseStyleInput(props),
+  input: baseStyleInput(props, mode),
   groupTitle: baseStyleGroupTitle,
   divider: baseStyleDivider,
   label: baseStyleLabel,
