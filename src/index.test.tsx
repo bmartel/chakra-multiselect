@@ -170,7 +170,7 @@ describe('MultiSelect', () => {
     })
   })
 
-  it('receive no results found message when search yields no value', async () => {
+  it('receives no results found message when search yields no value', async () => {
     const { getByText, getByLabelText } = render(
       <StatefulMultiSelect label='select an item' options={options} />
     )
@@ -183,6 +183,29 @@ describe('MultiSelect', () => {
 
     await waitFor(() => {
       getByText('No results found')
+    })
+  })
+
+  it('receives custom no results found message when search yields no value and emptyResultsLabel is provided', async () => {
+    const emptyResultsLabel = 'Nothing Found!'
+    const listProps = { emptyResultsLabel }
+
+    const { getByText, getByLabelText } = render(
+      <StatefulMultiSelect
+        label='select an item'
+        listProps={listProps}
+        options={options}
+      />
+    )
+
+    const input = getByLabelText('select an item') as HTMLInputElement
+
+    await act(async () => {
+      userEvent.type(input, 'abcdef')
+    })
+
+    await waitFor(() => {
+      getByText(emptyResultsLabel)
     })
   })
 
