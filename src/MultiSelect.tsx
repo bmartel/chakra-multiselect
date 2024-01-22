@@ -80,7 +80,8 @@ export interface SelectControlProps
   children?: ReactNode
 }
 
-export type SelectListProps = HTMLChakraProps<'ul'> & Pick<SelectProps, 'size'>
+export type SelectListProps = HTMLChakraProps<'ul'> &
+  Pick<SelectProps, 'size'> & { emptyResultsLabel?: string }
 export type SelectedListProps = BoxProps & {
   size?: SelectProps['size']
   selectedItems?: SelectItem[]
@@ -357,7 +358,7 @@ export const SelectList = memo<SelectListProps>((props) => {
           ))}
         </div>
       ) : dropdownVisible ? (
-        <EmptySelectResults />
+        <EmptySelectResults label={props.emptyResultsLabel} />
       ) : null}
     </chakra.ul>
   )
